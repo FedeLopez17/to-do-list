@@ -1,0 +1,41 @@
+.modal-background{
+    background-color: rgba(10, 10, 10, 50%);
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.task-modal, .project-modal{
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    height: 50%;
+    width: 50%;
+}
+
+.task-modal .modal-header, .project-modal, .modal-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.task-modal .modal-body, .project-modal, .modal-body{
+    flex: 1;
+    display: flex;
+}
+
+.task-modal .modal-footer, .project-modal .modal-footer{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.invalid{
+    outline: solid 2px red;
+}
+
+.valid{
+    outline: solid 2px lightgreen;
+}

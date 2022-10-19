@@ -1,0 +1,98 @@
+:root{
+    --nav-height: 44px;
+    --aside-height: calc(100vh - var(--nav-height));
+    --aside-width: 305px;
+}
+
+html, body{
+    margin: 0;
+    box-sizing: border-box;
+    outline: solid red 1px;
+}
+
+body{
+    background-color: teal;
+}
+
+nav{
+    background-color: grey;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+nav #hamburger-toggle{
+    cursor: pointer;
+}
+
+nav #new-task-button{
+    cursor: pointer;
+}
+
+.wrapper{
+    display: flex;
+}
+
+aside{
+    background-color: aqua;
+    height: var(--aside-height);
+    width: 0;
+    transition: width 0.2s ease-in;
+}
+
+aside.active{
+    width: var(--aside-width);
+}
+
+aside .inbox{
+    cursor: pointer;
+    background-color: brown;
+}
+
+aside .inbox:hover{
+    background-color: red;
+}
+
+aside .projects.hidden{
+    display: none;
+}
+
+aside .new-project-button{
+    display: flex;
+    align-items: center;
+}
+
+main{
+    flex: 1;
+    background-color: pink;
+}
+
+main .project{
+    height: 100%;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+}
+
+.project .title{
+    background-color: aqua;
+}
+
+.project .task{
+    display: flex;
+    cursor: pointer;
+}
+
+.project .task-name{
+    pointer-events: none;
+}
+
+.project .task-details{
+    background-color: red;
+}
+
+.project .task-details.collapsed{
+    display: none;
+    /* ESTO DEBERIA CRECER EN HEIGHT, NO DESAPARECER */
+}
