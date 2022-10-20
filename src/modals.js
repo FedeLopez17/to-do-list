@@ -6,7 +6,7 @@ import { reloadProjects, reloadTasks } from "./ui";
 export function appendNewProjectModal(){
     const container = document.querySelector("#content");
     
-    const modalAlreadyOnScreen = document.querySelector(".new-project-modal");
+    const modalAlreadyOnScreen = document.querySelector(".project-modal");
     if(modalAlreadyOnScreen) return;
 
     const modalBackground = document.createElement("section");
@@ -60,14 +60,82 @@ export function appendNewProjectModal(){
 }
 
 export function appendNewTaskModal(){
-    _appendTaskModal(true);
+    _appendTaskModal("new");
 }
 
 export function appendUpdateTaskModal(task){
-    _appendTaskModal(false, task);
+    _appendTaskModal("update", task);
 }
 
-function _appendTaskModal(isNewTask, task){
+export function appendViewTaskModal(task){
+    const container = document.querySelector("#content");
+    
+    const modalAlreadyOnScreen = document.querySelector(".task-modal");
+    if(modalAlreadyOnScreen) return;
+
+    const modalBackground = document.createElement("section");
+    modalBackground.classList.add("modal-background");
+    modalBackground.addEventListener("click", _closeModal);
+
+    const taskModal = document.createElement("section");
+    taskModal.classList.add("view", "task-modal");
+
+    //Modal header
+    const modalHeader = _makeModalHeader(task.title);
+    taskModal.appendChild(modalHeader);
+
+    //Modal body
+    const modalBody = document.createElement("section");
+    modalBody.classList.add("modal-body");
+
+    const descriptionContainer = document.createElement("section");
+    descriptionContainer.classList.add("description-container");
+    const description = document.createElement("p");
+    description.innerHTML =`<span>Description: </span> ${task.description}`;
+    descriptionContainer.appendChild(description);
+    modalBody.appendChild(descriptionContainer);
+
+    const priorityContainer = document.createElement("section");
+    priorityContainer.classList.add("priority-container");
+    const priority = document.createElement("p");
+    priority.innerHTML =`<span>Priority: </span> ${task.priority}`;
+    priorityContainer.appendChild(priority);
+    modalBody.appendChild(priorityContainer);
+
+
+    const projectContainer = document.createElement("section");
+    projectContainer.classList.add("project-container");
+    const project = document.createElement("p");
+    project.innerHTML =`<span>Project: </span> ${task.project}`;
+    projectContainer.appendChild(project);
+    modalBody.appendChild(projectContainer);
+
+    taskModal.appendChild(modalBody);
+
+    container.appendChild(modalBackground);
+    container.appendChild(taskModal);
+}
+
+function _appendTaskModal(mode, task){
+    const isUpdateTask = (mode === "update");
+
+    const MODE_VALUES = {
+        new: {
+            modalClass: "new",
+            modalTitle: "New Task",
+            buttonId: "add-task",
+            buttonText: "Add Task",
+            buttonFunction: _validateAndAddTask
+        }, 
+        update: {
+            modalClass: "update",
+            modalTitle: "Update Task",
+            buttonId: "update-task",
+            buttonText: "Update Task",
+            buttonFunction: ()=>{_validateAndUpdateTask(task)}
+        }
+    }
+
     const container = document.querySelector("#content");
     
     const modalAlreadyOnScreen = document.querySelector(".task-modal");
@@ -78,10 +146,10 @@ function _appendTaskModal(isNewTask, task){
     modalBackground.addEventListener("click", _closeModal);
     
     const taskModal = document.createElement("section");
-    taskModal.classList.add((isNewTask) ? "new" : "update", "task-modal");
+    taskModal.classList.add(MODE_VALUES[mode].modalClass, "task-modal");
     
     //Modal header
-    const title = (isNewTask) ? "New Task" : "Update Task";
+    const title = MODE_VALUES[mode].modalTitle;
     const modalHeader = _makeModalHeader(title);
     taskModal.appendChild(modalHeader);
     
@@ -105,7 +173,7 @@ function _appendTaskModal(isNewTask, task){
     titleInput.id = "title";
     titleInput.maxLength = 30;
     titleInput.addEventListener("input", ()=>{_selfValidation(titleInput)});
-    if(!isNewTask) titleInput.value = task.title;
+    if(isUpdateTask) titleInput.value = task.title;
     titleWrapper.appendChild(titleInput);
     
     firstHalf.appendChild(titleWrapper);
@@ -122,7 +190,7 @@ function _appendTaskModal(isNewTask, task){
     descriptionInput.type = "textarea";
     descriptionInput.id = "description";
     descriptionInput.addEventListener("input", ()=>{_selfValidation(descriptionInput)});
-    if(!isNewTask) descriptionInput.value = task.description;
+    if(isUpdateTask) descriptionInput.value = task.description;
     descriptionWrapper.appendChild(descriptionInput);
     
     firstHalf.appendChild(descriptionWrapper);
@@ -152,7 +220,7 @@ function _appendTaskModal(isNewTask, task){
         option.id = priorityLevel.toLowerCase();
         priorityInput.appendChild(option);
     })
-    if(!isNewTask) priorityInput.value = task.priority;
+    if(isUpdateTask) priorityInput.value = task.priority;
     priorityWrapper.appendChild(priorityInput);
     
     secondHalf.appendChild(priorityWrapper);
@@ -174,7 +242,7 @@ function _appendTaskModal(isNewTask, task){
         option.value = project;
         projectInput.appendChild(option);
     })
-    if(!isNewTask) projectInput.value = task.project;
+    if(isUpdateTask) projectInput.value = task.project;
     projectWrapper.appendChild(projectInput);
     
     secondHalf.appendChild(projectWrapper);
@@ -182,21 +250,21 @@ function _appendTaskModal(isNewTask, task){
     modalBody.appendChild(secondHalf);
     
     taskModal.appendChild(modalBody);
-    
+
     // Modal footer
     const modalFooter = document.createElement("footer");
     modalFooter.classList.add("modal-footer");
     
     const addTaskButton = document.createElement("button");
     addTaskButton.classList.add("task-modal-button");
-    addTaskButton.id = (isNewTask) ? "add-task" : "update-task";
-    addTaskButton.innerText = (isNewTask) ? "Add Task" : "Update Task";
-    addTaskButton.addEventListener("click", (isNewTask) ? _validateAndAddTask : ()=>{_validateAndUpdateTask(task)});
+    addTaskButton.id = MODE_VALUES[mode].buttonId;
+    addTaskButton.innerText = MODE_VALUES[mode].buttonText;
+    addTaskButton.addEventListener("click", MODE_VALUES[mode].buttonFunction);
     
     modalFooter.appendChild(addTaskButton);
     
     taskModal.appendChild(modalFooter);
-    
+
     container.appendChild(modalBackground);
     container.appendChild(taskModal);
 }

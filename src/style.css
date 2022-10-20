@@ -96,3 +96,15 @@ main .project{
     display: none;
     /* ESTO DEBERIA CRECER EN HEIGHT, NO DESAPARECER */
 }
+
+.project .task #priority-toggle.low{
+    color: yellow;
+}
+
+.project .task #priority-toggle.medium{
+    color: green;
+}
+
+.project .task #priority-toggle.high{
+    color: red;
+}

@@ -1,5 +1,5 @@
 import "./style.css";
-import { appendNewTaskModal, appendUpdateTaskModal, appendNewProjectModal } from "./modals";
+import { appendNewProjectModal, appendNewTaskModal, appendUpdateTaskModal, appendViewTaskModal } from "./modals";
 import { getProjectNames, getProjectTasks } from "./projects";
 
 export default function buildUserInterface(){
@@ -143,16 +143,33 @@ function _displayTasks(project){
         todo.setAttribute("data-id", hashedTitle);
         todo.addEventListener("click", (e)=>{_toggleDetails(e)});
 
+        //status checkbox
+
         const taskName = document.createElement("span");
         taskName.classList = "task-name";
         taskName.innerText = task.title;
         todo.appendChild(taskName);
 
+        const viewButton = document.createElement("i");
+        viewButton.id = "view-button";
+        viewButton.classList.add("fa-solid", "fa-eye");
+        viewButton.title = "VIEW TASK";
+        viewButton.addEventListener("click", ()=>{appendViewTaskModal(task)});
+        todo.appendChild(viewButton);
+
         const editButton = document.createElement("i");
-        editButton.classList.add("edit-button", "fa-solid", "fa-pen");
+        editButton.id = "edit-button";
+        editButton.classList.add("fa-solid", "fa-pen-to-square");
         editButton.title = "UPDATE TASK";
         editButton.addEventListener("click", ()=>{appendUpdateTaskModal(task)});
         todo.appendChild(editButton);
+
+        const priorityToggle = document.createElement("i");
+        priorityToggle.id = "priority-toggle";
+        priorityToggle.classList.add("fa-solid", "fa-flag", task.priority);
+        priorityToggle.title = "TOGGLE PRIORITY";
+        priorityToggle.addEventListener("click", ()=>{_togglePriority(task)});
+        todo.appendChild(priorityToggle);
 
         projectPageTasks.appendChild(todo);
 
@@ -184,6 +201,13 @@ function _displayTasks(project){
     const main = document.querySelector("main");
     _clearPreviousPage(main);
     main.appendChild(projectPage);
+}
+
+function _togglePriority(task){
+    const currentPriority = task.priority;
+    const newPriority = (currentPriority === "low") ? "medium" : (currentPriority === "medium") ? "high" : "low";
+    task.update("priority", newPriority);
+    reloadTasks(task.project);
 }
 
 export function reloadTasks(project){
