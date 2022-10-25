@@ -1,5 +1,5 @@
 import "./style.css";
-import { appendNewProjectModal, appendNewTaskModal, appendUpdateTaskModal, appendViewTaskModal } from "./modals";
+import { appendDeleteTaskModal, appendMoveTaskModal, appendNewProjectModal, appendNewTaskModal, appendNewTaskModalFromProject, appendUpdateTaskModal, appendViewTaskModal } from "./modals";
 import { getProjectNames, getProjectTasks } from "./projects";
 
 export default function buildUserInterface(){
@@ -58,6 +58,8 @@ function _appendAside(container){
 
     container.appendChild(aside);
 }
+// Inbox loads as the default project.
+window.addEventListener("load", ()=>{_displayTasks("Inbox")});
 
 function _appendProjects(container){
     const projectList = document.createElement("section");
@@ -134,7 +136,8 @@ function _displayTasks(project){
     projectPageTasks.classList.add("project-tasks");
 
     const tasks = getProjectTasks(project);
-    for (const task of tasks){
+    for (const taskKey in tasks){
+        const task = tasks[taskKey];
         //This is used to link the details of a task with the task.
         const hashedTitle = _hash(task.title);
 
@@ -143,7 +146,17 @@ function _displayTasks(project){
         todo.setAttribute("data-id", hashedTitle);
         todo.addEventListener("click", (e)=>{_toggleDetails(e)});
 
-        //status checkbox
+        const statusCheckbox = document.createElement("input");
+        statusCheckbox.classList.add("status-checkbox");
+        statusCheckbox.type = "checkbox";
+        statusCheckbox.title = "Toggle Status";
+        const taskCompleted = task.status;
+        if(taskCompleted){
+            todo.classList.add("done");
+            statusCheckbox.checked = true;
+        }
+        statusCheckbox.addEventListener("change", ()=>{_toggleTaskStatus(task, todo)});
+        todo.appendChild(statusCheckbox);
 
         const taskName = document.createElement("span");
         taskName.classList = "task-name";
@@ -153,23 +166,37 @@ function _displayTasks(project){
         const viewButton = document.createElement("i");
         viewButton.id = "view-button";
         viewButton.classList.add("fa-solid", "fa-eye");
-        viewButton.title = "VIEW TASK";
+        viewButton.title = "View";
         viewButton.addEventListener("click", ()=>{appendViewTaskModal(task)});
         todo.appendChild(viewButton);
-
-        const editButton = document.createElement("i");
-        editButton.id = "edit-button";
-        editButton.classList.add("fa-solid", "fa-pen-to-square");
-        editButton.title = "UPDATE TASK";
-        editButton.addEventListener("click", ()=>{appendUpdateTaskModal(task)});
-        todo.appendChild(editButton);
 
         const priorityToggle = document.createElement("i");
         priorityToggle.id = "priority-toggle";
         priorityToggle.classList.add("fa-solid", "fa-flag", task.priority);
-        priorityToggle.title = "TOGGLE PRIORITY";
-        priorityToggle.addEventListener("click", ()=>{_togglePriority(task)});
+        priorityToggle.title = "Toggle Priority";
+        priorityToggle.addEventListener("click", ()=>{_toggleTaskPriority(task)});
         todo.appendChild(priorityToggle);
+
+        const editButton = document.createElement("i");
+        editButton.id = "edit-button";
+        editButton.classList.add("fa-solid", "fa-pen-to-square");
+        editButton.title = "Update";
+        editButton.addEventListener("click", ()=>{appendUpdateTaskModal(task)});
+        todo.appendChild(editButton);
+
+        const moveTaskButton = document.createElement("i");
+        moveTaskButton.id = "move-task-button";
+        moveTaskButton.classList.add("fa-regular", "fa-share-from-square");
+        moveTaskButton.title = "Move";
+        moveTaskButton.addEventListener("click", ()=>{appendMoveTaskModal(task)});
+        todo.appendChild(moveTaskButton);
+
+        const deleteTaskButton = document.createElement("i");
+        deleteTaskButton.id = "delete-task-button";
+        deleteTaskButton.classList.add("fa-solid", "fa-trash-can");
+        deleteTaskButton.title = "Delete";
+        deleteTaskButton.addEventListener("click", ()=>{appendDeleteTaskModal(task)});
+        todo.appendChild(deleteTaskButton);
 
         projectPageTasks.appendChild(todo);
 
@@ -195,15 +222,33 @@ function _displayTasks(project){
 
         projectPageTasks.appendChild(details);
     }
-
     projectPage.appendChild(projectPageTasks);
+
+    const addTaskButton = document.createElement("section");
+    addTaskButton.id = "add-task-button";
+    addTaskButton.addEventListener("click", ()=>{appendNewTaskModalFromProject(project)});
+    const icon = document.createElement("i");
+    icon.classList.add("fa-solid", "fa-plus");
+    addTaskButton.appendChild(icon);
+    const text = document.createElement("section");
+    text.innerText = "Add Task";
+    addTaskButton.appendChild(text);
+    projectPage.appendChild(addTaskButton);
 
     const main = document.querySelector("main");
     _clearPreviousPage(main);
     main.appendChild(projectPage);
 }
 
-function _togglePriority(task){
+function _toggleTaskStatus(task, todo){
+    const currentStatus = task.status;
+    const newStatus = !currentStatus;
+    task.update("status", newStatus);
+    todo.classList.toggle("done");
+    reloadTasks(task.project);
+}
+
+function _toggleTaskPriority(task){
     const currentPriority = task.priority;
     const newPriority = (currentPriority === "low") ? "medium" : (currentPriority === "medium") ? "high" : "low";
     task.update("priority", newPriority);
@@ -220,6 +265,7 @@ export function reloadProjects(){
     
     const aside = document.querySelector("aside");
     _appendProjects(aside);
+    _toggleProjects();
 }
 
 function _clearPreviousPage(container){
@@ -227,7 +273,7 @@ function _clearPreviousPage(container){
 }
 
 function _toggleDetails(event){
-    if(event.target.getAttribute("class") !== "task"){
+    if(!event.target.getAttribute("class").includes("task")){
         return;
     }
 

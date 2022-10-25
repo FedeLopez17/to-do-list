@@ -108,3 +108,8 @@ main .project{
 .project .task #priority-toggle.high{
     color: red;
 }
+
+.done{
+    opacity: 0.5;
+    text-decoration: line-through;
+}

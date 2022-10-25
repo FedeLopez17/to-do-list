@@ -3,17 +3,22 @@ const _PROJECTS = {};
 export default class Project{
     constructor(name){
         this.name = name;
-        this.tasks = [];
+        this.tasks = {};
         _PROJECTS[this.name] = this;
     }
 
     addTask(task){
-        this.tasks.push(task);
+        this.tasks[task.title] = task;
+    }
+
+    deleteTask(task){
+        delete this.tasks[task.title];
     }
 
     getTasks(){
         return this.tasks;
     }
+
 }
 
 export function getProjectNames(){
@@ -30,4 +35,8 @@ export function addTaskToProject(task, project){
 
 export function getProjectTasks(project){
     return _PROJECTS[project].getTasks();
+}
+
+export function deleteTaskFromProject(task){
+    _PROJECTS[task.project].deleteTask(task);
 }
