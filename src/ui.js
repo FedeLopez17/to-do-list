@@ -116,7 +116,7 @@ function _appendMainSection(container){
 }
 
 function _displayTasks(project){
-    const formattedProjectName = `${project.toLowerCase().replaceAll(" ", "-")}-page`;
+    const formattedProjectName = `${project.replaceAll(" ", "-")}-page`;
 
     const tasksAlreadyOnScreen = document.querySelector(`.${formattedProjectName}`);
     if(tasksAlreadyOnScreen) return;

@@ -319,8 +319,8 @@ function _appendTaskModal({mode, task, project}){
     PRIORITY_LEVELS.forEach(priorityLevel => {
         const option = document.createElement("option");
         option.innerText = priorityLevel;
-        option.value = priorityLevel.toLowerCase();
-        option.id = priorityLevel.toLowerCase();
+        option.value = priorityLevel;
+        option.id = priorityLevel;
         priorityInput.appendChild(option);
     })
     if(isUpdateTask) priorityInput.value = task.priority;
@@ -464,7 +464,7 @@ function _addNewTask(){
 
     new ToDo(task);
 
-    const taskBelongsToCurrentProject = document.querySelector(`.${task.project.toLowerCase().replaceAll(" ", "-")}-page`);
+    const taskBelongsToCurrentProject = document.querySelector(`.${task.project.replaceAll(" ", "-")}-page`);
     if(taskBelongsToCurrentProject){reloadTasks(task.project)};
 
     _closeModal();
