@@ -315,7 +315,7 @@ function _appendTaskModal({mode, task, project}){
     
     const priorityInput = document.createElement("select");
     priorityInput.id = "priority";
-    const PRIORITY_LEVELS = ["Low", "Medium", "High"];
+    const PRIORITY_LEVELS = ["low", "medium", "high"];
     PRIORITY_LEVELS.forEach(priorityLevel => {
         const option = document.createElement("option");
         option.innerText = priorityLevel;
@@ -392,18 +392,27 @@ function _validateAndAddProject(){
     const currentProjects = getProjectNames();
     const nameInput = document.querySelector(".project-modal input#name");
     const nameNotInProjects = !currentProjects.includes(nameInput.value);
-    if (nameNotInProjects){
+    if (nameNotInProjects && _isValid(nameInput)){
         _addProject(nameInput.value);
         _closeModal();
         return;
     }
+
+    const invalidText = (!_isValid(nameInput)) ? "Invalid name!" : "This project already exists!";
+    
     if(!nameInput.classList.contains("invalid")){
         nameInput.classList.add("invalid");
         const invalidMessage = document.createElement("p");
         invalidMessage.classList.add("invalid-message");
-        invalidMessage.innerText = "This project already exists!";
+        invalidMessage.innerText = invalidText;
         nameInput.parentElement.appendChild(invalidMessage);
     }
+
+    const invalidMessageOnScreen = document.querySelector(".invalid-message");
+    if(invalidMessageOnScreen.innerText != invalidText){
+        invalidMessageOnScreen.innerText = invalidText;
+    }
+
 }
 
 function _addProject(projectName){

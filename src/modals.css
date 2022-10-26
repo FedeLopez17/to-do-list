@@ -24,11 +24,14 @@
 
 .task-modal .modal-body, .project-modal, .modal-body{
     flex: 1;
+}
+
+.task-modal .modal-body{
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
 
-.task-modal .modal-body > [class*="wrapper"], .project-modal .modal-body > [class*="wrapper"]{
+.task-modal .modal-body > [class*="wrapper"]{
     display: flex;
     flex-direction: column;
 }
