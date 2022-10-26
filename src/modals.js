@@ -268,9 +268,6 @@ function _appendTaskModal({mode, task, project}){
     const modalBody = document.createElement("section");
     modalBody.classList.add("modal-body");
     
-    const firstHalf = document.createElement("section");
-    firstHalf.classList.add("first-half");
-    
     const titleWrapper = document.createElement("section");
     titleWrapper.classList.add("title-wrapper");
     
@@ -287,7 +284,7 @@ function _appendTaskModal({mode, task, project}){
     if(isUpdateTask) titleInput.value = task.title;
     titleWrapper.appendChild(titleInput);
     
-    firstHalf.appendChild(titleWrapper);
+    modalBody.appendChild(titleWrapper);
     
     const descriptionWrapper = document.createElement("section");
     descriptionWrapper.classList.add("description-wrapper");
@@ -304,12 +301,7 @@ function _appendTaskModal({mode, task, project}){
     if(isUpdateTask) descriptionInput.value = task.description;
     descriptionWrapper.appendChild(descriptionInput);
     
-    firstHalf.appendChild(descriptionWrapper);
-    
-    modalBody.appendChild(firstHalf);
-    
-    const secondHalf = document.createElement("section");
-    secondHalf.classList.add("second-half");
+    modalBody.appendChild(descriptionWrapper);
     
     // DUE DATE
     
@@ -334,7 +326,7 @@ function _appendTaskModal({mode, task, project}){
     if(isUpdateTask) priorityInput.value = task.priority;
     priorityWrapper.appendChild(priorityInput);
     
-    secondHalf.appendChild(priorityWrapper);
+    modalBody.appendChild(priorityWrapper);
     
     const projectWrapper = document.createElement("section");
     projectWrapper.classList.add("project-wrapper");
@@ -357,9 +349,7 @@ function _appendTaskModal({mode, task, project}){
     if(isNewFromProject) projectInput.value = project;
     projectWrapper.appendChild(projectInput);
     
-    secondHalf.appendChild(projectWrapper);
-    
-    modalBody.appendChild(secondHalf);
+    modalBody.appendChild(projectWrapper);
     
     taskModal.appendChild(modalBody);
 
