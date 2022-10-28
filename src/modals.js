@@ -36,6 +36,7 @@ export function appendNewProjectModal(){
     const nameInput = document.createElement("input");
     nameInput.type = "text"
     nameInput.id = "name";
+    nameInput.setAttribute("data-modal-name", "name");
     nameInput.maxLength = 30;
     nameWrapper.appendChild(nameInput);
     modalBody.appendChild(nameWrapper);
@@ -95,22 +96,28 @@ export function appendViewTaskModal(task){
     const descriptionContainer = document.createElement("section");
     descriptionContainer.classList.add("description-container");
     const description = document.createElement("p");
-    description.innerHTML =`<span>Description: </span> ${task.description}`;
+    description.innerHTML = `<span>Description: </span> ${task.description}`;
     descriptionContainer.appendChild(description);
     modalBody.appendChild(descriptionContainer);
+
+    const dueDateContainer = document.createElement("section");
+    dueDateContainer.classList.add("due-date-container");
+    const dueDate = document.createElement("p");
+    dueDate.innerHTML = `<span>Due date: </span> ${new Date(task.dueDate)}`;
+    descriptionContainer.appendChild(dueDate);
+    modalBody.appendChild(dueDateContainer);
 
     const priorityContainer = document.createElement("section");
     priorityContainer.classList.add("priority-container");
     const priority = document.createElement("p");
-    priority.innerHTML =`<span>Priority: </span> ${task.priority}`;
+    priority.innerHTML = `<span>Priority: </span> ${task.priority}`;
     priorityContainer.appendChild(priority);
     modalBody.appendChild(priorityContainer);
-
 
     const projectContainer = document.createElement("section");
     projectContainer.classList.add("project-container");
     const project = document.createElement("p");
-    project.innerHTML =`<span>Project: </span> ${task.project}`;
+    project.innerHTML = `<span>Project: </span> ${task.project}`;
     projectContainer.appendChild(project);
     modalBody.appendChild(projectContainer);
 
@@ -192,6 +199,7 @@ export function appendMoveTaskModal(task){
     
     const projectInput = document.createElement("select");
     projectInput.id = "project";
+    projectInput.setAttribute("data-modal-name", "project");
     const projects = getProjectNames();
     projects.forEach(project => {
         const option = document.createElement("option");
@@ -279,6 +287,7 @@ function _appendTaskModal({mode, task, project}){
     const titleInput = document.createElement("input");
     titleInput.type = "text"
     titleInput.id = "title";
+    titleInput.setAttribute("data-modal-name", "title");
     titleInput.maxLength = 30;
     titleInput.addEventListener("input", ()=>{_selfValidation(titleInput)});
     if(isUpdateTask) titleInput.value = task.title;
@@ -297,6 +306,7 @@ function _appendTaskModal({mode, task, project}){
     const descriptionInput = document.createElement("input");
     descriptionInput.type = "textarea";
     descriptionInput.id = "description";
+    descriptionInput.setAttribute("data-modal-name", "description");
     descriptionInput.addEventListener("input", ()=>{_selfValidation(descriptionInput)});
     if(isUpdateTask) descriptionInput.value = task.description;
     descriptionWrapper.appendChild(descriptionInput);
@@ -304,6 +314,25 @@ function _appendTaskModal({mode, task, project}){
     modalBody.appendChild(descriptionWrapper);
     
     // DUE DATE
+
+    const dueDateWrapper = document.createElement("section");
+    dueDateWrapper.classList.add("due-date-wrapper");
+
+    const dueDateLabel = document.createElement("label");
+    dueDateLabel.for = "due-date";
+    dueDateLabel.innerText = "Due date:";
+    dueDateWrapper.appendChild(dueDateLabel);
+
+    const dueDateInput = document.createElement("input");
+    dueDateInput.type = "datetime-local";
+    dueDateInput.id = "dueDate";
+    dueDateInput.setAttribute("data-modal-name", "due date");
+    dueDateInput.addEventListener("input", ()=>{_selfValidation(dueDateInput)});
+    if(isUpdateTask) dueDateInput.value = task.dueDate;
+    dueDateWrapper.appendChild(dueDateInput);
+
+    modalBody.appendChild(dueDateWrapper);
+
     
     const priorityWrapper = document.createElement("section");
     priorityWrapper.classList.add("priority-wrapper");
@@ -315,6 +344,7 @@ function _appendTaskModal({mode, task, project}){
     
     const priorityInput = document.createElement("select");
     priorityInput.id = "priority";
+    priorityInput.setAttribute("data-modal-name", "priority");
     const PRIORITY_LEVELS = ["low", "medium", "high"];
     PRIORITY_LEVELS.forEach(priorityLevel => {
         const option = document.createElement("option");
@@ -338,6 +368,7 @@ function _appendTaskModal({mode, task, project}){
     
     const projectInput = document.createElement("select");
     projectInput.id = "project";
+    projectInput.setAttribute("data-modal-name", "description");
     const projects = getProjectNames();
     projects.forEach(project => {
         const option = document.createElement("option");
@@ -485,6 +516,7 @@ function _updateTask(task){
     for(const input of inputs){
         task.update(input.id, input.value);
     }
+
     reloadTasks(task.project);
 
     _closeModal();
@@ -517,7 +549,7 @@ function _validateInputs(){
         }
         else{
             input.classList.add("invalid");
-            _displayWarningAfterInput(input, `Invalid task ${input.id}`);
+            _displayWarningAfterInput(input, `Invalid task ${input.getAttribute("data-modal-name")}`);
             if(allInputsAreValid) allInputsAreValid = false;
         }
     }

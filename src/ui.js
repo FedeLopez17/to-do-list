@@ -1,6 +1,6 @@
 import "./style.css";
 import { appendDeleteTaskModal, appendMoveTaskModal, appendNewProjectModal, appendNewTaskModal, appendNewTaskModalFromProject, appendUpdateTaskModal, appendViewTaskModal } from "./modals";
-import { getProjectNames, getProjectTasks } from "./projects";
+import { getProjectNames, getProjectTasks, getTodaysTasks, getThisWeeksTasks } from "./projects";
 
 export default function buildUserInterface(){
     const container = document.querySelector("#content");
@@ -54,6 +54,22 @@ function _appendAside(container){
     inbox.addEventListener("click", ()=>{_displayTasks("Inbox")});
     aside.appendChild(inbox);
 
+    const today = document.createElement("section");
+    today.classList.add("today");
+    const todayTitle = document.createElement("span");
+    todayTitle.innerText = "Today";
+    today.appendChild(todayTitle);
+    today.addEventListener("click", ()=>{_displayTasks("Today")});
+    aside.appendChild(today);
+
+    const thisWeek = document.createElement("section");
+    thisWeek.classList.add("this-week");
+    const thisWeekTitle = document.createElement("span");
+    thisWeekTitle.innerText = "This week";
+    thisWeek.appendChild(thisWeekTitle);
+    thisWeek.addEventListener("click", ()=>{_displayTasks("This week")});
+    aside.appendChild(thisWeek);
+
     _appendProjects(aside);
 
     container.appendChild(aside);
@@ -80,7 +96,7 @@ function _appendProjects(container){
     projectList.appendChild(projects);
 
     for(const projectName of getProjectNames()){
-        const PROJECTS_TO_IGNORE = ["Inbox"];
+        const PROJECTS_TO_IGNORE = ["Inbox", "Today", "This week"];
         if(PROJECTS_TO_IGNORE.includes(projectName)) continue;
 
         const project = document.createElement("section");
@@ -121,6 +137,9 @@ function _displayTasks(project){
     const tasksAlreadyOnScreen = document.querySelector(`.${formattedProjectName}`);
     if(tasksAlreadyOnScreen) return;
 
+    const isTodaysTasks = (project == "Today");
+    const isThisWeeksTasks = (project == "This week");
+
     const projectPage = document.createElement("section");
     projectPage.classList.add(formattedProjectName, "project");
 
@@ -135,7 +154,7 @@ function _displayTasks(project){
     const projectPageTasks = document.createElement("section");
     projectPageTasks.classList.add("project-tasks");
 
-    const tasks = getProjectTasks(project);
+    const tasks = (isTodaysTasks) ? getTodaysTasks() : (isThisWeeksTasks) ? getThisWeeksTasks() : getProjectTasks(project);
     for (const taskKey in tasks){
         const task = tasks[taskKey];
         //This is used to link the details of a task with the task.
@@ -216,6 +235,10 @@ function _displayTasks(project){
         detailsStatus.innerHTML = `<span>Status:</span> ${(task.status) ? "Done" : "Pending"}`;
         details.appendChild(detailsStatus);
 
+        const detailsDueDate = document.createElement("p");
+        detailsDueDate.innerHTML = `<span>Due date:</span> ${new Date(task.dueDate)}`;
+        details.appendChild(detailsDueDate);
+
         const detailsProject = document.createElement("p");
         detailsProject.innerHTML = `<span>Project:</span> ${task.project}`;
         details.appendChild(detailsProject);
@@ -223,6 +246,12 @@ function _displayTasks(project){
         projectPageTasks.appendChild(details);
     }
     projectPage.appendChild(projectPageTasks);
+
+    const main = document.querySelector("main");
+    _clearPreviousPage(main);
+    main.appendChild(projectPage);
+
+    if(isTodaysTasks || isThisWeeksTasks) return;
 
     const addTaskButton = document.createElement("section");
     addTaskButton.id = "add-task-button";
@@ -234,10 +263,6 @@ function _displayTasks(project){
     text.innerText = "Add Task";
     addTaskButton.appendChild(text);
     projectPage.appendChild(addTaskButton);
-
-    const main = document.querySelector("main");
-    _clearPreviousPage(main);
-    main.appendChild(projectPage);
 }
 
 function _toggleTaskStatus(task, todo){
@@ -256,8 +281,11 @@ function _toggleTaskPriority(task){
 }
 
 export function reloadTasks(project){
+    const isTodayProject = document.querySelector("section.Today-page.project");
+    const isThisWeekProject = document.querySelector("section.This-week-page.project");
+    const projectToReload = (isTodayProject) ? "Today" : (isThisWeekProject) ? "This week" : project;
     document.querySelector("section.project").remove();
-    _displayTasks(project);
+    _displayTasks(projectToReload);
 }
 
 export function reloadProjects(){

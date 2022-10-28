@@ -1,11 +1,12 @@
 import { addTaskToProject, deleteTaskFromProject } from "./projects";
 
 export default class ToDo{
-    constructor({title, description = "", priority, project}){ // dueDate
+    constructor({title, description = "", priority, dueDate, project}){
         this.title = title;
         this.description = description;
         this.priority = priority;
         this.status = false;
+        this.dueDate = dueDate;
         this.project = project;
         addTaskToProject(this, project);
     }
