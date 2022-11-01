@@ -113,3 +113,7 @@ main .project{
     opacity: 0.5;
     text-decoration: line-through;
 }
+
+.project.current{
+    border: solid 1px black;
+}

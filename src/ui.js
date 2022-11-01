@@ -47,26 +47,29 @@ function _appendAside(container){
     aside.classList.add("active");
 
     const inbox = document.createElement("section");
-    inbox.classList.add("inbox");
+    inbox.classList.add("inbox", "project");
     const inboxTitle = document.createElement("span");
     inboxTitle.innerText = "Inbox";
     inbox.appendChild(inboxTitle);
+    inbox.addEventListener("click", ()=>{_toggleCurrentProject(inbox)});
     inbox.addEventListener("click", ()=>{_displayTasks("Inbox")});
     aside.appendChild(inbox);
 
     const today = document.createElement("section");
-    today.classList.add("today");
+    today.classList.add("today", "project");
     const todayTitle = document.createElement("span");
     todayTitle.innerText = "Today";
     today.appendChild(todayTitle);
+    today.addEventListener("click", ()=>{_toggleCurrentProject(today)});
     today.addEventListener("click", ()=>{_displayTasks("Today")});
     aside.appendChild(today);
 
     const thisWeek = document.createElement("section");
-    thisWeek.classList.add("this-week");
+    thisWeek.classList.add("this-week", "project");
     const thisWeekTitle = document.createElement("span");
     thisWeekTitle.innerText = "This week";
     thisWeek.appendChild(thisWeekTitle);
+    thisWeek.addEventListener("click", ()=>{_toggleCurrentProject(thisWeek)});
     thisWeek.addEventListener("click", ()=>{_displayTasks("This week")});
     aside.appendChild(thisWeek);
 
@@ -76,6 +79,13 @@ function _appendAside(container){
 }
 // Inbox loads as the default project.
 window.addEventListener("load", ()=>{_displayTasks("Inbox")});
+
+function _toggleCurrentProject(project){
+    const currentProject = document.querySelector(".project.current");
+    if (currentProject === project) return;
+    if(currentProject) currentProject.classList.toggle("current");
+    project.classList.toggle("current");
+}
 
 function _appendProjects(container){
     const projectList = document.createElement("section");
@@ -101,6 +111,8 @@ function _appendProjects(container){
 
         const project = document.createElement("section");
         project.innerText = projectName;
+        project.classList.add("project");
+        project.addEventListener("click", ()=>{_toggleCurrentProject(project)});
         project.addEventListener("click", ()=>{_displayTasks(projectName)});
         projects.appendChild(project);
     }
