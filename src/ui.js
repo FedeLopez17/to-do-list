@@ -1,5 +1,5 @@
 import "./style.css";
-import { appendDeleteTaskModal, appendMoveTaskModal, appendNewProjectModal, appendNewTaskModal, appendNewTaskModalFromProject, appendUpdateTaskModal, appendViewTaskModal } from "./modals";
+import { appendDeleteProjectModal, appendDeleteTaskModal, appendMoveTaskModal, appendNewProjectModal, appendNewTaskModal, appendNewTaskModalFromProject, appendUpdateTaskModal, appendViewTaskModal } from "./modals";
 import { getProjectNames, getProjectTasks, getTodaysTasks, getThisWeeksTasks } from "./projects";
 
 export default function buildUserInterface(){
@@ -115,6 +115,13 @@ function _appendProjects(container){
         project.addEventListener("click", ()=>{_toggleCurrentProject(project)});
         project.addEventListener("click", ()=>{_displayTasks(projectName)});
         projects.appendChild(project);
+
+        const deleteProjectButton = document.createElement("i");
+        deleteProjectButton.id = "delete-project-button";
+        deleteProjectButton.classList.add("fa-solid", "fa-trash-can");
+        deleteProjectButton.title = "Delete";
+        deleteProjectButton.addEventListener("click", ()=>{appendDeleteProjectModal(projectName)});
+        project.appendChild(deleteProjectButton);
     }
 
     const newProjectButton = document.createElement("section");
@@ -165,6 +172,8 @@ function _displayTasks(project){
 
     const projectPageTasks = document.createElement("section");
     projectPageTasks.classList.add("project-tasks");
+    
+    console.log(project);
 
     const tasks = (isTodaysTasks) ? getTodaysTasks() : (isThisWeeksTasks) ? getThisWeeksTasks() : getProjectTasks(project);
     for (const taskKey in tasks){
@@ -293,10 +302,10 @@ function _toggleTaskPriority(task){
 }
 
 export function reloadTasks(project){
-    const isTodayProject = document.querySelector("section.Today-page.project");
-    const isThisWeekProject = document.querySelector("section.This-week-page.project");
+    const isTodayProject = document.querySelector("Today-page.project");
+    const isThisWeekProject = document.querySelector("This-week-page.project");
     const projectToReload = (isTodayProject) ? "Today" : (isThisWeekProject) ? "This week" : project;
-    document.querySelector("section.project").remove();
+    document.querySelector("main section.project").remove();
     _displayTasks(projectToReload);
 }
 

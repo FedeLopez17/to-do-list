@@ -1,13 +1,14 @@
 import isToday from "date-fns/isToday";
 import isThisWeek from "date-fns/isThisWeek";
 
-const _PROJECTS = {};
+const _PROJECTS = {}; //Maybe this should be in the prototype or static part of the class?
 
 export default class Project{
     constructor(name){
         this.name = name;
         this.tasks = {};
         _PROJECTS[this.name] = this;
+        console.log(_PROJECTS);
     }
 
     addTask(task){
@@ -21,7 +22,6 @@ export default class Project{
     getTasks(){
         return this.tasks;
     }
-
 }
 
 export function getProjectNames(){
@@ -42,6 +42,12 @@ export function getProjectTasks(project){
 
 export function deleteTaskFromProject(task){
     _PROJECTS[task.project].deleteTask(task);
+}
+
+export function deleteProject(project){
+    console.log(_PROJECTS);
+    delete _PROJECTS[project];
+    console.log(_PROJECTS);
 }
 
 export function getTodaysTasks(){

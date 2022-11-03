@@ -1,6 +1,6 @@
 import "./modals.css";
 import ToDo from "./tasks.js";
-import Project, { getProjectNames, getProjectTasks } from "./projects";
+import Project, { deleteProject, getProjectNames, getProjectTasks } from "./projects";
 import { reloadProjects, reloadTasks } from "./ui";
 
 export function appendNewProjectModal(){
@@ -128,17 +128,44 @@ export function appendViewTaskModal(task){
 }
 
 export function appendDeleteTaskModal(task){
+    console.log("task:");
+    console.log(task);
+    _appendDeleteModal({mode: "task", task});
+}
+
+export function appendDeleteProjectModal(project){
+    console.log("project:");
+    console.log(project);
+    _appendDeleteModal({mode: "project", project});
+}
+
+function _appendDeleteModal({mode, task, project}){
+
+    const MODE_VALUES = {
+        task: {
+            modalClass: "task-modal",
+            warningText: "Are you sure you want to delete this task?",
+            deleteFunction: ()=>{_deleteTask(task)}
+        }, 
+        project: {
+            modalClass: "project-modal",
+            warningText: "Are you sure you want to delete this project?",
+            deleteFunction: ()=>{_deleteProject(project)}
+        }
+    }
+
+
     const container = document.querySelector("#content");
     
-    const modalAlreadyOnScreen = document.querySelector(".task-modal");
+    const modalAlreadyOnScreen = document.querySelector(`.${MODE_VALUES[mode].modalClass}`);
     if(modalAlreadyOnScreen) return;
 
     const modalBackground = document.createElement("section");
     modalBackground.classList.add("modal-background");
     modalBackground.addEventListener("click", _closeModal);
 
-    const deleteTaskModal = document.createElement("section");
-    deleteTaskModal.classList.add("delete", "task-modal");
+    const deleteModal = document.createElement("section");
+    deleteModal.classList.add("delete", MODE_VALUES[mode].modalClass);
 
     const modalBody = document.createElement("section");
     modalBody.classList.add("modal-body");
@@ -146,9 +173,9 @@ export function appendDeleteTaskModal(task){
     icon.classList.add("fa-solid", "fa-circle-exclamation");
     modalBody.appendChild(icon);
     const warning = document.createElement("p");
-    warning.innerText = "Are you sure you want to delete this task?";
+    warning.innerText = MODE_VALUES[mode].warningText;
     modalBody.appendChild(warning);
-    deleteTaskModal.appendChild(modalBody);
+    deleteModal.appendChild(modalBody);
 
     const modalFooter = document.createElement("footer");
     const cancelButton = document.createElement("button");
@@ -159,11 +186,11 @@ export function appendDeleteTaskModal(task){
     const deleteButton = document.createElement("button");
     deleteButton.classList.add("ok-button");
     deleteButton.innerText = "OK";
-    deleteButton.addEventListener("click", ()=>{_deleteTask(task)});
+    deleteButton.addEventListener("click", MODE_VALUES[mode].deleteFunction);
     modalFooter.appendChild(deleteButton);
-    deleteTaskModal.appendChild(modalFooter);
+    deleteModal.appendChild(modalFooter);
 
-    container.appendChild(deleteTaskModal);
+    container.appendChild(deleteModal);
 }
 
 export function appendMoveTaskModal(task){
@@ -533,6 +560,15 @@ function _moveTask(task){
 function _deleteTask(task){
     task.deleteFromProject();
     reloadTasks(task.project);
+    _closeModal();
+}
+
+function _deleteProject(project){
+    deleteProject(project);
+    //recargar project list
+    reloadProjects();
+    const deletedProjectOnScreen = document.querySelector(`.${project.replaceAll(" ", "-")}-page.project`);
+    if(deletedProjectOnScreen) reloadTasks("Today"); // Inbox
     _closeModal();
 }
 
