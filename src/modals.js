@@ -128,14 +128,10 @@ export function appendViewTaskModal(task){
 }
 
 export function appendDeleteTaskModal(task){
-    console.log("task:");
-    console.log(task);
     _appendDeleteModal({mode: "task", task});
 }
 
 export function appendDeleteProjectModal(project){
-    console.log("project:");
-    console.log(project);
     _appendDeleteModal({mode: "project", project});
 }
 
@@ -227,14 +223,17 @@ export function appendMoveTaskModal(task){
     const projectInput = document.createElement("select");
     projectInput.id = "project";
     projectInput.setAttribute("data-modal-name", "project");
-    const projects = getProjectNames();
-    projects.forEach(project => {
+
+    const PROJECTS_TO_IGNORE = ["Today", "This week"];
+    const projectNames = getProjectNames();
+    for(const projectName of projectNames){
+        if(PROJECTS_TO_IGNORE.includes(projectName)) continue;
         const option = document.createElement("option");
-        option.innerText = project;
-        option.value = project;
-        if(project === task.project) option.selected = true;
+        option.innerText = projectName;
+        option.value = projectName;
+        if(projectName === task.project) option.selected = true;
         projectInput.appendChild(option);
-    })
+    }
 
     projectWrapper.appendChild(projectInput);
     modalBody.appendChild(projectWrapper);
@@ -339,8 +338,6 @@ function _appendTaskModal({mode, task, project}){
     descriptionWrapper.appendChild(descriptionInput);
     
     modalBody.appendChild(descriptionWrapper);
-    
-    // DUE DATE
 
     const dueDateWrapper = document.createElement("section");
     dueDateWrapper.classList.add("due-date-wrapper");
@@ -396,13 +393,15 @@ function _appendTaskModal({mode, task, project}){
     const projectInput = document.createElement("select");
     projectInput.id = "project";
     projectInput.setAttribute("data-modal-name", "description");
-    const projects = getProjectNames();
-    projects.forEach(project => {
+    const PROJECTS_TO_IGNORE = ["Today", "This week"];
+    const projectNames = getProjectNames();
+    for(const projectName of projectNames){
+        if(PROJECTS_TO_IGNORE.includes(projectName)) continue;
         const option = document.createElement("option");
-        option.innerText = project;
-        option.value = project;
+        option.innerText = projectName;
+        option.value = projectName;
         projectInput.appendChild(option);
-    })
+    }
     if(isUpdateTask) projectInput.value = task.project;
     if(isNewFromProject) projectInput.value = project;
     projectWrapper.appendChild(projectInput);
@@ -539,6 +538,12 @@ function _addNewTask(){
 }
 
 function _updateTask(task){
+
+    console.log(task);
+     
+    const selectedProject = document.querySelector(".task-modal select#project").value;
+    if(task.project !== selectedProject) _moveTask(task);
+
     const inputs = document.querySelectorAll(".update.task-modal input, .update.task-modal select");
     for(const input of inputs){
         task.update(input.id, input.value);
@@ -550,8 +555,11 @@ function _updateTask(task){
 }
 
 function _moveTask(task){
+
+    console.log(task);
+
     const previousProject = task.project;
-    const selectedProject = document.querySelector(".task-modal select").value;
+    const selectedProject = document.querySelector(".task-modal select#project").value;
     task.moveTo(selectedProject);
     reloadTasks(previousProject);
     _closeModal();
@@ -565,10 +573,9 @@ function _deleteTask(task){
 
 function _deleteProject(project){
     deleteProject(project);
-    //recargar project list
     reloadProjects();
     const deletedProjectOnScreen = document.querySelector(`.${project.replaceAll(" ", "-")}-page.project`);
-    if(deletedProjectOnScreen) reloadTasks("Today"); // Inbox
+    if(deletedProjectOnScreen) reloadTasks("Inbox");
     _closeModal();
 }
 

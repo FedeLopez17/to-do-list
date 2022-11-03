@@ -8,7 +8,6 @@ export default class Project{
         this.name = name;
         this.tasks = {};
         _PROJECTS[this.name] = this;
-        console.log(_PROJECTS);
     }
 
     addTask(task){
@@ -33,6 +32,8 @@ export function getProjectNames(){
 }
 
 export function addTaskToProject(task, project){
+    console.log(task);
+    console.log(project);
     _PROJECTS[project].addTask(task);
 }
 
@@ -45,9 +46,7 @@ export function deleteTaskFromProject(task){
 }
 
 export function deleteProject(project){
-    console.log(_PROJECTS);
     delete _PROJECTS[project];
-    console.log(_PROJECTS);
 }
 
 export function getTodaysTasks(){
