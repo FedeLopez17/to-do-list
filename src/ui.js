@@ -1,6 +1,6 @@
 import "./style.css";
-import { appendDeleteProjectModal, appendDeleteTaskModal, appendMoveTaskModal, appendNewProjectModal, appendNewTaskModal, appendNewTaskModalFromProject, appendUpdateTaskModal, appendViewTaskModal } from "./modals";
-import { getProjectNames, getProjectTasks, getTodaysTasks, getThisWeeksTasks } from "./projects";
+import { appendDeleteProjectModal, appendDeleteTaskModal, appendMoveTaskModal, appendNewProjectModal, appendNewTaskModal, appendNewTaskModalFromProject, appendUpdateProjectModal, appendUpdateTaskModal, appendViewTaskModal } from "./modals";
+import { getProjectNames, getProjectTasks, getTodaysTasks, getThisWeeksTasks, getProjectIcon } from "./projects";
 
 export default function buildUserInterface(){
     const container = document.querySelector("#content");
@@ -48,6 +48,9 @@ function _appendAside(container){
 
     const inbox = document.createElement("section");
     inbox.classList.add("inbox", "project");
+    const inboxIcon = document.createElement("i");
+    inboxIcon.classList.add("fa-solid", getProjectIcon("Inbox").class);
+    inbox.appendChild(inboxIcon);
     const inboxTitle = document.createElement("span");
     inboxTitle.innerText = "Inbox";
     inbox.appendChild(inboxTitle);
@@ -57,6 +60,9 @@ function _appendAside(container){
 
     const today = document.createElement("section");
     today.classList.add("today", "project");
+    const todayIcon = document.createElement("i");
+    todayIcon.classList.add("fa-solid", "fa-calendar-day");
+    today.appendChild(todayIcon);
     const todayTitle = document.createElement("span");
     todayTitle.innerText = "Today";
     today.appendChild(todayTitle);
@@ -66,6 +72,9 @@ function _appendAside(container){
 
     const thisWeek = document.createElement("section");
     thisWeek.classList.add("this-week", "project");
+    const thisWeekIcon = document.createElement("i");
+    thisWeekIcon.classList.add("fa-solid", "fa-calendar-week");
+    thisWeek.appendChild(thisWeekIcon);
     const thisWeekTitle = document.createElement("span");
     thisWeekTitle.innerText = "This week";
     thisWeek.appendChild(thisWeekTitle);
@@ -106,7 +115,7 @@ function _appendProjects(container){
     projectList.appendChild(projects);
 
     for(const projectName of getProjectNames()){
-        const PROJECTS_TO_IGNORE = ["Inbox", "Today", "This week"];
+        const PROJECTS_TO_IGNORE = ["Inbox"];
         if(PROJECTS_TO_IGNORE.includes(projectName)) continue;
 
         const projectContainer = document.createElement("section");
@@ -114,11 +123,26 @@ function _appendProjects(container){
         projects.appendChild(projectContainer);
 
         const project = document.createElement("section");
-        project.innerText = projectName;
         project.classList.add("project");
         project.addEventListener("click", ()=>{_toggleCurrentProject(project)});
         project.addEventListener("click", ()=>{_displayTasks(projectName)});
+
+        const projectIcon = document.createElement("i");
+        projectIcon.classList.add("fa-solid", getProjectIcon(projectName).class);
+        project.appendChild(projectIcon);
+
+        const projectTitle = document.createElement("span");
+        projectTitle.innerText = projectName;
+        project.appendChild(projectTitle);
+
         projectContainer.appendChild(project);
+
+        const editProjectButton = document.createElement("i");
+        editProjectButton.id = "edit-project-button";
+        editProjectButton.classList.add("fa-solid", "fa-pen-to-square");
+        editProjectButton.title = "Edit";
+        editProjectButton.addEventListener("click", ()=>{appendUpdateProjectModal(projectName)});
+        projectContainer.appendChild(editProjectButton);
 
         const deleteProjectButton = document.createElement("i");
         deleteProjectButton.id = "delete-project-button";

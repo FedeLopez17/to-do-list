@@ -16,7 +16,6 @@ export default class ToDo{
     }
 
     moveTo(newProject){
-        console.log(this);
         deleteTaskFromProject(this);
         this.project = newProject;
         addTaskToProject(this, newProject);

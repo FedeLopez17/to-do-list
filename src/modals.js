@@ -1,9 +1,39 @@
 import "./modals.css";
 import ToDo from "./tasks.js";
-import Project, { deleteProject, getProjectNames, getProjectTasks } from "./projects";
+import Project, { deleteProject, getProject, getProjectNames, getProjectTasks } from "./projects";
 import { reloadProjects, reloadTasks } from "./ui";
 
+export function appendUpdateProjectModal(projectName){
+    const project = getProject(projectName);
+    console.log(project);
+    _appendProjectModal({mode:"update", project});
+}
+
 export function appendNewProjectModal(){
+    _appendProjectModal({mode: "new"});
+}
+
+function _appendProjectModal({mode, project}){
+
+    const isUpdateMode = (mode === "update");
+
+    const MODE_VALUES = {
+        new: {
+            modalClass: "new",
+            modalTitle: "New Project",
+            buttonId: "add-project",
+            buttonText: "Add Project",
+            buttonFunction: _validateAndAddProject
+        }, 
+        update: {
+            modalClass: "update",
+            modalTitle: "Update Project",
+            buttonId: "update-project",
+            buttonText: "Update Project",
+            buttonFunction: ()=>{_validateAndUpdateProject(project)}
+        }
+    }
+
     const container = document.querySelector("#content");
     
     const modalAlreadyOnScreen = document.querySelector(".project-modal");
@@ -14,10 +44,10 @@ export function appendNewProjectModal(){
     modalBackground.addEventListener("click", _closeModal);
 
     const projectModal = document.createElement("section");
-    projectModal.classList.add("new", "project-modal");
+    projectModal.classList.add(MODE_VALUES[mode].modalClass, "project-modal");
 
     //Modal header
-    const modalHeader = _makeModalHeader("New Project");
+    const modalHeader = _makeModalHeader(MODE_VALUES[mode].modalTitle);
     projectModal.appendChild(modalHeader);
 
     //Modal body
@@ -38,8 +68,43 @@ export function appendNewProjectModal(){
     nameInput.id = "name";
     nameInput.setAttribute("data-modal-name", "name");
     nameInput.maxLength = 30;
+    nameInput.autocomplete = "off";
+    if(isUpdateMode) nameInput.value = project.name;
     nameWrapper.appendChild(nameInput);
     modalBody.appendChild(nameWrapper);
+
+    const iconWrapper = document.createElement("section");
+    iconWrapper.classList.add("icon-wrapper");
+    modalBody.appendChild(iconWrapper);
+
+    const iconLabel = document.createElement("span");
+    iconLabel.innerText = "Icon:";
+    iconWrapper.appendChild(iconLabel);
+
+    const iconContainer = document.createElement("section");
+    iconContainer.classList.add("icon-container");
+    iconWrapper.appendChild(iconContainer);
+
+    const FA_ICONS = [{id: "project", class: "fa-list-check", isDefault: true}, {id: "finance", class: "fa-sack-dollar"}, {id: "education", class: "fa-book"}, {id: "repairs", class: "fa-screwdriver-wrench"}];
+
+    FA_ICONS.forEach(fontAwesomeIcon => {
+        const label = document.createElement("label");
+        label.setAttribute("for", fontAwesomeIcon.id);
+        iconContainer.appendChild(label);
+        const icon = document.createElement("i");
+        icon.classList.add("fa-solid", fontAwesomeIcon.class);
+        label.appendChild(icon);
+        iconContainer.appendChild(label);
+
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = "icon";
+        input.id = fontAwesomeIcon.id;
+        input.classList.add("hidden");
+        if(fontAwesomeIcon.isDefault) input.checked = true;
+        if(isUpdateMode && input.id === project.icon.name) input.checked = true;
+        iconContainer.appendChild(input);
+    })
 
     projectModal.appendChild(modalBody);
 
@@ -49,9 +114,9 @@ export function appendNewProjectModal(){
    
    const addProjectButton = document.createElement("button");
    addProjectButton.classList.add("project-modal-button");
-   addProjectButton.id = "add-project";
-   addProjectButton.innerText = "Add Project";
-   addProjectButton.addEventListener("click", _validateAndAddProject);
+   addProjectButton.id = MODE_VALUES[mode].buttonId;
+   addProjectButton.innerText = MODE_VALUES[mode].buttonText;
+   addProjectButton.addEventListener("click", MODE_VALUES[mode].buttonFunction);
    modalFooter.appendChild(addProjectButton);
 
    projectModal.appendChild(modalFooter);
@@ -224,10 +289,8 @@ export function appendMoveTaskModal(task){
     projectInput.id = "project";
     projectInput.setAttribute("data-modal-name", "project");
 
-    const PROJECTS_TO_IGNORE = ["Today", "This week"];
     const projectNames = getProjectNames();
     for(const projectName of projectNames){
-        if(PROJECTS_TO_IGNORE.includes(projectName)) continue;
         const option = document.createElement("option");
         option.innerText = projectName;
         option.value = projectName;
@@ -393,10 +456,8 @@ function _appendTaskModal({mode, task, project}){
     const projectInput = document.createElement("select");
     projectInput.id = "project";
     projectInput.setAttribute("data-modal-name", "description");
-    const PROJECTS_TO_IGNORE = ["Today", "This week"];
     const projectNames = getProjectNames();
     for(const projectName of projectNames){
-        if(PROJECTS_TO_IGNORE.includes(projectName)) continue;
         const option = document.createElement("option");
         option.innerText = projectName;
         option.value = projectName;
@@ -450,7 +511,8 @@ function _validateAndAddProject(){
     const nameInput = document.querySelector(".project-modal input#name");
     const nameNotInProjects = !currentProjects.includes(nameInput.value);
     if (nameNotInProjects && _isValid(nameInput)){
-        _addProject(nameInput.value);
+        const chosenIcon = document.querySelector(".project-modal input[type='radio']:checked");
+        _addProject(nameInput.value, chosenIcon.id);
         _closeModal();
         return;
     }
@@ -472,9 +534,53 @@ function _validateAndAddProject(){
 
 }
 
-function _addProject(projectName){
-    new Project(projectName);
+function _addProject(projectName, projectIcon){
+    const project = new Project(projectName, projectIcon);
     reloadProjects();
+    return project;
+}
+
+function _validateAndUpdateProject(outdatedProject){
+    console.log(outdatedProject);
+    const nameInput = document.querySelector(".project-modal input#name");
+    if (_isValid(nameInput)){
+        const updatedName = nameInput.value;
+        const updatedIcon = document.querySelector(".project-modal input[type='radio']:checked").id;
+        _updateProject(updatedName, updatedIcon, outdatedProject);
+        _closeModal();
+        return;
+    }
+    
+    if(!nameInput.classList.contains("invalid")){
+        nameInput.classList.add("invalid");
+        const invalidMessage = document.createElement("p");
+        invalidMessage.classList.add("invalid-message");
+        invalidMessage.innerText = "Invalid Name!";
+        nameInput.parentElement.appendChild(invalidMessage);
+    }
+}
+
+function _updateProject(updatedName, updatedIcon, outdatedProject){
+    const isDifferentName = (updatedName !== outdatedProject.name);
+
+    if(isDifferentName){
+        const updatedProject = _addProject(updatedName, updatedIcon);
+        _migrateTasks(outdatedProject, updatedProject);
+        deleteProject(outdatedProject.name);
+        const projectTasksOnScreen = document.querySelector(`.${outdatedProject.name.replaceAll(" ", "-")}-page.project`);
+        if(projectTasksOnScreen) reloadTasks(updatedName);
+    }
+    else{
+        outdatedProject.setIcon(updatedIcon);
+    }
+
+    reloadProjects();
+}
+
+function _migrateTasks(originProject, recipientProject){
+    for(const task in originProject.tasks){
+        originProject.tasks[task].moveTo(recipientProject.name);
+    }
 }
 
 function _validateAndAddTask(){
@@ -538,9 +644,6 @@ function _addNewTask(){
 }
 
 function _updateTask(task){
-
-    console.log(task);
-     
     const selectedProject = document.querySelector(".task-modal select#project").value;
     if(task.project !== selectedProject) _moveTask(task);
 
@@ -550,14 +653,10 @@ function _updateTask(task){
     }
 
     reloadTasks(task.project);
-
     _closeModal();
 }
 
 function _moveTask(task){
-
-    console.log(task);
-
     const previousProject = task.project;
     const selectedProject = document.querySelector(".task-modal select#project").value;
     task.moveTo(selectedProject);

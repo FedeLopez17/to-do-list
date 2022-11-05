@@ -1,13 +1,37 @@
 import isToday from "date-fns/isToday";
 import isThisWeek from "date-fns/isThisWeek";
 
-const _PROJECTS = {}; //Maybe this should be in the prototype or static part of the class?
+let _PROJECTS = {}; //Maybe this should be in the prototype or static part of the class?
+
+function _sortProjects(){
+    const sortedProjects = {};
+    const unorderedProjectNames = Object.keys(_PROJECTS);
+    const orderedProjectNames = unorderedProjectNames.sort();
+    orderedProjectNames.forEach(projectName => {
+        sortedProjects[projectName] = _PROJECTS[projectName];
+    })
+    _PROJECTS = sortedProjects;
+}
+
+const _ICON_CLASSES = {inbox: "fa-inbox", project: "fa-list-check", finance: "fa-sack-dollar", education: "fa-book", repairs: "fa-screwdriver-wrench"};
 
 export default class Project{
-    constructor(name){
+    constructor(name, icon){
         this.name = name;
+        this.icon = {name: icon, class: _ICON_CLASSES[icon]};
         this.tasks = {};
         _PROJECTS[this.name] = this;
+        _sortProjects();
+        console.log(this);
+    }
+
+    getIcon(){
+        return this.icon;
+    }
+
+    setIcon(iconName){
+        this.icon.name = iconName;
+        this.icon.class = _ICON_CLASSES[iconName];
     }
 
     addTask(task){
@@ -23,6 +47,10 @@ export default class Project{
     }
 }
 
+export function getProject(projectName){
+    return _PROJECTS[projectName];
+}
+
 export function getProjectNames(){
     const projectNames = [];
     for(const project in _PROJECTS){
@@ -31,9 +59,11 @@ export function getProjectNames(){
     return projectNames;
 }
 
+export function getProjectIcon(project){
+    return _PROJECTS[project].getIcon();
+}
+
 export function addTaskToProject(task, project){
-    console.log(task);
-    console.log(project);
     _PROJECTS[project].addTask(task);
 }
 
