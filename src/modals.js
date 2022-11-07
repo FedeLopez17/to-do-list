@@ -5,7 +5,6 @@ import { reloadProjects, reloadTasks } from "./ui";
 
 export function appendUpdateProjectModal(projectName){
     const project = getProject(projectName);
-    console.log(project);
     _appendProjectModal({mode:"update", project});
 }
 
@@ -396,7 +395,6 @@ function _appendTaskModal({mode, task, project}){
     descriptionInput.type = "textarea";
     descriptionInput.id = "description";
     descriptionInput.setAttribute("data-modal-name", "description");
-    descriptionInput.addEventListener("input", ()=>{_selfValidation(descriptionInput)});
     if(isUpdateTask) descriptionInput.value = task.description;
     descriptionWrapper.appendChild(descriptionInput);
     
@@ -455,7 +453,7 @@ function _appendTaskModal({mode, task, project}){
     
     const projectInput = document.createElement("select");
     projectInput.id = "project";
-    projectInput.setAttribute("data-modal-name", "description");
+    projectInput.setAttribute("data-modal-name", "project");
     const projectNames = getProjectNames();
     for(const projectName of projectNames){
         const option = document.createElement("option");
@@ -507,12 +505,25 @@ function _makeModalHeader(title){
 }
 
 function _validateAndAddProject(){
+    _validateProjectAndCarryThrough({isAddMode: true});
+}
+
+function _validateAndUpdateProject(outdatedProject){
+    _validateProjectAndCarryThrough({isAddMode: false, outdatedProject});
+}
+
+function _validateProjectAndCarryThrough({isAddMode, outdatedProject}){
+    const isUpdateMode = !isAddMode;
     const currentProjects = getProjectNames();
     const nameInput = document.querySelector(".project-modal input#name");
     const nameNotInProjects = !currentProjects.includes(nameInput.value);
-    if (nameNotInProjects && _isValid(nameInput)){
-        const chosenIcon = document.querySelector(".project-modal input[type='radio']:checked");
-        _addProject(nameInput.value, chosenIcon.id);
+    const isSameName = outdatedProject ? (nameInput.value === outdatedProject.name) : false;
+    const addCondition = isAddMode && nameNotInProjects && _isValid(nameInput);
+    const updateCondition = isUpdateMode && _isValid(nameInput) && nameNotInProjects || isUpdateMode && isSameName;
+    if (addCondition || updateCondition){
+        const chosenName = nameInput.value;
+        const chosenIcon = document.querySelector(".project-modal input[type='radio']:checked").id;
+        isAddMode ? _addProject(chosenName, chosenIcon) : _updateProject(chosenName, chosenIcon, outdatedProject);
         _closeModal();
         return;
     }
@@ -540,38 +551,20 @@ function _addProject(projectName, projectIcon){
     return project;
 }
 
-function _validateAndUpdateProject(outdatedProject){
-    console.log(outdatedProject);
-    const nameInput = document.querySelector(".project-modal input#name");
-    if (_isValid(nameInput)){
-        const updatedName = nameInput.value;
-        const updatedIcon = document.querySelector(".project-modal input[type='radio']:checked").id;
-        _updateProject(updatedName, updatedIcon, outdatedProject);
-        _closeModal();
-        return;
-    }
-    
-    if(!nameInput.classList.contains("invalid")){
-        nameInput.classList.add("invalid");
-        const invalidMessage = document.createElement("p");
-        invalidMessage.classList.add("invalid-message");
-        invalidMessage.innerText = "Invalid Name!";
-        nameInput.parentElement.appendChild(invalidMessage);
-    }
-}
-
 function _updateProject(updatedName, updatedIcon, outdatedProject){
-    const isDifferentName = (updatedName !== outdatedProject.name);
+    const isSameName = (updatedName === outdatedProject.name);
+    const isDifferentIcon = (updatedIcon !== outdatedProject.icon.name);
+    const onlyTheIconIsDifferent = isSameName && isDifferentIcon;
 
-    if(isDifferentName){
+    if(onlyTheIconIsDifferent){
+        outdatedProject.setIcon(updatedIcon);
+    }
+    else{
         const updatedProject = _addProject(updatedName, updatedIcon);
         _migrateTasks(outdatedProject, updatedProject);
         deleteProject(outdatedProject.name);
         const projectTasksOnScreen = document.querySelector(`.${outdatedProject.name.replaceAll(" ", "-")}-page.project`);
         if(projectTasksOnScreen) reloadTasks(updatedName);
-    }
-    else{
-        outdatedProject.setIcon(updatedIcon);
     }
 
     reloadProjects();
@@ -625,10 +618,11 @@ function _validateAndUpdateTask(task){
 }
 
 function _addNewTask(){
+    const OPTIONAL_FIELDS = {description: {defaultValue: "n/a"}};
     const inputs = document.querySelectorAll(".new.task-modal input, .new.task-modal select");
     const task = {};
     for(const input of inputs){
-        task[input.id] = input.value;
+        task[input.id] = input.value || OPTIONAL_FIELDS[input.id].defaultValue;
     }
 
     // Don't allow the user to add tasks with the same name in the same project
@@ -681,7 +675,7 @@ function _deleteProject(project){
 
 function _validateInputs(){
 
-    const inputs = document.querySelectorAll(".task-modal input, .task-modal select");
+    const inputs = document.querySelectorAll(".task-modal input:not(#description), .task-modal select");
 
     let allInputsAreValid = true;
 

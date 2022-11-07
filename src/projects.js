@@ -22,7 +22,6 @@ export default class Project{
         this.tasks = {};
         _PROJECTS[this.name] = this;
         _sortProjects();
-        console.log(this);
     }
 
     getIcon(){
