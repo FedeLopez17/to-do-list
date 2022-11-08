@@ -4,34 +4,27 @@ import { getProjectNames, getProjectTasks, getTodaysTasks, getThisWeeksTasks, ge
 
 export default function buildUserInterface(){
     const container = document.querySelector("#content");
-
     _appendNavBar(container);
-
     const mainWrapper = document.createElement("section");
     mainWrapper.classList.add("wrapper");
-
     _appendAside(mainWrapper);
     _appendMainSection(mainWrapper);
-
     container.appendChild(mainWrapper);
 }
 
 
 function _appendNavBar(container){
     const navBar = document.createElement("nav");
-
     const hamburgerToggle = document.createElement("i");
     hamburgerToggle.classList.add("fa-solid", "fa-bars");
     hamburgerToggle.id = "hamburger-toggle";
     hamburgerToggle.addEventListener("click", _toggleSideMenu);
     navBar.appendChild(hamburgerToggle);
-
     const newTaskButton = document.createElement("i");
     newTaskButton.classList.add("fa-solid", "fa-plus");
     newTaskButton.id = "new-task-button";
     newTaskButton.addEventListener("click", appendNewTaskModal);
     navBar.appendChild(newTaskButton);
-
     container.appendChild(navBar);
 }
 
@@ -46,55 +39,67 @@ function _appendAside(container){
     const aside = document.createElement("aside");
     aside.classList.add("active");
 
-    const inbox = document.createElement("section");
-    inbox.classList.add("inbox", "project");
-    const inboxIcon = document.createElement("i");
-    inboxIcon.classList.add("fa-solid", getProjectIcon("Inbox").class);
-    inbox.appendChild(inboxIcon);
-    const inboxTitle = document.createElement("span");
-    inboxTitle.innerText = "Inbox";
-    inbox.appendChild(inboxTitle);
-    inbox.addEventListener("click", ()=>{_toggleCurrentProject(inbox)});
-    inbox.addEventListener("click", ()=>{_displayTasks("Inbox")});
-    aside.appendChild(inbox);
-
-    const today = document.createElement("section");
-    today.classList.add("today", "project");
-    const todayIcon = document.createElement("i");
-    todayIcon.classList.add("fa-solid", "fa-calendar-day");
-    today.appendChild(todayIcon);
-    const todayTitle = document.createElement("span");
-    todayTitle.innerText = "Today";
-    today.appendChild(todayTitle);
-    today.addEventListener("click", ()=>{_toggleCurrentProject(today)});
-    today.addEventListener("click", ()=>{_displayTasks("Today")});
-    aside.appendChild(today);
-
-    const thisWeek = document.createElement("section");
-    thisWeek.classList.add("this-week", "project");
-    const thisWeekIcon = document.createElement("i");
-    thisWeekIcon.classList.add("fa-solid", "fa-calendar-week");
-    thisWeek.appendChild(thisWeekIcon);
-    const thisWeekTitle = document.createElement("span");
-    thisWeekTitle.innerText = "This week";
-    thisWeek.appendChild(thisWeekTitle);
-    thisWeek.addEventListener("click", ()=>{_toggleCurrentProject(thisWeek)});
-    thisWeek.addEventListener("click", ()=>{_displayTasks("This week")});
-    aside.appendChild(thisWeek);
+    const ASIDE_COMPONENTS = {
+        inbox: {
+            title: "Inbox",
+            classes: ["inbox", "project"],
+            iconClasses: ["fa-solid", getProjectIcon("Inbox").class],
+            eventListeners: [
+                {event: "click", function: () => {_toggleCurrentProject(".inbox.project")}},
+                {event: "click", function: () => {_displayTasks("Inbox")}}
+            ]
+        },
+        today: {
+            title: "Today",
+            classes: ["today", "project"],
+            iconClasses: ["fa-solid", "fa-calendar-day"],
+            eventListeners: [
+                {event: "click", function: () => {_toggleCurrentProject(".today.project")}},
+                {event: "click", function: () => {_displayTasks("Today")}}
+            ]
+        },
+        thisWeek: {
+            title: "This week",
+            classes: ["this-week", "project"],
+            iconClasses: ["fa-solid", "fa-calendar-week"],
+            eventListeners: [
+                {event: "click", function: () => {_toggleCurrentProject(".this-week.project")}},
+                {event: "click", function: () => {_displayTasks("This week")}}
+            ]
+        },
+    }   
+    
+    for (let component in ASIDE_COMPONENTS){
+        component = ASIDE_COMPONENTS[component];
+        const componentSection = document.createElement("section");
+        componentSection.classList.add(...component.classes);
+        const componentIcon = document.createElement("i");
+        componentIcon.classList.add(...component.iconClasses);
+        componentSection.appendChild(componentIcon);
+        const componentTitle = document.createElement("span");
+        componentTitle.innerText = component.title;
+        componentSection.append(componentTitle);
+        component.eventListeners.forEach(eventListener => {componentSection.addEventListener(eventListener.event, eventListener.function)});
+        aside.appendChild(componentSection);
+    }
 
     _appendProjects(aside);
-
     container.appendChild(aside);
 }
 // Inbox loads as the default project.
 window.addEventListener("load", ()=>{_displayTasks("Inbox")});
 
-function _toggleCurrentProject(project){
+
+function _toggleCurrentProject(projectClass){
     const currentProject = document.querySelector(".project.current");
-    if (currentProject === project) return;
-    if(currentProject) currentProject.classList.toggle("current");
+    const project = document.querySelector(projectClass);
+    const projectIsCurrent = (project === currentProject);
+    if (projectIsCurrent) return;
+    const oldProjectSetAsCurrent = currentProject;
+    if(oldProjectSetAsCurrent) oldProjectSetAsCurrent.classList.toggle("current");
     project.classList.toggle("current");
 }
+
 
 function _appendProjects(container){
     const projectList = document.createElement("section");
@@ -137,19 +142,24 @@ function _appendProjects(container){
 
         projectContainer.appendChild(project);
 
-        const editProjectButton = document.createElement("i");
-        editProjectButton.id = "edit-project-button";
-        editProjectButton.classList.add("fa-solid", "fa-pen-to-square");
-        editProjectButton.title = "Edit";
-        editProjectButton.addEventListener("click", ()=>{appendUpdateProjectModal(projectName)});
-        projectContainer.appendChild(editProjectButton);
+        const PROJECT_BUTTONS = {
+            edit: {
+                htmlElement: "i",
+                id: "edit-project-button",
+                classes: ["fa-solid", "fa-pen-to-square"],
+                title: "Edit",
+                eventListeners: [{event: "click", function: ()=>{appendUpdateProjectModal(projectName)}}]
+            },
+            delete: {
+                htmlElement: "i",
+                id: "delete-project-button",
+                classes: ["fa-solid", "fa-trash-can"],
+                title: "Delete",
+                eventListeners: [{event: "click", function: ()=>{appendDeleteProjectModal(projectName)}}]
+            }
+        }
 
-        const deleteProjectButton = document.createElement("i");
-        deleteProjectButton.id = "delete-project-button";
-        deleteProjectButton.classList.add("fa-solid", "fa-trash-can");
-        deleteProjectButton.title = "Delete";
-        deleteProjectButton.addEventListener("click", ()=>{appendDeleteProjectModal(projectName)});
-        projectContainer.appendChild(deleteProjectButton);
+        _appendButtons(PROJECT_BUTTONS, projectContainer);
     }
 
     const newProjectButton = document.createElement("section");
@@ -163,6 +173,7 @@ function _appendProjects(container){
     newProjectButton.appendChild(title);
     projects.appendChild(newProjectButton);
 }
+
 
 function _toggleProjects(){
     const toggleIcon = document.querySelector("#project-toggle > .fa-solid");
@@ -202,15 +213,15 @@ function _displayTasks(project){
     projectPageTasks.classList.add("project-tasks");
     
     const tasks = (isTodaysTasks) ? getTodaysTasks() : (isThisWeeksTasks) ? getThisWeeksTasks() : getProjectTasks(project);
-    for (const taskKey in tasks){
-        const task = tasks[taskKey];
+    for (const taskName in tasks){
+        const task = tasks[taskName];
         //This is used to link the details of a task with the task.
         const hashedTitle = _hash(task.title);
 
-        const todo = document.createElement("section");
-        todo.classList.add("task");
-        todo.setAttribute("data-id", hashedTitle);
-        todo.addEventListener("click", (e)=>{_toggleDetails(e)});
+        const taskSection = document.createElement("section");
+        taskSection.classList.add("task");
+        taskSection.setAttribute("data-id", hashedTitle);
+        taskSection.addEventListener("click", (event)=>{_toggleDetails({mode: "event", event})});
 
         const statusCheckbox = document.createElement("input");
         statusCheckbox.classList.add("status-checkbox");
@@ -218,78 +229,90 @@ function _displayTasks(project){
         statusCheckbox.title = "Toggle Status";
         const taskCompleted = task.status;
         if(taskCompleted){
-            todo.classList.add("done");
+            taskSection.classList.add("done");
             statusCheckbox.checked = true;
         }
-        statusCheckbox.addEventListener("change", ()=>{_toggleTaskStatus(task, todo)});
-        todo.appendChild(statusCheckbox);
+        statusCheckbox.addEventListener("change", ()=>{_toggleTaskStatus(task, taskSection)});
+        taskSection.appendChild(statusCheckbox);
 
-        const taskName = document.createElement("span");
-        taskName.classList = "task-name";
-        taskName.innerText = task.title;
-        todo.appendChild(taskName);
+        const taskTitle = document.createElement("span");
+        taskTitle.classList.add("task-title");
+        taskTitle.innerText = task.title;
+        taskTitle.style.pointerEvents = "none";
+        taskSection.appendChild(taskTitle);
 
-        const viewButton = document.createElement("i");
-        viewButton.id = "view-button";
-        viewButton.classList.add("fa-solid", "fa-eye");
-        viewButton.title = "View";
-        viewButton.addEventListener("click", ()=>{appendViewTaskModal(task)});
-        todo.appendChild(viewButton);
-
-        const priorityToggle = document.createElement("i");
-        priorityToggle.id = "priority-toggle";
-        priorityToggle.classList.add("fa-solid", "fa-flag", task.priority);
-        priorityToggle.title = "Toggle Priority";
-        priorityToggle.addEventListener("click", ()=>{_toggleTaskPriority(task)});
-        todo.appendChild(priorityToggle);
-
-        const editButton = document.createElement("i");
-        editButton.id = "edit-button";
-        editButton.classList.add("fa-solid", "fa-pen-to-square");
-        editButton.title = "Update";
-        editButton.addEventListener("click", ()=>{appendUpdateTaskModal(task)});
-        todo.appendChild(editButton);
-
-        const moveTaskButton = document.createElement("i");
-        moveTaskButton.id = "move-task-button";
-        moveTaskButton.classList.add("fa-regular", "fa-share-from-square");
-        moveTaskButton.title = "Move";
-        moveTaskButton.addEventListener("click", ()=>{appendMoveTaskModal(task)});
-        todo.appendChild(moveTaskButton);
-
-        const deleteTaskButton = document.createElement("i");
-        deleteTaskButton.id = "delete-task-button";
-        deleteTaskButton.classList.add("fa-solid", "fa-trash-can");
-        deleteTaskButton.title = "Delete";
-        deleteTaskButton.addEventListener("click", ()=>{appendDeleteTaskModal(task)});
-        todo.appendChild(deleteTaskButton);
-
-        projectPageTasks.appendChild(todo);
+        const TASK_BUTTONS = {
+            view: {
+                htmlElement: "i",
+                id: "view-button",
+                classes: ["fa-solid", "fa-eye"],
+                title: "View",
+                eventListeners: [{event: "click", function: ()=>{appendViewTaskModal(task)}}],
+            },
+            priority: {
+                id: "priority-toggle",
+                classes: ["fa-solid", "fa-flag", task.priority],
+                title: "Toggle Priority",
+                eventListeners: [{event: "click", function: ()=>{_toggleTaskPriority(task)}}],
+            },
+            edit: {
+                htmlElement: "i",
+                id: "edit-button",
+                classes: ["fa-solid", "fa-pen-to-square"],
+                title: "Update",
+                eventListeners: [{event: "click", function: ()=>{appendUpdateTaskModal(task)}}],
+            },
+            move: {
+                htmlElement: "i",
+                id: "move-task-button",
+                classes: ["fa-solid", "fa-share-from-square"],
+                title: "Move",
+                eventListeners: [{event: "click", function: ()=>{appendMoveTaskModal(task)}}],
+            },
+            delete: {
+                htmlElement: "i",
+                id: "delete-task-button",
+                classes: ["fa-solid", "fa-trash-can"],
+                title: "Delete",
+                eventListeners: [{event: "click", function: ()=>{appendDeleteTaskModal(task)}}],
+            }
+        }
+        _appendButtons(TASK_BUTTONS, taskSection);
+        projectPageTasks.appendChild(taskSection);
 
         const details = document.createElement("section");
         details.classList.add("task-details", "collapsed");
         details.setAttribute("data-id", hashedTitle);
 
-        const detailsDescription = document.createElement("p");
-        detailsDescription.innerHTML = `<span>Description:</span> ${task.description}`;
-        details.appendChild(detailsDescription);
+        const TASK_DETAILS = {
+            description: {
+                htmlElement: "p",
+                innerHTML: `<span>Description:</span> ${task.description}`
+            },
+            priority: {
+                htmlElement: "p",
+                innerHTML: `<span>Priority:</span> ${task.priority}`
+            },
+            status: {
+                htmlElement: "p",
+                innerHTML: `<span>Status:</span> ${(task.status) ? "Done" : "Pending"}`
+            },
+            dueDate: {
+                htmlElement: "p",
+                innerHTML: `<span>Due date:</span> ${new Date(task.dueDate)}`
+            },
+            project: {
+                htmlElement: "p",
+                innerHTML: `<span>Project:</span> ${task.project}`
+            },
+        }
 
-        const detailsPriority = document.createElement("p");
-        detailsPriority.innerHTML = `<span>Priority:</span> ${task.priority}`;
-        details.appendChild(detailsPriority);
-
-        const detailsStatus = document.createElement("p");
-        detailsStatus.innerHTML = `<span>Status:</span> ${(task.status) ? "Done" : "Pending"}`;
-        details.appendChild(detailsStatus);
-
-        const detailsDueDate = document.createElement("p");
-        detailsDueDate.innerHTML = `<span>Due date:</span> ${new Date(task.dueDate)}`;
-        details.appendChild(detailsDueDate);
-
-        const detailsProject = document.createElement("p");
-        detailsProject.innerHTML = `<span>Project:</span> ${task.project}`;
-        details.appendChild(detailsProject);
-
+        for(const detailName in TASK_DETAILS){
+            const detailObject = TASK_DETAILS[detailName];
+            const detail = document.createElement(detailObject.htmlElement);
+            detail.innerHTML = detailObject.innerHTML;
+            details.appendChild(detail);
+        }
         projectPageTasks.appendChild(details);
     }
     projectPage.appendChild(projectPageTasks);
@@ -298,6 +321,7 @@ function _displayTasks(project){
     _clearPreviousPage(main);
     main.appendChild(projectPage);
 
+    // Today and This week don't allow users to add tasks, they just show any task that has its due date set to today or any day of this week
     if(isTodaysTasks || isThisWeeksTasks) return;
 
     const addTaskButton = document.createElement("section");
@@ -312,13 +336,20 @@ function _displayTasks(project){
     projectPage.appendChild(addTaskButton);
 }
 
+
 function _toggleTaskStatus(task, todo){
     const currentStatus = task.status;
     const newStatus = !currentStatus;
     task.update("status", newStatus);
     todo.classList.toggle("done");
+    const detailsWereOpen = document.querySelector(".task-details:not(.collapsed)");
     reloadTasks(task.project);
+    if(detailsWereOpen){
+        const hashedTitle = _hash(task.title);
+        _toggleDetails({mode: "hash", hashedTitle});
+    };
 }
+
 
 function _toggleTaskPriority(task){
     const currentPriority = task.priority;
@@ -327,13 +358,28 @@ function _toggleTaskPriority(task){
     reloadTasks(task.project);
 }
 
+
+function _appendButtons(BUTTONS_INFO, container){
+    for(const buttonName in BUTTONS_INFO){
+        const buttonObject = BUTTONS_INFO[buttonName];
+        const projectButton = document.createElement(buttonObject.htmlElement);
+        projectButton.id = buttonObject.id;
+        buttonObject.classes.forEach(cssClass => {projectButton.classList.add(cssClass)});
+        projectButton.title = buttonObject.title;
+        buttonObject.eventListeners.forEach(eventListener => {projectButton.addEventListener(eventListener.event, eventListener.function)});
+        container.appendChild(projectButton);
+    }
+}
+
+
 export function reloadTasks(project){
-    const isTodayProject = document.querySelector(".Today-page.project");
-    const isThisWeekProject = document.querySelector(".This-week-page.project");
-    const projectToReload = (isTodayProject) ? "Today" : (isThisWeekProject) ? "This week" : project;
+    const isToday = document.querySelector(".Today-page.project");
+    const isThisWeek = document.querySelector(".This-week-page.project");
+    const projectToReload = (isToday) ? "Today" : (isThisWeek) ? "This week" : project;
     document.querySelector("main section.project").remove();
     _displayTasks(projectToReload);
 }
+
 
 export function reloadProjects(){
     document.querySelector(".project-list").remove();
@@ -343,19 +389,30 @@ export function reloadProjects(){
     _toggleProjects();
 }
 
+
 function _clearPreviousPage(container){
     container.innerHTML = "";
 }
 
-function _toggleDetails(event){
-    if(!event.target.getAttribute("class").includes("task")){
-        return;
+
+function _toggleDetails({mode, event, hashedTitle}){
+    const isEventMode = (mode === "event");
+
+    let dataId;
+
+    if(isEventMode){
+        const clickedOnAButton = !event.target.getAttribute("class").includes("task");
+        if(clickedOnAButton) return;
+        dataId = event.target.getAttribute("data-id");
+    }
+    else{
+        dataId = hashedTitle;
     }
 
-    const dataId = event.target.getAttribute("data-id");
     const details = document.querySelector(`section.task-details[data-id='${dataId}']`);
     details.classList.toggle("collapsed");
 }
+
 
 function _hash(string){
     let totalValue = 0;
