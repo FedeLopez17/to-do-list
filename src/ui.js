@@ -299,7 +299,7 @@ function _displayTasks(project){
             },
             dueDate: {
                 htmlElement: "p",
-                innerHTML: `<span>Due date:</span> ${new Date(task.dueDate)}`
+                innerHTML: `<span>Due date:</span> ${task.formattedDate}`
             },
             project: {
                 htmlElement: "p",

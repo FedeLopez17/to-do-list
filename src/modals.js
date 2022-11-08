@@ -167,7 +167,7 @@ export function appendViewTaskModal(task){
     const dueDateContainer = document.createElement("section");
     dueDateContainer.classList.add("due-date-container");
     const dueDate = document.createElement("p");
-    dueDate.innerHTML = `<span>Due date: </span> ${new Date(task.dueDate)}`;
+    dueDate.innerHTML = `<span>Due date: </span> ${task.formattedDate}`;
     descriptionContainer.appendChild(dueDate);
     modalBody.appendChild(dueDateContainer);
 
