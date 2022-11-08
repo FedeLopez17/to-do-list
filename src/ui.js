@@ -245,7 +245,7 @@ function _displayTasks(project){
             view: {
                 htmlElement: "i",
                 id: "view-button",
-                classes: ["fa-solid", "fa-eye"],
+                classes: ["fa-solid", "fa-circle-info"],
                 title: "View",
                 eventListeners: [{event: "click", function: ()=>{appendViewTaskModal(task)}}],
             },
