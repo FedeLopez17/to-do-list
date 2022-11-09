@@ -124,23 +124,23 @@ function _appendProjects(container){
         if(PROJECTS_TO_IGNORE.includes(projectName)) continue;
 
         const projectContainer = document.createElement("section");
-        projectContainer.classList.add("project-container");
+        projectContainer.classList.add("project", projectName);
+        projectContainer.addEventListener("click", ()=>{_toggleCurrentProject(`.project.${projectName}`)});
+        projectContainer.addEventListener("click", ()=>{_displayTasks(projectName)});
         projects.appendChild(projectContainer);
 
-        const project = document.createElement("section");
-        project.classList.add("project");
-        project.addEventListener("click", ()=>{_toggleCurrentProject(project)});
-        project.addEventListener("click", ()=>{_displayTasks(projectName)});
+        const projectTitleWrapper = document.createElement("section");
+        projectTitleWrapper.classList.add("project-title-wrapper");
 
         const projectIcon = document.createElement("i");
         projectIcon.classList.add("fa-solid", getProjectIcon(projectName).class);
-        project.appendChild(projectIcon);
+        projectTitleWrapper.appendChild(projectIcon);
 
         const projectTitle = document.createElement("span");
         projectTitle.innerText = projectName;
-        project.appendChild(projectTitle);
+        projectTitleWrapper.appendChild(projectTitle);
 
-        projectContainer.appendChild(project);
+        projectContainer.appendChild(projectTitleWrapper);
 
         const PROJECT_BUTTONS = {
             edit: {

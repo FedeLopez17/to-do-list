@@ -45,15 +45,6 @@ aside.active{
     width: var(--aside-width);
 }
 
-aside .inbox{
-    cursor: pointer;
-    background-color: brown;
-}
-
-aside .inbox:hover{
-    background-color: red;
-}
-
 aside .projects.hidden{
     display: none;
 }
@@ -63,8 +54,19 @@ aside .new-project-button{
     align-items: center;
 }
 
-aside .project-container{
+aside .project{
     display: flex;
+    cursor: pointer;
+    background-color: darksalmon;
+}
+
+aside .project:hover{
+    background-color: darkred;
+}
+
+aside .project.current{
+    font-weight: 900;
+    background-color: darkred;
 }
 
 main{
@@ -116,8 +118,4 @@ main .project{
 .done{
     opacity: 0.5;
     text-decoration: line-through;
-}
-
-.project.current{
-    border: solid 1px black;
 }

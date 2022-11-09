@@ -2,15 +2,18 @@ import "./modals.css";
 import ToDo from "./tasks.js";
 import Project, { deleteProject, getProject, getProjectNames, getProjectTasks } from "./projects";
 import { reloadProjects, reloadTasks } from "./ui";
+import { FA_ICONS, makeTaskModalFields } from "./modals-data";
 
 export function appendUpdateProjectModal(projectName){
     const project = getProject(projectName);
     _appendProjectModal({mode:"update", project});
 }
 
+
 export function appendNewProjectModal(){
     _appendProjectModal({mode: "new"});
 }
+
 
 function _appendProjectModal({mode, project}){
 
@@ -38,9 +41,7 @@ function _appendProjectModal({mode, project}){
     const modalAlreadyOnScreen = document.querySelector(".project-modal");
     if(modalAlreadyOnScreen) return;
 
-    const modalBackground = document.createElement("section");
-    modalBackground.classList.add("modal-background");
-    modalBackground.addEventListener("click", _closeModal);
+    const modalBackground = _makeModalBackground();
 
     const projectModal = document.createElement("section");
     projectModal.classList.add(MODE_VALUES[mode].modalClass, "project-modal");
@@ -84,8 +85,7 @@ function _appendProjectModal({mode, project}){
     iconContainer.classList.add("icon-container");
     iconWrapper.appendChild(iconContainer);
 
-    const FA_ICONS = [{id: "project", class: "fa-list-check", isDefault: true}, {id: "finance", class: "fa-sack-dollar"}, {id: "education", class: "fa-book"}, {id: "repairs", class: "fa-screwdriver-wrench"}];
-
+    // These icons are imported from modals-data.js
     FA_ICONS.forEach(fontAwesomeIcon => {
         const label = document.createElement("label");
         label.setAttribute("for", fontAwesomeIcon.id);
@@ -101,7 +101,7 @@ function _appendProjectModal({mode, project}){
         input.id = fontAwesomeIcon.id;
         input.classList.add("hidden");
         if(fontAwesomeIcon.isDefault) input.checked = true;
-        if(isUpdateMode && input.id === project.icon.name) input.checked = true;
+        if(isUpdateMode) input.checked = (input.id === project.icon.name);
         iconContainer.appendChild(input);
     })
 
@@ -124,6 +124,7 @@ function _appendProjectModal({mode, project}){
    container.appendChild(projectModal);
 }
 
+
 export function appendNewTaskModalFromProject(projectName){
     _appendTaskModal({mode: "new from project", project: projectName});
 }
@@ -137,59 +138,131 @@ export function appendUpdateTaskModal(task){
 }
 
 export function appendViewTaskModal(task){
+    _appendTaskModal({mode: "view", task});
+}
+
+
+function _appendTaskModal({mode, task, project}){
+    const isViewMode = (mode === "view");
+    const isUpdateTask = (mode === "update");
+    let isNewFromProject = false;
+    if(mode === "new from project"){
+        isNewFromProject = true;
+        mode = "new";
+    }
+
+    const MODE_VALUES = {
+        new: {
+            modalClass: "new",
+            modalTitle: "New Task",
+            buttonId: "add-task",
+            buttonText: "Add Task",
+            buttonFunction: _validateAndAddTask
+        }, 
+        update: {
+            modalClass: "update",
+            modalTitle: "Update Task",
+            buttonId: "update-task",
+            buttonText: "Update Task",
+            buttonFunction: ()=>{_validateAndUpdateTask(task)}
+        },
+        view: {
+            modalClass: "view",
+            modalTitle: task && task.title,
+        }
+    }
+
     const container = document.querySelector("#content");
     
     const modalAlreadyOnScreen = document.querySelector(".task-modal");
     if(modalAlreadyOnScreen) return;
-
-    const modalBackground = document.createElement("section");
-    modalBackground.classList.add("modal-background");
-    modalBackground.addEventListener("click", _closeModal);
+    
+    const modalBackground = _makeModalBackground();
 
     const taskModal = document.createElement("section");
-    taskModal.classList.add("view", "task-modal");
-
+    taskModal.classList.add(MODE_VALUES[mode].modalClass, "task-modal");
+    
     //Modal header
-    const modalHeader = _makeModalHeader(task.title);
+    const title = MODE_VALUES[mode].modalTitle;
+    const modalHeader = _makeModalHeader(title);
     taskModal.appendChild(modalHeader);
-
+    
     //Modal body
     const modalBody = document.createElement("section");
     modalBody.classList.add("modal-body");
+    
+    const MODAL_FIELDS = makeTaskModalFields(task);
 
-    const descriptionContainer = document.createElement("section");
-    descriptionContainer.classList.add("description-container");
-    const description = document.createElement("p");
-    description.innerHTML = `<span>Description: </span> ${task.description}`;
-    descriptionContainer.appendChild(description);
-    modalBody.appendChild(descriptionContainer);
-
-    const dueDateContainer = document.createElement("section");
-    dueDateContainer.classList.add("due-date-container");
-    const dueDate = document.createElement("p");
-    dueDate.innerHTML = `<span>Due date: </span> ${task.formattedDate}`;
-    descriptionContainer.appendChild(dueDate);
-    modalBody.appendChild(dueDateContainer);
-
-    const priorityContainer = document.createElement("section");
-    priorityContainer.classList.add("priority-container");
-    const priority = document.createElement("p");
-    priority.innerHTML = `<span>Priority: </span> ${task.priority}`;
-    priorityContainer.appendChild(priority);
-    modalBody.appendChild(priorityContainer);
-
-    const projectContainer = document.createElement("section");
-    projectContainer.classList.add("project-container");
-    const project = document.createElement("p");
-    project.innerHTML = `<span>Project: </span> ${task.project}`;
-    projectContainer.appendChild(project);
-    modalBody.appendChild(projectContainer);
+    for(const fieldName in MODAL_FIELDS){
+        const fieldObject = MODAL_FIELDS[fieldName];
+        const wrapperObject = fieldObject.wrapper;
+        const labelObject = fieldObject.label;
+        const inputObject = fieldObject.input;
+        const viewModeObject = fieldObject.viewMode;
+        
+        if(isViewMode){
+            if(inputObject.attributes.id === "title") continue;
+            const fieldContainer = document.createElement("section");
+            viewModeObject.container.classes.forEach(cssClass => {fieldContainer.classList.add(cssClass)});
+            const fieldText = document.createElement("p");
+            fieldText.innerHTML = viewModeObject.text.innerHTML;
+            fieldContainer.appendChild(fieldText);
+            modalBody.appendChild(fieldContainer);
+        }
+        else{
+            const wrapper = document.createElement("section");
+            wrapper.classList.add(...wrapperObject.classes);
+    
+            const label = document.createElement("label");
+            label.for = inputObject.attributes.id;
+            label.innerText = labelObject.innerText;
+            wrapper.appendChild(label);
+    
+            const input = document.createElement(inputObject.htmlElement);
+            for(const attribute in inputObject.attributes){
+                input.setAttribute(attribute, inputObject.attributes[attribute]);
+            }
+            if(inputObject.selfValidates) input.addEventListener("input", ()=>{_selfValidation(input)});
+    
+            if(inputObject.options){
+                inputObject.options.forEach(optionName => {
+                    const option = document.createElement("option");
+                    option.innerText = optionName;
+                    option.value = optionName;
+                    option.id = optionName;
+                    input.appendChild(option);
+                })
+            }
+            if(isUpdateTask) input.value = task[fieldName];
+            if(isNewFromProject && input.id === "project") input.value = project;
+            wrapper.appendChild(input);
+    
+            modalBody.appendChild(wrapper);
+        }
+    }
 
     taskModal.appendChild(modalBody);
 
     container.appendChild(modalBackground);
     container.appendChild(taskModal);
+
+    // View task modal doesn't need a footer
+    if(isViewMode) return;
+
+    // Modal footer
+    const modalFooter = document.createElement("footer");
+    modalFooter.classList.add("modal-footer");
+    
+    const taskButton = document.createElement("button");
+    taskButton.classList.add("task-modal-button");
+    taskButton.id = MODE_VALUES[mode].buttonId;
+    taskButton.innerText = MODE_VALUES[mode].buttonText;
+    taskButton.addEventListener("click", MODE_VALUES[mode].buttonFunction);
+    
+    modalFooter.appendChild(taskButton);
+    taskModal.appendChild(modalFooter);
 }
+
 
 export function appendDeleteTaskModal(task){
     _appendDeleteModal({mode: "task", task});
@@ -214,15 +287,12 @@ function _appendDeleteModal({mode, task, project}){
         }
     }
 
-
     const container = document.querySelector("#content");
     
     const modalAlreadyOnScreen = document.querySelector(`.${MODE_VALUES[mode].modalClass}`);
     if(modalAlreadyOnScreen) return;
 
-    const modalBackground = document.createElement("section");
-    modalBackground.classList.add("modal-background");
-    modalBackground.addEventListener("click", _closeModal);
+    const modalBackground = _makeModalBackground();
 
     const deleteModal = document.createElement("section");
     deleteModal.classList.add("delete", MODE_VALUES[mode].modalClass);
@@ -250,6 +320,7 @@ function _appendDeleteModal({mode, task, project}){
     modalFooter.appendChild(deleteButton);
     deleteModal.appendChild(modalFooter);
 
+    container.appendChild(modalBackground);
     container.appendChild(deleteModal);
 }
 
@@ -260,9 +331,7 @@ export function appendMoveTaskModal(task){
     const modalAlreadyOnScreen = document.querySelector(".task-modal");
     if(modalAlreadyOnScreen) return;
 
-    const modalBackground = document.createElement("section");
-    modalBackground.classList.add("modal-background");
-    modalBackground.addEventListener("click", _closeModal);
+    const modalBackground = _makeModalBackground();
 
     const moveTaskModal = document.createElement("section");
     moveTaskModal.classList.add("move", "task-modal");
@@ -318,174 +387,14 @@ export function appendMoveTaskModal(task){
     container.appendChild(moveTaskModal);
 }
 
-function _appendTaskModal({mode, task, project}){
-    const isUpdateTask = (mode === "update");
-    let isNewFromProject = false;
-    if(mode === "new from project"){
-        isNewFromProject = true;
-        mode = "new";
-    }
 
-    const MODE_VALUES = {
-        new: {
-            modalClass: "new",
-            modalTitle: "New Task",
-            buttonId: "add-task",
-            buttonText: "Add Task",
-            buttonFunction: _validateAndAddTask
-        }, 
-        update: {
-            modalClass: "update",
-            modalTitle: "Update Task",
-            buttonId: "update-task",
-            buttonText: "Update Task",
-            buttonFunction: ()=>{_validateAndUpdateTask(task)}
-        }
-    }
-
-    const container = document.querySelector("#content");
-    
-    const modalAlreadyOnScreen = document.querySelector(".task-modal");
-    if(modalAlreadyOnScreen) return;
-    
+function _makeModalBackground(){
     const modalBackground = document.createElement("section");
     modalBackground.classList.add("modal-background");
     modalBackground.addEventListener("click", _closeModal);
-    
-    const taskModal = document.createElement("section");
-    taskModal.classList.add(MODE_VALUES[mode].modalClass, "task-modal");
-    
-    //Modal header
-    const title = MODE_VALUES[mode].modalTitle;
-    const modalHeader = _makeModalHeader(title);
-    taskModal.appendChild(modalHeader);
-    
-    //Modal body
-    const modalBody = document.createElement("section");
-    modalBody.classList.add("modal-body");
-    
-    const titleWrapper = document.createElement("section");
-    titleWrapper.classList.add("title-wrapper");
-    
-    const titleLabel = document.createElement("label");
-    titleLabel.for = "title";
-    titleLabel.innerText = "Title:";
-    titleWrapper.appendChild(titleLabel);
-    
-    const titleInput = document.createElement("input");
-    titleInput.type = "text"
-    titleInput.id = "title";
-    titleInput.setAttribute("data-modal-name", "title");
-    titleInput.maxLength = 30;
-    titleInput.addEventListener("input", ()=>{_selfValidation(titleInput)});
-    if(isUpdateTask) titleInput.value = task.title;
-    titleWrapper.appendChild(titleInput);
-    
-    modalBody.appendChild(titleWrapper);
-    
-    const descriptionWrapper = document.createElement("section");
-    descriptionWrapper.classList.add("description-wrapper");
-    
-    const descriptionLabel = document.createElement("label");
-    descriptionLabel.for = "description";
-    descriptionLabel.innerText = "Description:";
-    descriptionWrapper.appendChild(descriptionLabel);
-    
-    const descriptionInput = document.createElement("input");
-    descriptionInput.type = "textarea";
-    descriptionInput.id = "description";
-    descriptionInput.setAttribute("data-modal-name", "description");
-    if(isUpdateTask) descriptionInput.value = task.description;
-    descriptionWrapper.appendChild(descriptionInput);
-    
-    modalBody.appendChild(descriptionWrapper);
-
-    const dueDateWrapper = document.createElement("section");
-    dueDateWrapper.classList.add("due-date-wrapper");
-
-    const dueDateLabel = document.createElement("label");
-    dueDateLabel.for = "due-date";
-    dueDateLabel.innerText = "Due date:";
-    dueDateWrapper.appendChild(dueDateLabel);
-
-    const dueDateInput = document.createElement("input");
-    dueDateInput.type = "datetime-local";
-    dueDateInput.id = "dueDate";
-    dueDateInput.setAttribute("data-modal-name", "due date");
-    dueDateInput.addEventListener("input", ()=>{_selfValidation(dueDateInput)});
-    if(isUpdateTask) dueDateInput.value = task.dueDate;
-    dueDateWrapper.appendChild(dueDateInput);
-
-    modalBody.appendChild(dueDateWrapper);
-
-    
-    const priorityWrapper = document.createElement("section");
-    priorityWrapper.classList.add("priority-wrapper");
-    
-    const priorityLabel = document.createElement("label");
-    priorityLabel.for = "priority"
-    priorityLabel.innerText = "Priority:"
-    priorityWrapper.appendChild(priorityLabel);
-    
-    const priorityInput = document.createElement("select");
-    priorityInput.id = "priority";
-    priorityInput.setAttribute("data-modal-name", "priority");
-    const PRIORITY_LEVELS = ["low", "medium", "high"];
-    PRIORITY_LEVELS.forEach(priorityLevel => {
-        const option = document.createElement("option");
-        option.innerText = priorityLevel;
-        option.value = priorityLevel;
-        option.id = priorityLevel;
-        priorityInput.appendChild(option);
-    })
-    if(isUpdateTask) priorityInput.value = task.priority;
-    priorityWrapper.appendChild(priorityInput);
-    
-    modalBody.appendChild(priorityWrapper);
-    
-    const projectWrapper = document.createElement("section");
-    projectWrapper.classList.add("project-wrapper");
-    
-    const projectLabel = document.createElement("label");
-    projectLabel.for = "project";
-    projectLabel.innerText = "Project:";
-    projectWrapper.appendChild(projectLabel);
-    
-    const projectInput = document.createElement("select");
-    projectInput.id = "project";
-    projectInput.setAttribute("data-modal-name", "project");
-    const projectNames = getProjectNames();
-    for(const projectName of projectNames){
-        const option = document.createElement("option");
-        option.innerText = projectName;
-        option.value = projectName;
-        projectInput.appendChild(option);
-    }
-    if(isUpdateTask) projectInput.value = task.project;
-    if(isNewFromProject) projectInput.value = project;
-    projectWrapper.appendChild(projectInput);
-    
-    modalBody.appendChild(projectWrapper);
-    
-    taskModal.appendChild(modalBody);
-
-    // Modal footer
-    const modalFooter = document.createElement("footer");
-    modalFooter.classList.add("modal-footer");
-    
-    const addTaskButton = document.createElement("button");
-    addTaskButton.classList.add("task-modal-button");
-    addTaskButton.id = MODE_VALUES[mode].buttonId;
-    addTaskButton.innerText = MODE_VALUES[mode].buttonText;
-    addTaskButton.addEventListener("click", MODE_VALUES[mode].buttonFunction);
-    
-    modalFooter.appendChild(addTaskButton);
-    
-    taskModal.appendChild(modalFooter);
-
-    container.appendChild(modalBackground);
-    container.appendChild(taskModal);
+    return modalBackground;
 }
+
 
 function _makeModalHeader(title){
     const modalHeader = document.createElement("header");
@@ -529,7 +438,6 @@ function _validateProjectAndCarryThrough({isAddMode, outdatedProject}){
     }
 
     const invalidText = (!_isValid(nameInput)) ? "Invalid name!" : "This project already exists!";
-    
     if(!nameInput.classList.contains("invalid")){
         nameInput.classList.add("invalid");
         const invalidMessage = document.createElement("p");
@@ -542,7 +450,6 @@ function _validateProjectAndCarryThrough({isAddMode, outdatedProject}){
     if(invalidMessageOnScreen.innerText != invalidText){
         invalidMessageOnScreen.innerText = invalidText;
     }
-
 }
 
 function _addProject(projectName, projectIcon){
@@ -674,9 +581,7 @@ function _deleteProject(project){
 
 
 function _validateInputs(){
-
     const inputs = document.querySelectorAll(".task-modal input:not(#description), .task-modal select");
-
     let allInputsAreValid = true;
 
     for (const input of inputs){
