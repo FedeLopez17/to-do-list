@@ -74,44 +74,36 @@ main{
     background-color: pink;
 }
 
-main .project{
+main .project-tasks{
     height: 100%;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
 }
 
-.project .title{
-    background-color: aqua;
-}
-
-.project .task{
+.project-tasks .task{
     display: flex;
     cursor: pointer;
 }
 
-.project .task-name{
-    pointer-events: none;
-}
-
-.project .task-details{
+.project-tasks .task-details{
     background-color: red;
 }
 
-.project .task-details.collapsed{
+.project-tasks .task-details.collapsed{
     display: none;
     /* ESTO DEBERIA CRECER EN HEIGHT, NO DESAPARECER */
 }
 
-.project .task #priority-toggle.low{
+.project-tasks .task #priority-toggle.low{
     color: yellow;
 }
 
-.project .task #priority-toggle.medium{
+.project-tasks .task #priority-toggle.medium{
     color: green;
 }
 
-.project .task #priority-toggle.high{
+.project-tasks .task #priority-toggle.high{
     color: red;
 }
 

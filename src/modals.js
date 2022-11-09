@@ -537,7 +537,7 @@ function _addNewTask(){
 
     new ToDo(task);
 
-    const taskBelongsToCurrentProject = document.querySelector(`.${task.project.replaceAll(" ", "-")}-page`);
+    const taskBelongsToCurrentProject = document.querySelector(`.project-tasks[data-project-name='${task.project}']`);
     if(taskBelongsToCurrentProject){reloadTasks(task.project)};
 
     _closeModal();

@@ -42,28 +42,31 @@ function _appendAside(container){
     const ASIDE_COMPONENTS = {
         inbox: {
             title: "Inbox",
-            classes: ["inbox", "project"],
+            classes: ["project"],
+            attributes: [{key: "data-name", value: "Inbox"}],
             iconClasses: ["fa-solid", getProjectIcon("Inbox").class],
             eventListeners: [
-                {event: "click", function: () => {_toggleCurrentProject(".inbox.project")}},
+                {event: "click", function: () => {_toggleCurrentProject(".project[data-name='Inbox']")}},
                 {event: "click", function: () => {_displayTasks("Inbox")}}
             ]
         },
         today: {
             title: "Today",
-            classes: ["today", "project"],
+            classes: ["project"],
+            attributes: [{key: "data-name", value: "Today"}],
             iconClasses: ["fa-solid", "fa-calendar-day"],
             eventListeners: [
-                {event: "click", function: () => {_toggleCurrentProject(".today.project")}},
+                {event: "click", function: () => {_toggleCurrentProject(".project[data-name='Today']")}},
                 {event: "click", function: () => {_displayTasks("Today")}}
             ]
         },
         thisWeek: {
             title: "This week",
-            classes: ["this-week", "project"],
+            classes: ["project"],
+            attributes: [{key: "data-name", value: "This-week"}],
             iconClasses: ["fa-solid", "fa-calendar-week"],
             eventListeners: [
-                {event: "click", function: () => {_toggleCurrentProject(".this-week.project")}},
+                {event: "click", function: () => {_toggleCurrentProject(".project[data-name='This-week']")}},
                 {event: "click", function: () => {_displayTasks("This week")}}
             ]
         },
@@ -73,6 +76,7 @@ function _appendAside(container){
         component = ASIDE_COMPONENTS[component];
         const componentSection = document.createElement("section");
         componentSection.classList.add(...component.classes);
+        component.attributes.forEach(attribute => {componentSection.setAttribute(attribute.key, attribute.value)});
         const componentIcon = document.createElement("i");
         componentIcon.classList.add(...component.iconClasses);
         componentSection.appendChild(componentIcon);
@@ -89,10 +93,9 @@ function _appendAside(container){
 // Inbox loads as the default project.
 window.addEventListener("load", ()=>{_displayTasks("Inbox")});
 
-
-function _toggleCurrentProject(projectClass){
+function _toggleCurrentProject(projectSelector){
     const currentProject = document.querySelector(".project.current");
-    const project = document.querySelector(projectClass);
+    const project = document.querySelector(projectSelector);
     const projectIsCurrent = (project === currentProject);
     if (projectIsCurrent) return;
     const oldProjectSetAsCurrent = currentProject;
@@ -124,8 +127,9 @@ function _appendProjects(container){
         if(PROJECTS_TO_IGNORE.includes(projectName)) continue;
 
         const projectContainer = document.createElement("section");
-        projectContainer.classList.add("project", projectName);
-        projectContainer.addEventListener("click", ()=>{_toggleCurrentProject(`.project.${projectName}`)});
+        projectContainer.classList.add("project");
+        projectContainer.setAttribute("data-name", projectName);
+        projectContainer.addEventListener("click", ()=>{_toggleCurrentProject(`.project[data-name='${projectName}']`)});
         projectContainer.addEventListener("click", ()=>{_displayTasks(projectName)});
         projects.appendChild(projectContainer);
 
@@ -189,30 +193,29 @@ function _appendMainSection(container){
     container.appendChild(main);
 }
 
-function _displayTasks(project){
-    const formattedProjectName = `${project.replaceAll(" ", "-")}-page`;
-
-    const tasksAlreadyOnScreen = document.querySelector(`.${formattedProjectName}`);
+function _displayTasks(projectName){
+    const tasksAlreadyOnScreen = document.querySelector(`.project-tasks[data-project-name='${projectName}']`);
     if(tasksAlreadyOnScreen) return;
 
-    const isTodaysTasks = (project == "Today");
-    const isThisWeeksTasks = (project == "This week");
+    const isTodaysTasks = (projectName == "Today");
+    const isThisWeeksTasks = (projectName == "This week");
 
     const projectPage = document.createElement("section");
-    projectPage.classList.add(formattedProjectName, "project");
+    projectPage.classList.add("project-tasks");
+    projectPage.setAttribute("data-project-name", projectName);
 
     const projectPageHeader = document.createElement("header");
     projectPage.appendChild(projectPageHeader);
     
     const projectPageTitle = document.createElement("h2");
     projectPageTitle.classList.add("title");
-    projectPageTitle.innerText = project;
+    projectPageTitle.innerText = projectName;
     projectPageHeader.appendChild(projectPageTitle);
 
     const projectPageTasks = document.createElement("section");
-    projectPageTasks.classList.add("project-tasks");
+    projectPageTasks.classList.add("tasks");
     
-    const tasks = (isTodaysTasks) ? getTodaysTasks() : (isThisWeeksTasks) ? getThisWeeksTasks() : getProjectTasks(project);
+    const tasks = (isTodaysTasks) ? getTodaysTasks() : (isThisWeeksTasks) ? getThisWeeksTasks() : getProjectTasks(projectName);
     for (const taskName in tasks){
         const task = tasks[taskName];
         //This is used to link the details of a task with the task.
@@ -326,7 +329,7 @@ function _displayTasks(project){
 
     const addTaskButton = document.createElement("section");
     addTaskButton.id = "add-task-button";
-    addTaskButton.addEventListener("click", ()=>{appendNewTaskModalFromProject(project)});
+    addTaskButton.addEventListener("click", ()=>{appendNewTaskModalFromProject(projectName)});
     const icon = document.createElement("i");
     icon.classList.add("fa-solid", "fa-plus");
     addTaskButton.appendChild(icon);
@@ -373,10 +376,10 @@ function _appendButtons(BUTTONS_INFO, container){
 
 
 export function reloadTasks(project){
-    const isToday = document.querySelector(".Today-page.project");
-    const isThisWeek = document.querySelector(".This-week-page.project");
+    const isToday = document.querySelector(".project-tasks[data-project-name='Today']");
+    const isThisWeek = document.querySelector(".project-tasks[data-project-name='This week']");
     const projectToReload = (isToday) ? "Today" : (isThisWeek) ? "This week" : project;
-    document.querySelector("main section.project").remove();
+    document.querySelector("main section.project-tasks").remove();
     _displayTasks(projectToReload);
 }
 
