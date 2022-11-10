@@ -218,6 +218,7 @@ function _displayTasks(projectName){
     const tasks = (isTodaysTasks) ? getTodaysTasks() : (isThisWeeksTasks) ? getThisWeeksTasks() : getProjectTasks(projectName);
     for (const taskName in tasks){
         const task = tasks[taskName];
+        console.log(task);
         //This is used to link the details of a task with the task.
         const hashedTitle = _hash(task.title);
 

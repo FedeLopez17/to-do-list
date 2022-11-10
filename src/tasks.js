@@ -1,4 +1,4 @@
-import { addTaskToProject, deleteTaskFromProject } from "./projects";
+import { addTaskToProject, deleteTaskFromProject, renameProjectTask } from "./projects";
 import format from "date-fns/format";
 
 export default class ToDo{
@@ -13,8 +13,16 @@ export default class ToDo{
         addTaskToProject(this, project);
     }
 
-    update(property, value){
-        this[property] = value;
+    update(property, updatedValue){
+        if(this[property] !== updatedValue){
+            const isNewTitle = (property === "title");
+            if(isNewTitle) renameProjectTask(this, updatedValue);
+
+            const isNewProject = (property === "project");
+            if(isNewProject) moveTo(updatedValue);
+
+            this[property] = updatedValue;
+        }
     }
 
     moveTo(newProject){

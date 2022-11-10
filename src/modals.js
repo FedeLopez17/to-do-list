@@ -1,6 +1,6 @@
 import "./modals.css";
 import ToDo from "./tasks.js";
-import Project, { deleteProject, getProject, getProjectNames, getProjectTasks } from "./projects";
+import Project, { deleteProject, getProject, getProjectNames, getProjectTasks, logProject } from "./projects";
 import { reloadProjects, reloadTasks } from "./ui";
 import { FA_ICONS, makeTaskModalFields } from "./modals-data";
 
@@ -378,7 +378,7 @@ export function appendMoveTaskModal(task){
     moveTaskButton.classList.add("task-modal-button");
     moveTaskButton.id = "move-task";
     moveTaskButton.innerText = "Move Task";
-    moveTaskButton.addEventListener("click", ()=>{_moveTask(task)});  
+    moveTaskButton.addEventListener("click", ()=>{_moveTask(task, projectInput.value)});  
     modalFooter.appendChild(moveTaskButton);
 
     moveTaskModal.appendChild(modalFooter);
@@ -468,7 +468,7 @@ function _updateProject(updatedName, updatedIcon, outdatedProject){
     }
     else{
         const updatedProject = _addProject(updatedName, updatedIcon);
-        _migrateTasks(outdatedProject, updatedProject);
+        _migrateAllTasks(outdatedProject, updatedProject);
         deleteProject(outdatedProject.name);
         const projectTasksOnScreen = document.querySelector(`.${outdatedProject.name.replaceAll(" ", "-")}-page.project`);
         if(projectTasksOnScreen) reloadTasks(updatedName);
@@ -477,7 +477,7 @@ function _updateProject(updatedName, updatedIcon, outdatedProject){
     reloadProjects();
 }
 
-function _migrateTasks(originProject, recipientProject){
+function _migrateAllTasks(originProject, recipientProject){
     for(const task in originProject.tasks){
         originProject.tasks[task].moveTo(recipientProject.name);
     }
@@ -519,8 +519,16 @@ function _isFollowedByAWarning(input){
 
 function _validateAndUpdateTask(task){
     const inputsAreValid = _validateInputs();
-    if(inputsAreValid){
-        _updateTask(task);
+    if(!inputsAreValid) return;
+
+    const taskAlreadyExists = !_updateTask(task);
+    if(taskAlreadyExists) {
+        const titleInput = document.querySelector(".task-modal input#title");
+        if(titleInput.classList.contains("valid")){
+            titleInput.classList.remove("valid");
+            titleInput.classList.add("invalid");
+        }
+        _displayWarningAfterInput(titleInput, "This task already exists within this project!");
     }
 }
 
@@ -545,8 +553,12 @@ function _addNewTask(){
 }
 
 function _updateTask(task){
+    const selectedTitle = document.querySelector(".task-modal input#title").value;
     const selectedProject = document.querySelector(".task-modal select#project").value;
-    if(task.project !== selectedProject) _moveTask(task);
+
+    // Don't allow the user to change the task title if a task with the same title already exists within the project
+    const titleChanged = (task.title !== selectedTitle);
+    if(titleChanged && getProjectTasks(selectedProject)[selectedTitle]) return false;
 
     const inputs = document.querySelectorAll(".update.task-modal input, .update.task-modal select");
     for(const input of inputs){
@@ -555,12 +567,12 @@ function _updateTask(task){
 
     reloadTasks(task.project);
     _closeModal();
+    return true;
 }
 
-function _moveTask(task){
+function _moveTask(task, recipientProject){
     const previousProject = task.project;
-    const selectedProject = document.querySelector(".task-modal select#project").value;
-    task.moveTo(selectedProject);
+    task.moveTo(recipientProject);
     reloadTasks(previousProject);
     _closeModal();
 }

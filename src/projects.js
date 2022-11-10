@@ -46,6 +46,18 @@ export default class Project{
     }
 }
 
+export function logProject(projectName){
+   return JSON.stringify(_PROJECTS[projectName].tasks);
+}
+
+export function renameProjectTask(task, newTaskTitle){
+    const taskProject = task.project;
+    const oldTaskTitle = task.title;
+    const projectTasks = _PROJECTS[taskProject].tasks;
+    projectTasks[newTaskTitle] = projectTasks[oldTaskTitle];
+    delete projectTasks[oldTaskTitle];
+}
+
 export function getProject(projectName){
     return _PROJECTS[projectName];
 }
