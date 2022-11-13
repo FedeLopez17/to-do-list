@@ -13,6 +13,15 @@ function _sortProjects(){
     _PROJECTS = sortedProjects;
 }
 
+const _sortedTaskTitles = [];
+
+function _sortTasks(projectName){
+    const tasks = _PROJECTS[projectName].tasks;
+    const sortedTasks = {};
+    _sortedTaskTitles.forEach(taskTitle => {sortedTasks[taskTitle] = tasks[taskTitle]});
+    _PROJECTS[projectName].tasks = sortedTasks;
+}
+
 const _ICON_CLASSES = {inbox: "fa-inbox", project: "fa-list-check", finance: "fa-sack-dollar", education: "fa-book", repairs: "fa-screwdriver-wrench"};
 
 export default class Project{
@@ -47,6 +56,7 @@ export default class Project{
 }
 
 export function logProject(projectName){
+    console.log(JSON.stringify(_PROJECTS[projectName].tasks));
    return JSON.stringify(_PROJECTS[projectName].tasks);
 }
 
@@ -56,6 +66,8 @@ export function renameProjectTask(task, newTaskTitle){
     const projectTasks = _PROJECTS[taskProject].tasks;
     projectTasks[newTaskTitle] = projectTasks[oldTaskTitle];
     delete projectTasks[oldTaskTitle];
+    _sortedTaskTitles.splice(_sortedTaskTitles.indexOf(oldTaskTitle), 1, newTaskTitle);
+    _sortTasks(task.project);
 }
 
 export function getProject(projectName){
@@ -76,6 +88,8 @@ export function getProjectIcon(project){
 
 export function addTaskToProject(task, project){
     _PROJECTS[project].addTask(task);
+    _sortedTaskTitles.push(task.title);
+    _sortTasks(task.project);
 }
 
 export function getProjectTasks(project){
@@ -84,6 +98,8 @@ export function getProjectTasks(project){
 
 export function deleteTaskFromProject(task){
     _PROJECTS[task.project].deleteTask(task);
+    _sortedTaskTitles.splice(_sortedTaskTitles.indexOf(task.title), 1);
+    _sortTasks(task.project);
 }
 
 export function deleteProject(project){

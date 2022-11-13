@@ -541,7 +541,8 @@ function _addNewTask(){
     }
 
     // Don't allow the user to add tasks with the same name in the same project
-    if(getProjectTasks(task.project)[task.title]) return false;
+    const taskAlreadyExists = getProjectTasks(task.project)[task.title];
+    if(taskAlreadyExists) return false;
 
     new ToDo(task);
 
@@ -556,16 +557,24 @@ function _updateTask(task){
     const selectedTitle = document.querySelector(".task-modal input#title").value;
     const selectedProject = document.querySelector(".task-modal select#project").value;
 
+    let previousProject = false;
+
     // Don't allow the user to change the task title if a task with the same title already exists within the project
     const titleChanged = (task.title !== selectedTitle);
-    if(titleChanged && getProjectTasks(selectedProject)[selectedTitle]) return false;
+    const projectChanged = (task.project !== selectedProject);
+    const taskAlreadyExists = getProjectTasks(selectedProject)[selectedTitle];
+    if(projectChanged && taskAlreadyExists || titleChanged && !projectChanged && taskAlreadyExists) return false;
+
+    if(projectChanged) previousProject = task.project;
 
     const inputs = document.querySelectorAll(".update.task-modal input, .update.task-modal select");
     for(const input of inputs){
         task.update(input.id, input.value);
     }
 
-    reloadTasks(task.project);
+    logProject(task.project);
+
+    reloadTasks(previousProject || task.project);
     _closeModal();
     return true;
 }

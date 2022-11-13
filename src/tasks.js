@@ -19,7 +19,7 @@ export default class ToDo{
             if(isNewTitle) renameProjectTask(this, updatedValue);
 
             const isNewProject = (property === "project");
-            if(isNewProject) moveTo(updatedValue);
+            if(isNewProject) this.moveTo(updatedValue);
 
             this[property] = updatedValue;
         }
