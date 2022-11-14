@@ -581,12 +581,15 @@ function _updateTask(task){
 
 function _moveTask(task, recipientProject){
     const taskAlreadyExists = getProjectTasks(recipientProject)[task.title];
-    if(taskAlreadyExists) return;
-    if(!taskAlreadyExists && recipientProject !== task.project){
-        const previousProject = task.project;
-        task.moveTo(recipientProject);
-        reloadTasks(previousProject);
+    if(taskAlreadyExists &&  recipientProject !== task.project){
+        const projectInput = document.querySelector(".task-modal select#project");
+        if(!projectInput.classList.contains("invalid"))projectInput.classList.add("invalid");
+        _displayWarningAfterInput(projectInput, "A task with this name already exists within this project!");
+        return;
     }
+    const previousProject = task.project;
+    task.moveTo(recipientProject);
+    reloadTasks(previousProject);
     _closeModal();
 }
 
