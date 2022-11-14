@@ -120,14 +120,14 @@ function _getTasksForTimePeriod(timePeriod){
 
     const TIME_PERIODS = {"today" : {function : isToday}, "week" : {function : isThisWeek}};
 
-    const tasksForTimePeriod = {};
+    const tasksForTimePeriod = [];
 
     for (const project in _PROJECTS){
         for (const taskKey in _PROJECTS[project].tasks){
             const task = _PROJECTS[project].tasks[taskKey];
             const taskDueDate = new Date(task.dueDate);
             if(TIME_PERIODS[timePeriod].function(taskDueDate)){
-                tasksForTimePeriod[task.title] = task;
+                tasksForTimePeriod.push(task);
             }
         }
     }

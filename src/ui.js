@@ -218,13 +218,15 @@ function _displayTasks(projectName){
     const tasks = (isTodaysTasks) ? getTodaysTasks() : (isThisWeeksTasks) ? getThisWeeksTasks() : getProjectTasks(projectName);
     for (const taskName in tasks){
         const task = tasks[taskName];
-        //This is used to link the details of a task with the task.
-        const hashedTitle = _hash(task.title);
 
         const taskSection = document.createElement("section");
         taskSection.classList.add("task");
-        taskSection.setAttribute("data-id", hashedTitle);
-        taskSection.addEventListener("click", (event)=>{_toggleDetails({mode: "event", event})});
+
+        const upperSection = document.createElement("section");
+        upperSection.classList.add("top");
+        upperSection.setAttribute("data-id", `${task.title}-from-${task.project}`);
+        upperSection.addEventListener("click", (event)=>{_toggleDetails({event})});
+        taskSection.appendChild(upperSection);
 
         const statusCheckbox = document.createElement("input");
         statusCheckbox.classList.add("status-checkbox");
@@ -232,17 +234,17 @@ function _displayTasks(projectName){
         statusCheckbox.title = "Toggle Status";
         const taskCompleted = task.status;
         if(taskCompleted){
-            taskSection.classList.add("done");
+            upperSection.classList.add("done");
             statusCheckbox.checked = true;
         }
-        statusCheckbox.addEventListener("change", ()=>{_toggleTaskStatus(task, taskSection)});
-        taskSection.appendChild(statusCheckbox);
+        statusCheckbox.addEventListener("change", ()=>{_toggleTaskStatus(task)});
+        upperSection.appendChild(statusCheckbox);
 
         const taskTitle = document.createElement("span");
         taskTitle.classList.add("task-title");
         taskTitle.innerText = task.title;
         taskTitle.style.pointerEvents = "none";
-        taskSection.appendChild(taskTitle);
+        upperSection.appendChild(taskTitle);
 
         const TASK_BUTTONS = {
             view: {
@@ -280,12 +282,12 @@ function _displayTasks(projectName){
                 eventListeners: [{event: "click", function: ()=>{appendDeleteTaskModal(task)}}],
             }
         }
-        _appendButtons(TASK_BUTTONS, taskSection);
+        _appendButtons(TASK_BUTTONS, upperSection);
         projectPageTasks.appendChild(taskSection);
 
         const details = document.createElement("section");
         details.classList.add("task-details", "collapsed");
-        details.setAttribute("data-id", hashedTitle);
+        details.setAttribute("data-id", `${task.title}-from-${task.project}`);
 
         const TASK_DETAILS = {
             description: {
@@ -316,7 +318,7 @@ function _displayTasks(projectName){
             detail.innerHTML = detailObject.innerHTML;
             details.appendChild(detail);
         }
-        projectPageTasks.appendChild(details);
+        taskSection.appendChild(details);
     }
     projectPage.appendChild(projectPageTasks);
 
@@ -340,17 +342,14 @@ function _displayTasks(projectName){
 }
 
 
-function _toggleTaskStatus(task, todo){
+function _toggleTaskStatus(task){
     const currentStatus = task.status;
     const newStatus = !currentStatus;
     task.update("status", newStatus);
-    todo.classList.toggle("done");
-    const detailsWereOpen = document.querySelector(".task-details:not(.collapsed)");
+    const dataId = `${task.title}-from-${task.project}`;
+    const detailsWereOpen = document.querySelector(`.task-details[data-id='${dataId}']:not(.collapsed)`);
     reloadTasks(task.project);
-    if(detailsWereOpen){
-        const hashedTitle = _hash(task.title);
-        _toggleDetails({mode: "hash", hashedTitle});
-    };
+    if(detailsWereOpen) _toggleDetails({dataId});
 }
 
 
@@ -398,29 +397,12 @@ function _clearPreviousPage(container){
 }
 
 
-function _toggleDetails({mode, event, hashedTitle}){
-    const isEventMode = (mode === "event");
-
-    let dataId;
-
-    if(isEventMode){
-        const clickedOnAButton = !event.target.getAttribute("class").includes("task");
+function _toggleDetails({event, dataId}){
+    if(event){
+        const clickedOnAButton = !event.target.classList.contains("top");
         if(clickedOnAButton) return;
         dataId = event.target.getAttribute("data-id");
     }
-    else{
-        dataId = hashedTitle;
-    }
-
-    const details = document.querySelector(`section.task-details[data-id='${dataId}']`);
+    const details = document.querySelector(`.task-details[data-id='${dataId}']`);
     details.classList.toggle("collapsed");
-}
-
-
-function _hash(string){
-    let totalValue = 0;
-    for (const character of string){
-        totalValue += character.charCodeAt(0);
-    }
-    return totalValue;
 }

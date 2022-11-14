@@ -83,6 +83,7 @@ main .project-tasks{
 
 .project-tasks .task{
     display: flex;
+    flex-direction: column;
     cursor: pointer;
 }
 
