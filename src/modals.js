@@ -580,9 +580,13 @@ function _updateTask(task){
 }
 
 function _moveTask(task, recipientProject){
-    const previousProject = task.project;
-    task.moveTo(recipientProject);
-    reloadTasks(previousProject);
+    const taskAlreadyExists = getProjectTasks(recipientProject)[task.title];
+    if(taskAlreadyExists) return;
+    if(!taskAlreadyExists && recipientProject !== task.project){
+        const previousProject = task.project;
+        task.moveTo(recipientProject);
+        reloadTasks(previousProject);
+    }
     _closeModal();
 }
 

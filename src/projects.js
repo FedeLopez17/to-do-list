@@ -13,12 +13,11 @@ function _sortProjects(){
     _PROJECTS = sortedProjects;
 }
 
-const _sortedTaskTitles = [];
-
 function _sortTasks(projectName){
     const tasks = _PROJECTS[projectName].tasks;
+    const orderedTaskNames = _PROJECTS[projectName].orderOfTasks;
     const sortedTasks = {};
-    _sortedTaskTitles.forEach(taskTitle => {sortedTasks[taskTitle] = tasks[taskTitle]});
+    orderedTaskNames.forEach(taskTitle => {sortedTasks[taskTitle] = tasks[taskTitle]});
     _PROJECTS[projectName].tasks = sortedTasks;
 }
 
@@ -29,6 +28,7 @@ export default class Project{
         this.name = name;
         this.icon = {name: icon, class: _ICON_CLASSES[icon]};
         this.tasks = {};
+        this.orderOfTasks = [];
         _PROJECTS[this.name] = this;
         _sortProjects();
     }
@@ -66,7 +66,7 @@ export function renameProjectTask(task, newTaskTitle){
     const projectTasks = _PROJECTS[taskProject].tasks;
     projectTasks[newTaskTitle] = projectTasks[oldTaskTitle];
     delete projectTasks[oldTaskTitle];
-    _sortedTaskTitles.splice(_sortedTaskTitles.indexOf(oldTaskTitle), 1, newTaskTitle);
+    _PROJECTS[taskProject].orderOfTasks.splice(_PROJECTS[taskProject].orderOfTasks.indexOf(oldTaskTitle), 1, newTaskTitle);
     _sortTasks(task.project);
 }
 
@@ -88,7 +88,7 @@ export function getProjectIcon(project){
 
 export function addTaskToProject(task, project){
     _PROJECTS[project].addTask(task);
-    _sortedTaskTitles.push(task.title);
+    _PROJECTS[project].orderOfTasks.push(task.title);
     _sortTasks(task.project);
 }
 
@@ -98,7 +98,7 @@ export function getProjectTasks(project){
 
 export function deleteTaskFromProject(task){
     _PROJECTS[task.project].deleteTask(task);
-    _sortedTaskTitles.splice(_sortedTaskTitles.indexOf(task.title), 1);
+    _PROJECTS[task.project].orderOfTasks.splice(_PROJECTS[task.project].orderOfTasks.indexOf(task.title), 1);
     _sortTasks(task.project);
 }
 
