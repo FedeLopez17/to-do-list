@@ -2,6 +2,7 @@ import "./style.css";
 import { appendNewProjectModal, appendUpdateProjectModal, appendDeleteProjectModal } from "./modals";
 import { appendNewTaskModal, appendNewTaskModalFromProject, appendViewTaskModal, appendUpdateTaskModal, appendMoveTaskModal, appendDeleteTaskModal } from "./modals";
 import { getProjectNames, getProjectTasks, getTodaysTasks, getThisWeeksTasks, getProjectIcon } from "./projects";
+import displayAlert from "./alerts";
 
 export default function buildUserInterface(){
     const container = document.querySelector("#content");
@@ -255,12 +256,6 @@ function _displayTasks(projectName){
                 title: "View",
                 eventListeners: [{event: "click", function: ()=>{appendViewTaskModal(task)}}],
             },
-            priority: {
-                id: "priority-toggle",
-                classes: ["fa-solid", "fa-flag", task.priority],
-                title: "Toggle Priority",
-                eventListeners: [{event: "click", function: ()=>{_toggleTaskPriority(task)}}],
-            },
             edit: {
                 htmlElement: "i",
                 id: "edit-button",
@@ -274,6 +269,12 @@ function _displayTasks(projectName){
                 classes: ["fa-solid", "fa-share-from-square"],
                 title: "Move",
                 eventListeners: [{event: "click", function: ()=>{appendMoveTaskModal(task)}}],
+            },
+            priority: {
+                id: "priority-toggle",
+                classes: ["fa-solid", "fa-flag", task.priority],
+                title: "Toggle Priority",
+                eventListeners: [{event: "click", function: ()=>{_toggleTaskPriority(task)}}],
             },
             delete: {
                 htmlElement: "i",
@@ -359,6 +360,7 @@ function _toggleTaskPriority(task){
     const newPriority = (currentPriority === "low") ? "medium" : (currentPriority === "medium") ? "high" : "low";
     task.update("priority", newPriority);
     reloadTasks(task.project);
+    displayAlert("Task updated!");
 }
 
 

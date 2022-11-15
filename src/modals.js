@@ -570,7 +570,7 @@ function _updateTask(task){
 
     reloadTasks(previousProject || task.project);
     _closeModal();
-    displayAlert("New task added!");
+    displayAlert("Task updated!");
     return true;
 }
 
@@ -594,6 +594,7 @@ function _moveTask(task, recipientProjectName){
     task.moveTo(recipientProjectName);
     reloadTasks(previousProject);
     _closeModal();
+    displayAlert("Task updated!");
 }
 
 
