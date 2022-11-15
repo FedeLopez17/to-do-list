@@ -24,7 +24,8 @@ export function makeTaskModalFields(task){
                     maxLength: 30,
                     "data-modal-name": "title"
                 },
-                selfValidates: true
+                selfValidates: true,
+                required: true
             },
         },
         description: {
@@ -65,7 +66,8 @@ export function makeTaskModalFields(task){
                     id: "dueDate",
                     "data-modal-name": "due date"
                 },
-                selfValidates: true
+                selfValidates: true,
+                required: true
             },
             viewMode: {
                 container: {
@@ -89,7 +91,8 @@ export function makeTaskModalFields(task){
                 attributes: {
                     id: "priority",
                     "data-modal-name": "priority"
-                }
+                },
+                required: true
             },
             viewMode: {
                 container: {
@@ -113,7 +116,8 @@ export function makeTaskModalFields(task){
                 attributes: {
                     id: "project",
                     "data-modal-name": "project"
-                }
+                },
+                required: true
             },
             viewMode: {
                 container: {

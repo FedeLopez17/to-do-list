@@ -214,6 +214,13 @@ function _appendTaskModal({mode, task, projectName}){
             const label = document.createElement("label");
             label.for = inputObject.attributes.id;
             label.innerText = labelObject.innerText;
+            if(inputObject.required){
+                const requiredIndication = document.createElement("span");
+                requiredIndication.classList.add("required-indication");
+                label.title = "Required!";
+                requiredIndication.innerText = "*";
+                label.appendChild(requiredIndication);
+            }
             wrapper.appendChild(label);
     
             const input = document.createElement(inputObject.htmlElement);

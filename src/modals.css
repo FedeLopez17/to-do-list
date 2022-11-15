@@ -48,3 +48,7 @@
 .valid{
     outline: solid 2px lightgreen;
 }
+
+.required-indication{
+    color: red;
+}
