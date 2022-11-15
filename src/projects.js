@@ -64,11 +64,6 @@ export default class Project{
     }
 }
 
-export function logProject(projectName){
-    console.log(JSON.stringify(_PROJECTS[projectName].tasks));
-   return JSON.stringify(_PROJECTS[projectName].tasks);
-}
-
 export function getProject(projectName){
     return _PROJECTS[projectName];
 }
@@ -103,6 +98,21 @@ export function deleteProjectTask(task){
 
 export function deleteProject(projectName){
     delete _PROJECTS[projectName];
+}
+
+
+export function getCompletedTasks(){
+    const completedTasks = [];
+
+    for (const project in _PROJECTS){
+        for (const taskKey in _PROJECTS[project].tasks){
+            const task = _PROJECTS[project].tasks[taskKey];
+            const taskCompleted = task.status;
+            if(taskCompleted) completedTasks.push(task);
+        }
+    }
+
+    return completedTasks;
 }
 
 export function getTodaysTasks(){

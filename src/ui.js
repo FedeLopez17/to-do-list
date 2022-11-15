@@ -1,7 +1,7 @@
 import "./style.css";
 import { appendNewProjectModal, appendUpdateProjectModal, appendDeleteProjectModal } from "./modals";
 import { appendNewTaskModal, appendNewTaskModalFromProject, appendViewTaskModal, appendUpdateTaskModal, appendMoveTaskModal, appendDeleteTaskModal } from "./modals";
-import { getProjectNames, getProjectTasks, getTodaysTasks, getThisWeeksTasks, getProjectIcon } from "./projects";
+import { getProjectNames, getProjectTasks, getTodaysTasks, getThisWeeksTasks, getProjectIcon, getCompletedTasks } from "./projects";
 import displayAlert from "./alerts";
 
 export default function buildUserInterface(){
@@ -72,6 +72,16 @@ function _appendAside(container){
                 {event: "click", function: () => {_displayTasks("This week")}}
             ]
         },
+        completed: {
+            title: "Completed",
+            classes: ["project"],
+            attributes: [{key: "data-name", value: "Completed"}],
+            iconClasses: ["fa-solid", "fa-square-check"],
+            eventListeners: [
+                {event: "click", function: () => {_toggleCurrentProject(".project[data-name='Completed']")}},
+                {event: "click", function: () => {_displayTasks("Completed")}}
+            ]
+        }
     }   
     
     for (let component in ASIDE_COMPONENTS){
@@ -198,9 +208,10 @@ function _appendMainSection(container){
 function _displayTasks(projectName){
     const tasksAlreadyOnScreen = document.querySelector(`.project-tasks[data-project-name='${projectName}']`);
     if(tasksAlreadyOnScreen) return;
-
+    
     const isTodaysTasks = (projectName == "Today");
     const isThisWeeksTasks = (projectName == "This week");
+    const isCompletedTasks = (projectName === "Completed");
 
     const projectPage = document.createElement("section");
     projectPage.classList.add("project-tasks");
@@ -217,7 +228,7 @@ function _displayTasks(projectName){
     const projectPageTasks = document.createElement("section");
     projectPageTasks.classList.add("tasks");
     
-    const tasks = (isTodaysTasks) ? getTodaysTasks() : (isThisWeeksTasks) ? getThisWeeksTasks() : getProjectTasks(projectName);
+    const tasks = (isTodaysTasks) ? getTodaysTasks() : (isThisWeeksTasks) ? getThisWeeksTasks() : (isCompletedTasks) ? getCompletedTasks() : getProjectTasks(projectName);
     for (const taskName in tasks){
         const task = tasks[taskName];
 
@@ -329,7 +340,7 @@ function _displayTasks(projectName){
     main.appendChild(projectPage);
 
     // Today and This week don't allow users to add tasks, they just show any task that has its due date set to today or any day of this week
-    if(isTodaysTasks || isThisWeeksTasks) return;
+    if(isTodaysTasks || isThisWeeksTasks || isCompletedTasks) return;
 
     const addTaskButton = document.createElement("section");
     addTaskButton.id = "add-task-button";
@@ -380,7 +391,8 @@ function _appendButtons(BUTTONS_INFO, container){
 export function reloadTasks(project){
     const isToday = document.querySelector(".project-tasks[data-project-name='Today']");
     const isThisWeek = document.querySelector(".project-tasks[data-project-name='This week']");
-    const projectToReload = (isToday) ? "Today" : (isThisWeek) ? "This week" : project;
+    const isCompleted = document.querySelector(".project-tasks[data-project-name='Completed']");
+    const projectToReload = (isToday) ? "Today" : (isThisWeek) ? "This week" : (isCompleted) ? "Completed" : project;
     document.querySelector("main section.project-tasks").remove();
     _displayTasks(projectToReload);
 }

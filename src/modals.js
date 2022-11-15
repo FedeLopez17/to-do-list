@@ -1,6 +1,6 @@
 import "./modals.css";
 import ToDo from "./tasks.js";
-import Project, { deleteProject, getProject, getProjectNames, getProjectTasks, logProject } from "./projects";
+import Project, { deleteProject, getProject, getProjectNames, getProjectTasks } from "./projects";
 import { reloadProjects, reloadTasks } from "./ui";
 import { FA_ICONS, makeTaskModalFields } from "./modals-data";
 import displayAlert from "./alerts";
@@ -572,8 +572,6 @@ function _updateTask(task){
     for(const input of inputs){
         task.update(input.id, input.value);
     }
-
-    logProject(task.project);
 
     reloadTasks(previousProject || task.project);
     _closeModal();
