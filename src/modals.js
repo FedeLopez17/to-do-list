@@ -154,14 +154,14 @@ function _appendTaskModal({mode, task, projectName}){
             modalTitle: "New Task",
             buttonId: "add-task",
             buttonText: "Add Task",
-            buttonFunction: _validateAndAddTask
+            buttonFunction: ()=>{_validateTaskAndCarryThrough({isAddMode: true})}
         }, 
         update: {
             modalClass: "update",
             modalTitle: "Update Task",
             buttonId: "update-task",
             buttonText: "Update Task",
-            buttonFunction: ()=>{_validateAndUpdateTask(task)}
+            buttonFunction: ()=>{_validateTaskAndCarryThrough({isAddMode: false, task})}
         },
         view: {
             modalClass: "view",
@@ -495,11 +495,12 @@ function _deleteProject(projectName){
 }
 
 
-function _validateAndAddTask(){
+function _validateTaskAndCarryThrough({isAddMode, task}){
     const inputsAreValid = _validateInputs();
     if(!inputsAreValid) return;
-    const taskAlreadyExists = !_addNewTask();
-    if(taskAlreadyExists) {
+
+    const taskAlreadyExists = (isAddMode) ? !_addNewTask() : !_updateTask(task);
+    if(taskAlreadyExists){
         const titleInput = document.querySelector(".task-modal input#title");
         if(titleInput.classList.contains("valid")){
             titleInput.classList.remove("valid");
@@ -528,22 +529,6 @@ function _addNewTask(){
 
     _closeModal();
     return true;
-}
-
-
-function _validateAndUpdateTask(task){
-    const inputsAreValid = _validateInputs();
-    if(!inputsAreValid) return;
-
-    const taskAlreadyExists = !_updateTask(task);
-    if(taskAlreadyExists) {
-        const titleInput = document.querySelector(".task-modal input#title");
-        if(titleInput.classList.contains("valid")){
-            titleInput.classList.remove("valid");
-            titleInput.classList.add("invalid");
-        }
-        _displayWarningAfterInput(titleInput, "This task already exists within this project!");
-    }
 }
 
 function _updateTask(task){
