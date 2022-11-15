@@ -60,6 +60,7 @@ function _appendProjectModal({mode, project}){
     const nameLabel = document.createElement("label");
     nameLabel.for = "name";
     nameLabel.innerText = "Name:";
+    _appendRequiredInputIndication(nameLabel);
     nameWrapper.appendChild(nameLabel);
 
     const nameInput = document.createElement("input");
@@ -214,13 +215,7 @@ function _appendTaskModal({mode, task, projectName}){
             const label = document.createElement("label");
             label.for = inputObject.attributes.id;
             label.innerText = labelObject.innerText;
-            if(inputObject.required){
-                const requiredIndication = document.createElement("span");
-                requiredIndication.classList.add("required-indication");
-                label.title = "Required!";
-                requiredIndication.innerText = "*";
-                label.appendChild(requiredIndication);
-            }
+            if(inputObject.required) _appendRequiredInputIndication(label);
             wrapper.appendChild(label);
     
             const input = document.createElement(inputObject.htmlElement);
@@ -268,6 +263,13 @@ function _appendTaskModal({mode, task, projectName}){
     taskModal.appendChild(modalFooter);
 }
 
+function _appendRequiredInputIndication(parentElement){
+    const requiredIndication = document.createElement("span");
+    requiredIndication.classList.add("required-indication");
+    parentElement.title = "Required!";
+    requiredIndication.innerText = "*";
+    parentElement.appendChild(requiredIndication);
+}
 
 export function appendDeleteTaskModal(task){
     _appendDeleteModal({mode: "task", task});
