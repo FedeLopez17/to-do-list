@@ -3,6 +3,7 @@ import ToDo from "./tasks.js";
 import Project, { deleteProject, getProject, getProjectNames, getProjectTasks, logProject } from "./projects";
 import { reloadProjects, reloadTasks } from "./ui";
 import { FA_ICONS, makeTaskModalFields } from "./modals-data";
+import displayAlert from "./alerts";
 
 export function appendUpdateProjectModal(projectName){
     const project = getProject(projectName);
@@ -275,12 +276,18 @@ function _appendDeleteModal({mode, task, projectName}){
         task: {
             modalClass: "task-modal",
             warningText: "Are you sure you want to delete this task?",
-            deleteFunction: ()=>{_deleteTask(task)}
+            deleteFunction: ()=>{
+                _deleteTask(task);
+                displayAlert("Task deleted!");
+            }
         }, 
         project: {
             modalClass: "project-modal",
             warningText: "Are you sure you want to delete this project?",
-            deleteFunction: ()=>{_deleteProject(projectName)}
+            deleteFunction: ()=>{
+                _deleteProject(projectName);
+                displayAlert("Project deleted!");
+            }
         }
     }
 
@@ -431,7 +438,15 @@ function _validateProjectAndCarryThrough({isAddMode, outdatedProject}){
     if (addCondition || updateCondition){
         const chosenName = nameInput.value;
         const chosenIcon = document.querySelector(".project-modal input[type='radio']:checked").id;
-        isAddMode ? _addProject(chosenName, chosenIcon) : _updateProject(chosenName, chosenIcon, outdatedProject);
+        if(isAddMode){
+            _addProject(chosenName, chosenIcon);
+            displayAlert("New project added!");
+        }
+        else{
+            _updateProject(chosenName, chosenIcon, outdatedProject);
+            displayAlert("Project updated!");
+        }
+
         _closeModal();
         return;
     }
@@ -528,6 +543,7 @@ function _addNewTask(){
     if(taskBelongsToCurrentProject){reloadTasks(task.project)};
 
     _closeModal();
+    displayAlert("New task added!");
     return true;
 }
 
@@ -554,6 +570,7 @@ function _updateTask(task){
 
     reloadTasks(previousProject || task.project);
     _closeModal();
+    displayAlert("New task added!");
     return true;
 }
 
