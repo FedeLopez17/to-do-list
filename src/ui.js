@@ -46,7 +46,7 @@ function _appendAside(container){
             title: "Inbox",
             classes: ["project"],
             attributes: [{key: "data-name", value: "Inbox"}],
-            iconClasses: ["fa-solid", getProjectIcon("Inbox").class],
+            iconClasses: ["fa-solid", "fa-inbox"],
             eventListeners: [
                 {event: "click", function: () => {_toggleCurrentProject(".project[data-name='Inbox']")}},
                 {event: "click", function: () => {_displayTasks("Inbox")}}

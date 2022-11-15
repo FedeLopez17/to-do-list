@@ -13,12 +13,33 @@ function _sortProjects(){
     _PROJECTS = sortedProjects;
 }
 
-const _ICON_CLASSES = {inbox: "fa-inbox", project: "fa-list-check", finance: "fa-sack-dollar", education: "fa-book", repairs: "fa-screwdriver-wrench"};
+
+const PROJECT_ICONS = {
+    inbox: {id: "inbox", class: "fa-inbox", isUnavailable: true},
+    project: {id: "project", class: "fa-list-check", isDefault: true},
+    finance: {id: "finance", class: "fa-sack-dollar"},
+    education: {id: "education", class: "fa-book"},
+    repairs: {id: "repairs", class: "fa-screwdriver-wrench"},
+    shopping: {id: "shopping", class: "fa-cart-shopping"},
+    exercise: {id: "exercise", class: "fa-dumbbell"},
+    nature: {id: "nature", class: "fa-tree"},
+    travelling: {id: "travelling", class: "fa-plane"}
+};
+
+export function getProjectIcons(){
+    const iconArray = [];
+    for (const icon in PROJECT_ICONS){
+        if(PROJECT_ICONS[icon].isUnavailable) continue;
+        iconArray.push(PROJECT_ICONS[icon]);
+    }
+    return iconArray;
+}
+
 
 export default class Project{
     constructor(name, icon){
         this.name = name;
-        this.icon = {name: icon, class: _ICON_CLASSES[icon]};
+        this.icon = {name: icon, class: PROJECT_ICONS[icon].class};
         this.tasks = {};
         this.orderedTaskNames = [];
         _PROJECTS[this.name] = this;
@@ -60,7 +81,7 @@ export default class Project{
 
     setIcon(iconName){
         this.icon.name = iconName;
-        this.icon.class = _ICON_CLASSES[iconName];
+        this.icon.class = PROJECT_ICONS[iconName].class;
     }
 }
 

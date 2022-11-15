@@ -1,8 +1,8 @@
 import "./modals.css";
 import ToDo from "./tasks.js";
-import Project, { deleteProject, getProject, getProjectNames, getProjectTasks } from "./projects";
+import Project, { deleteProject, getProject, getProjectIcons, getProjectNames, getProjectTasks } from "./projects";
 import { reloadProjects, reloadTasks } from "./ui";
-import { FA_ICONS, makeTaskModalFields } from "./modals-data";
+import { makeTaskModalFields } from "./modals-data";
 import displayAlert from "./alerts";
 
 export function appendUpdateProjectModal(projectName){
@@ -84,8 +84,8 @@ function _appendProjectModal({mode, project}){
     iconContainer.classList.add("icon-container");
     iconWrapper.appendChild(iconContainer);
 
-    // These icons are imported from modals-data.js
-    FA_ICONS.forEach(fontAwesomeIcon => {
+    const projectIcons = getProjectIcons();
+    projectIcons.forEach(fontAwesomeIcon => {
         const label = document.createElement("label");
         label.setAttribute("for", fontAwesomeIcon.id);
         iconContainer.appendChild(label);
