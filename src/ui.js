@@ -1,5 +1,6 @@
 import "./style.css";
-import { appendDeleteProjectModal, appendDeleteTaskModal, appendMoveTaskModal, appendNewProjectModal, appendNewTaskModal, appendNewTaskModalFromProject, appendUpdateProjectModal, appendUpdateTaskModal, appendViewTaskModal } from "./modals";
+import { appendNewProjectModal, appendUpdateProjectModal, appendDeleteProjectModal } from "./modals";
+import { appendNewTaskModal, appendNewTaskModalFromProject, appendViewTaskModal, appendUpdateTaskModal, appendMoveTaskModal, appendDeleteTaskModal } from "./modals";
 import { getProjectNames, getProjectTasks, getTodaysTasks, getThisWeeksTasks, getProjectIcon } from "./projects";
 
 export default function buildUserInterface(){

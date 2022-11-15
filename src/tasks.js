@@ -1,4 +1,4 @@
-import { addTaskToProject, deleteTaskFromProject, renameProjectTask } from "./projects";
+import { addProjectTask, deleteProjectTask, renameProjectTask } from "./projects";
 import format from "date-fns/format";
 
 export default class ToDo{
@@ -10,7 +10,7 @@ export default class ToDo{
         this.dueDate = dueDate;
         this.formattedDate = format(new Date(dueDate), "EEEE do - MMMM - yyyy");
         this.project = project;
-        addTaskToProject(this, project);
+        addProjectTask(this, project);
     }
 
     update(property, updatedValue){
@@ -26,12 +26,12 @@ export default class ToDo{
     }
 
     moveTo(newProject){
-        deleteTaskFromProject(this);
+        deleteProjectTask(this);
         this.project = newProject;
-        addTaskToProject(this, newProject);
+        addProjectTask(this, newProject);
     }
 
     deleteFromProject(){
-        deleteTaskFromProject(this);
+        deleteProjectTask(this);
     }
 }

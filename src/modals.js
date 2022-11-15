@@ -9,11 +9,9 @@ export function appendUpdateProjectModal(projectName){
     _appendProjectModal({mode:"update", project});
 }
 
-
 export function appendNewProjectModal(){
     _appendProjectModal({mode: "new"});
 }
-
 
 function _appendProjectModal({mode, project}){
 
@@ -126,7 +124,7 @@ function _appendProjectModal({mode, project}){
 
 
 export function appendNewTaskModalFromProject(projectName){
-    _appendTaskModal({mode: "new from project", project: projectName});
+    _appendTaskModal({mode: "new from project", projectName});
 }
 
 export function appendNewTaskModal(){
@@ -141,8 +139,7 @@ export function appendViewTaskModal(task){
     _appendTaskModal({mode: "view", task});
 }
 
-
-function _appendTaskModal({mode, task, project}){
+function _appendTaskModal({mode, task, projectName}){
     const isViewMode = (mode === "view");
     const isUpdateTask = (mode === "update");
     let isNewFromProject = false;
@@ -234,7 +231,7 @@ function _appendTaskModal({mode, task, project}){
                 })
             }
             if(isUpdateTask) input.value = task[fieldName];
-            if(isNewFromProject && input.id === "project") input.value = project;
+            if(isNewFromProject && input.id === "project") input.value = projectName;
             wrapper.appendChild(input);
     
             modalBody.appendChild(wrapper);
@@ -268,11 +265,11 @@ export function appendDeleteTaskModal(task){
     _appendDeleteModal({mode: "task", task});
 }
 
-export function appendDeleteProjectModal(project){
-    _appendDeleteModal({mode: "project", project});
+export function appendDeleteProjectModal(projectName){
+    _appendDeleteModal({mode: "project", projectName});
 }
 
-function _appendDeleteModal({mode, task, project}){
+function _appendDeleteModal({mode, task, projectName}){
 
     const MODE_VALUES = {
         task: {
@@ -283,7 +280,7 @@ function _appendDeleteModal({mode, task, project}){
         project: {
             modalClass: "project-modal",
             warningText: "Are you sure you want to delete this project?",
-            deleteFunction: ()=>{_deleteProject(project)}
+            deleteFunction: ()=>{_deleteProject(projectName)}
         }
     }
 
@@ -323,6 +320,7 @@ function _appendDeleteModal({mode, task, project}){
     container.appendChild(modalBackground);
     container.appendChild(deleteModal);
 }
+
 
 export function appendMoveTaskModal(task){
 
@@ -413,6 +411,7 @@ function _makeModalHeader(title){
     return modalHeader;
 }
 
+
 function _validateAndAddProject(){
     _validateProjectAndCarryThrough({isAddMode: true});
 }
@@ -452,11 +451,13 @@ function _validateProjectAndCarryThrough({isAddMode, outdatedProject}){
     }
 }
 
+
 function _addProject(projectName, projectIcon){
     const project = new Project(projectName, projectIcon);
     reloadProjects();
     return project;
 }
+
 
 function _updateProject(updatedName, updatedIcon, outdatedProject){
     const isSameName = (updatedName === outdatedProject.name);
@@ -470,12 +471,13 @@ function _updateProject(updatedName, updatedIcon, outdatedProject){
         const updatedProject = _addProject(updatedName, updatedIcon);
         _migrateAllTasks(outdatedProject, updatedProject);
         deleteProject(outdatedProject.name);
-        const projectTasksOnScreen = document.querySelector(`.${outdatedProject.name.replaceAll(" ", "-")}-page.project`);
+        const projectTasksOnScreen = document.querySelector(`.project-tasks[data-project-name='${outdatedProject.name}']`);
         if(projectTasksOnScreen) reloadTasks(updatedName);
     }
 
     reloadProjects();
 }
+
 
 function _migrateAllTasks(originProject, recipientProject){
     for(const task in originProject.tasks){
@@ -483,45 +485,20 @@ function _migrateAllTasks(originProject, recipientProject){
     }
 }
 
+
+function _deleteProject(projectName){
+    deleteProject(projectName);
+    reloadProjects();
+    const deletedProjectOnScreen = document.querySelector(`.project-tasks[data-project-name='${projectName}']`);
+    if(deletedProjectOnScreen) reloadTasks("Inbox");
+    _closeModal();
+}
+
+
 function _validateAndAddTask(){
     const inputsAreValid = _validateInputs();
     if(!inputsAreValid) return;
     const taskAlreadyExists = !_addNewTask();
-    if(taskAlreadyExists) {
-        const titleInput = document.querySelector(".task-modal input#title");
-        if(titleInput.classList.contains("valid")){
-            titleInput.classList.remove("valid");
-            titleInput.classList.add("invalid");
-        }
-        _displayWarningAfterInput(titleInput, "This task already exists within this project!");
-    }
-}
-
-function _displayWarningAfterInput(input, warningMessage){
-
-    const inputAlreadyHasAWarning = _isFollowedByAWarning(input);
-    if(inputAlreadyHasAWarning) return;
-
-    const warning = document.createElement("p");
-    warning.classList.add("warning");
-    warning.innerText = warningMessage;
-    input.after(warning);
-    input.addEventListener("input", ()=>{
-        if(_isFollowedByAWarning(input)){
-            input.nextSibling.remove();
-        }
-    }, {once: true});
-}
-
-function _isFollowedByAWarning(input){
-    return input.nextSibling && input.nextSibling.classList.contains("warning");
-}
-
-function _validateAndUpdateTask(task){
-    const inputsAreValid = _validateInputs();
-    if(!inputsAreValid) return;
-
-    const taskAlreadyExists = !_updateTask(task);
     if(taskAlreadyExists) {
         const titleInput = document.querySelector(".task-modal input#title");
         if(titleInput.classList.contains("valid")){
@@ -553,6 +530,22 @@ function _addNewTask(){
     return true;
 }
 
+
+function _validateAndUpdateTask(task){
+    const inputsAreValid = _validateInputs();
+    if(!inputsAreValid) return;
+
+    const taskAlreadyExists = !_updateTask(task);
+    if(taskAlreadyExists) {
+        const titleInput = document.querySelector(".task-modal input#title");
+        if(titleInput.classList.contains("valid")){
+            titleInput.classList.remove("valid");
+            titleInput.classList.add("invalid");
+        }
+        _displayWarningAfterInput(titleInput, "This task already exists within this project!");
+    }
+}
+
 function _updateTask(task){
     const selectedTitle = document.querySelector(".task-modal input#title").value;
     const selectedProject = document.querySelector(".task-modal select#project").value;
@@ -579,19 +572,28 @@ function _updateTask(task){
     return true;
 }
 
-function _moveTask(task, recipientProject){
-    const taskAlreadyExists = getProjectTasks(recipientProject)[task.title];
-    if(taskAlreadyExists &&  recipientProject !== task.project){
+
+function _moveTask(task, recipientProjectName){
+    const taskAlreadyExists = getProjectTasks(recipientProjectName)[task.title];
+
+    if(recipientProjectName === task.project){
+        _closeModal();
+        return;
+    }
+
+    if(taskAlreadyExists){
         const projectInput = document.querySelector(".task-modal select#project");
         if(!projectInput.classList.contains("invalid"))projectInput.classList.add("invalid");
         _displayWarningAfterInput(projectInput, "A task with this name already exists within this project!");
         return;
     }
+
     const previousProject = task.project;
-    task.moveTo(recipientProject);
+    task.moveTo(recipientProjectName);
     reloadTasks(previousProject);
     _closeModal();
 }
+
 
 function _deleteTask(task){
     task.deleteFromProject();
@@ -599,12 +601,25 @@ function _deleteTask(task){
     _closeModal();
 }
 
-function _deleteProject(project){
-    deleteProject(project);
-    reloadProjects();
-    const deletedProjectOnScreen = document.querySelector(`.${project.replaceAll(" ", "-")}-page.project`);
-    if(deletedProjectOnScreen) reloadTasks("Inbox");
-    _closeModal();
+
+function _displayWarningAfterInput(input, warningMessage){
+
+    const inputAlreadyHasAWarning = _isFollowedByAWarning(input);
+    if(inputAlreadyHasAWarning) return;
+
+    const warning = document.createElement("p");
+    warning.classList.add("warning");
+    warning.innerText = warningMessage;
+    input.after(warning);
+    input.addEventListener("input", ()=>{
+        if(_isFollowedByAWarning(input)){
+            input.nextSibling.remove();
+        }
+    }, {once: true});
+}
+
+function _isFollowedByAWarning(input){
+    return input.nextSibling && input.nextSibling.classList.contains("warning");
 }
 
 
@@ -640,6 +655,7 @@ function _selfValidation(input){
         if(!input.classList.contains("invalid")){input.classList.add("invalid")};
     }
 }
+
 
 function _closeModal(){
     [".modal-background", ".task-modal", ".project-modal"].forEach(elementClass =>{
