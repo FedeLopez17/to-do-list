@@ -6,3 +6,7 @@
     aspect-ratio: 16/9;
     height: 100px;
 }
+
+#alert.hide{
+    display: none;
+}

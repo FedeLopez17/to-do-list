@@ -3,6 +3,9 @@ const _ALERT_TIME_UNTIL_DELETION_IN_SECONDS = 5;
 const _ALERT_TIME_UNTIL_FADE_OUT_IN_SECONDS = 4;
 
 export default function displayAlert(alertMessage){
+    const previousAlertOnScreen = document.querySelector("#alert");
+    if(previousAlertOnScreen) previousAlertOnScreen.classList.add("hide");
+    
     const container = document.querySelector("#content");
     const alert = document.createElement("section");
     alert.id = "alert";
