@@ -52,3 +52,12 @@
 .required-indication{
     color: red;
 }
+
+.project-modal input[type='radio'].hidden{
+    display: none;
+}
+
+.project-modal input[type='radio']:checked + label{
+    background-color: red;
+    padding: 2px;
+}

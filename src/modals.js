@@ -87,14 +87,6 @@ function _appendProjectModal({mode, project}){
 
     const projectIcons = getProjectIcons();
     projectIcons.forEach(fontAwesomeIcon => {
-        const label = document.createElement("label");
-        label.setAttribute("for", fontAwesomeIcon.id);
-        iconContainer.appendChild(label);
-        const icon = document.createElement("i");
-        icon.classList.add("fa-solid", fontAwesomeIcon.class);
-        label.appendChild(icon);
-        iconContainer.appendChild(label);
-
         const input = document.createElement("input");
         input.type = "radio";
         input.name = "icon";
@@ -103,6 +95,14 @@ function _appendProjectModal({mode, project}){
         if(fontAwesomeIcon.isDefault) input.checked = true;
         if(isUpdateMode) input.checked = (input.id === project.icon.name);
         iconContainer.appendChild(input);
+
+        const label = document.createElement("label");
+        label.setAttribute("for", fontAwesomeIcon.id);
+        iconContainer.appendChild(label);
+        const icon = document.createElement("i");
+        icon.classList.add("fa-solid", fontAwesomeIcon.class);
+        label.appendChild(icon);
+        iconContainer.appendChild(label);
     })
 
     projectModal.appendChild(modalBody);
