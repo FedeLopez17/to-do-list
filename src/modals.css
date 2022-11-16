@@ -64,6 +64,17 @@
     margin-top: 10px;
 }
 
+.project-modal .icon-container label{
+    padding: 8px;
+    border: solid 1px lightgrey;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.project-modal input[type='radio']:checked + label{
+    background-color: red;
+}
+
 .modal-body > [class*="wrapper"]{
     display: flex;
     flex-direction: column;
@@ -73,6 +84,10 @@
 .modal-body > [class*="wrapper"]:last-of-type{
     margin-bottom: 40px;
 }
+
+.task-modal.view .modal-body span{
+    font-weight: 900;
+} 
 
 .modal-footer{
     height: 60px;
@@ -103,11 +118,6 @@
 
 .project-modal input[type='radio'].hidden{
     display: none;
-}
-
-.project-modal input[type='radio']:checked + label{
-    background-color: red;
-    padding: 2px;
 }
 
 @keyframes slide-down-fade-in {
