@@ -87,7 +87,32 @@
 
 .task-modal.view .modal-body span{
     font-weight: 900;
-} 
+}
+
+.delete .modal-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+}
+
+.delete i{
+    font-size: 100px;
+}
+
+.delete .modal-body span{
+    font-weight: 900;
+}
+
+.delete .modal-footer{
+    margin: 0;
+    height: 50px;
+}
+
+.delete .delete-button{
+    background-color: red;
+}
 
 .modal-footer{
     height: 60px;

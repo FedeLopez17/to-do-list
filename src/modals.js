@@ -284,7 +284,7 @@ function _appendDeleteModal({mode, task, projectName}){
     const MODE_VALUES = {
         task: {
             modalClass: "task-modal",
-            warningText: "Are you sure you want to delete this task?",
+            warningTextInnerHTML: `Are you sure you want to <span>permanently delete</span> this task?`,
             deleteFunction: ()=>{
                 _deleteTask(task);
                 displayAlert("Task deleted!");
@@ -292,7 +292,7 @@ function _appendDeleteModal({mode, task, projectName}){
         }, 
         project: {
             modalClass: "project-modal",
-            warningText: "Are you sure you want to delete this project?",
+            warningTextInnerHTML: `Are you sure you want to <span>permanently delete</span> this project?`,
             deleteFunction: ()=>{
                 _deleteProject(projectName);
                 displayAlert("Project deleted!");
@@ -316,19 +316,20 @@ function _appendDeleteModal({mode, task, projectName}){
     icon.classList.add("fa-solid", "fa-circle-exclamation");
     modalBody.appendChild(icon);
     const warning = document.createElement("p");
-    warning.innerText = MODE_VALUES[mode].warningText;
+    warning.innerHTML = MODE_VALUES[mode].warningTextInnerHTML;
     modalBody.appendChild(warning);
     deleteModal.appendChild(modalBody);
 
     const modalFooter = document.createElement("footer");
+    modalFooter.classList.add("modal-footer");
     const cancelButton = document.createElement("button");
     cancelButton.classList.add("cancel-button");
     cancelButton.innerText = "Cancel";
     cancelButton.addEventListener("click", _closeModal);
     modalFooter.appendChild(cancelButton);
     const deleteButton = document.createElement("button");
-    deleteButton.classList.add("ok-button");
-    deleteButton.innerText = "OK";
+    deleteButton.classList.add("delete-button");
+    deleteButton.innerText = "Delete";
     deleteButton.addEventListener("click", MODE_VALUES[mode].deleteFunction);
     modalFooter.appendChild(deleteButton);
     deleteModal.appendChild(modalFooter);
