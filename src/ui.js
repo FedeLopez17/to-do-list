@@ -105,7 +105,10 @@ function _appendAside(container){
 // Inbox loads as the default project.
 window.addEventListener("load", ()=>{_displayTasks("Inbox")});
 
-function _toggleCurrentProject(projectSelector){
+function _toggleCurrentProject(projectSelector, event){
+    const clickedOnAButton = event && !event.target.classList.contains("project");
+    if(clickedOnAButton) return;
+
     const currentProject = document.querySelector(".project.current");
     const project = document.querySelector(projectSelector);
     const projectIsCurrent = (project === currentProject);
@@ -141,8 +144,8 @@ function _appendProjects(container){
         const projectContainer = document.createElement("section");
         projectContainer.classList.add("project");
         projectContainer.setAttribute("data-name", projectName);
-        projectContainer.addEventListener("click", ()=>{_toggleCurrentProject(`.project[data-name='${projectName}']`)});
-        projectContainer.addEventListener("click", ()=>{_displayTasks(projectName)});
+        projectContainer.addEventListener("click", (event)=>{_toggleCurrentProject(`.project[data-name='${projectName}']`, event)});
+        projectContainer.addEventListener("click", (event)=>{_displayTasks(projectName, event)});
         projects.appendChild(projectContainer);
 
         const projectTitleWrapper = document.createElement("section");
@@ -205,7 +208,10 @@ function _appendMainSection(container){
     container.appendChild(main);
 }
 
-function _displayTasks(projectName){
+function _displayTasks(projectName, event){
+    const clickedOnAButton = event && !event.target.classList.contains("project");
+    if(clickedOnAButton) return;
+
     const tasksAlreadyOnScreen = document.querySelector(`.project-tasks[data-project-name='${projectName}']`);
     if(tasksAlreadyOnScreen) return;
     

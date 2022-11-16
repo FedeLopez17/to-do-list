@@ -438,6 +438,7 @@ function _validateAndUpdateProject(outdatedProject){
 }
 
 function _validateProjectAndCarryThrough({isAddMode, outdatedProject}){
+    console.log(outdatedProject); //ACAAAAAAAAAAA
     const isUpdateMode = !isAddMode;
     const currentProjects = getProjectNames();
     const nameInput = document.querySelector(".project-modal input#name");
@@ -488,6 +489,9 @@ function _updateProject(updatedName, updatedIcon, outdatedProject){
     const isSameName = (updatedName === outdatedProject.name);
     const isDifferentIcon = (updatedIcon !== outdatedProject.icon.name);
     const onlyTheIconIsDifferent = isSameName && isDifferentIcon;
+    const projectDidNotChange = (isSameName && !isDifferentIcon);
+
+    if(projectDidNotChange) return;
 
     if(onlyTheIconIsDifferent){
         outdatedProject.setIcon(updatedIcon);
