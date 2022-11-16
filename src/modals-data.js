@@ -14,7 +14,7 @@ export function makeTaskModalFields(task){
                 classes: ["title-wrapper"]
             },
             label: {
-                innerText: "Title:"
+                innerText: "Title"
             },
             input: {
                 htmlElement: "input",
@@ -33,7 +33,7 @@ export function makeTaskModalFields(task){
                 classes: ["description-wrapper"]
             },
             label: {
-                innerText: "Description:"
+                innerText: "Description"
             },
             input: {
                 htmlElement: "input",
@@ -57,7 +57,7 @@ export function makeTaskModalFields(task){
                 classes: ["due-date-wrapper"]
             },
             label: {
-                innerText: "Due date:"
+                innerText: "Due date"
             },
             input: {
                 htmlElement: "input",
@@ -83,7 +83,7 @@ export function makeTaskModalFields(task){
                 classes: ["priority-wrapper"]
             },
             label: {
-                innerText: "Priority:"
+                innerText: "Priority"
             },
             input: {
                 htmlElement: "select",
@@ -92,7 +92,6 @@ export function makeTaskModalFields(task){
                     id: "priority",
                     "data-modal-name": "priority"
                 },
-                required: true
             },
             viewMode: {
                 container: {
@@ -108,7 +107,7 @@ export function makeTaskModalFields(task){
                 classes: ["project-wrapper"]
             },
             label: {
-                innerText: "Project:"
+                innerText: "Project"
             },
             input: {
                 htmlElement: "select",
@@ -117,7 +116,6 @@ export function makeTaskModalFields(task){
                     id: "project",
                     "data-modal-name": "project"
                 },
-                required: true
             },
             viewMode: {
                 container: {

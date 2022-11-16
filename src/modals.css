@@ -1,5 +1,9 @@
+:root{
+    --modal-width: 500px;
+}
+
 .modal-background{
-    background-color: rgba(10, 10, 10, 50%);
+    background-color: rgba(10, 10, 10, 60%);
     position: absolute;
     top: 0;
     height: 100%;
@@ -12,33 +16,80 @@
     flex-direction: column;
     position: absolute;
     top: 20%;
-    left: 20%;
-    height: 50%;
-    width: 50%;
+    left: calc(50% - (var(--modal-width) / 2)); /* exactly in the center */
+    width: var(--modal-width);
+    animation: slide-down-fade-in 0.2s ease-in;
 }
 
-.task-modal .modal-header, .project-modal, .modal-header{
+.task-modal{
+    top: 15%;
+}
+
+.modal-out{
+    animation: slide-up-fade-out 0.1s ease-out forwards;
+}
+
+.modal-header{
+    height: 40px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    background-color: red;
 }
 
-.task-modal .modal-body, .project-modal, .modal-body{
+.modal-header .modal-title{
+    margin-left: 10px;
+}
+
+.modal-header .modal-close-button{
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.modal-body{
     flex: 1;
+    width: 80%;
+    align-self: center;
+}
+
+.modal-body input, .modal-body select{
+    height: 22px;
+    margin-top: 10px;
+}
+
+.project-modal .icon-container{
+    display: flex;
+    justify-content: space-between;
+    font-size: 22px;
+    margin-top: 10px;
 }
 
 .task-modal .modal-body{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    
 }
 
-.task-modal .modal-body > [class*="wrapper"]{
+.modal-body > [class*="wrapper"]{
     display: flex;
     flex-direction: column;
+    margin-top: 40px;
 }
 
-.task-modal .modal-footer, .project-modal .modal-footer{
+.modal-body > [class*="wrapper"]:last-of-type{
+    margin-bottom: 40px;
+}
+
+.modal-footer{
+    height: 60px;
+    margin-top: 40px;
     display: flex;
     justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.modal-footer button{
+    aspect-ratio: 21/9;
+    height: 80%;
+    margin: 0 8px 8px 0;
 }
 
 .invalid{
@@ -60,4 +111,14 @@
 .project-modal input[type='radio']:checked + label{
     background-color: red;
     padding: 2px;
+}
+
+@keyframes slide-down-fade-in {
+    0% {transform: translateY(-100px); opacity: 0.5}
+    100% {transform: translateY(0); opacity: 1;}
+}
+
+@keyframes slide-up-fade-out {
+    0% {transform: translateY(0); opacity: 1;}
+    100% {transform: translateY(-100px); opacity: 0.5}
 }

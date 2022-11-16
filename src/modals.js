@@ -59,7 +59,7 @@ function _appendProjectModal({mode, project}){
 
     const nameLabel = document.createElement("label");
     nameLabel.for = "name";
-    nameLabel.innerText = "Name:";
+    nameLabel.innerText = "Name";
     _appendRequiredInputIndication(nameLabel);
     nameWrapper.appendChild(nameLabel);
 
@@ -668,9 +668,15 @@ function _selfValidation(input){
 
 
 function _closeModal(){
-    [".modal-background", ".task-modal", ".project-modal"].forEach(elementClass =>{
-        if(document.querySelector(elementClass)){
-            document.querySelector(elementClass).remove();
-        }
-    })
+    const modal = document.querySelector(".task-modal") || document.querySelector(".project-modal");
+    const modalBackground = document.querySelector(".modal-background");
+
+    modal.classList.add("modal-out");
+    // The replace method is needed to get rid of the unit (seconds) used in css
+    const fadeOutAnimationDurationInSeconds = Number(getComputedStyle(modal)["animation-duration"].replace("s", ""));
+    const fadeOutAnimationDurationInMiliseconds = fadeOutAnimationDurationInSeconds * 1000;
+    setTimeout(() => {
+        modal.remove();
+        modalBackground.remove();
+    }, fadeOutAnimationDurationInMiliseconds)
 }
