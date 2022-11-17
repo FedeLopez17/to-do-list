@@ -70,6 +70,7 @@ function _appendProjectModal({mode, project}){
     nameInput.maxLength = 30;
     nameInput.autocomplete = "off";
     if(isUpdateMode) nameInput.value = project.name;
+    nameInput.addEventListener("input", ()=>{_selfValidation(nameInput)});
     nameWrapper.appendChild(nameInput);
     modalBody.appendChild(nameWrapper);
 
@@ -438,7 +439,6 @@ function _validateAndUpdateProject(outdatedProject){
 }
 
 function _validateProjectAndCarryThrough({isAddMode, outdatedProject}){
-    console.log(outdatedProject); //ACAAAAAAAAAAA
     const isUpdateMode = !isAddMode;
     const currentProjects = getProjectNames();
     const nameInput = document.querySelector(".project-modal input#name");
@@ -463,17 +463,12 @@ function _validateProjectAndCarryThrough({isAddMode, outdatedProject}){
     }
 
     const invalidText = (!_isValid(nameInput)) ? "Invalid name!" : "This project already exists!";
+
+    if(nameInput.classList.contains("valid")) nameInput.classList.remove("valid");
+
     if(!nameInput.classList.contains("invalid")){
         nameInput.classList.add("invalid");
-        const invalidMessage = document.createElement("p");
-        invalidMessage.classList.add("invalid-message");
-        invalidMessage.innerText = invalidText;
-        nameInput.parentElement.appendChild(invalidMessage);
-    }
-
-    const invalidMessageOnScreen = document.querySelector(".invalid-message");
-    if(invalidMessageOnScreen.innerText != invalidText){
-        invalidMessageOnScreen.innerText = invalidText;
+        _displayWarningAfterInput(nameInput, invalidText);
     }
 }
 
