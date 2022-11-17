@@ -11,11 +11,11 @@
 html, body{
     margin: 0;
     box-sizing: border-box;
-    outline: solid red 1px;
 }
 
 body{
     background-color: teal;
+    overflow-x: hidden;
 }
 
 .wrapper{
