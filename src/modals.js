@@ -268,7 +268,7 @@ function _appendRequiredInputIndication(parentElement){
     const requiredIndication = document.createElement("span");
     requiredIndication.classList.add("required-indication");
     parentElement.title = "Required!";
-    requiredIndication.innerText = "*";
+    requiredIndication.innerText = " *";
     parentElement.appendChild(requiredIndication);
 }
 
@@ -466,10 +466,9 @@ function _validateProjectAndCarryThrough({isAddMode, outdatedProject}){
 
     if(nameInput.classList.contains("valid")) nameInput.classList.remove("valid");
 
-    if(!nameInput.classList.contains("invalid")){
-        nameInput.classList.add("invalid");
-        _displayWarningAfterInput(nameInput, invalidText);
-    }
+    if(!nameInput.classList.contains("invalid")) nameInput.classList.add("invalid");
+
+    if(nameInput.classList.contains("invalid")) _displayWarningAfterInput(nameInput, invalidText);
 }
 
 

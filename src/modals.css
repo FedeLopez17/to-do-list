@@ -54,14 +54,71 @@
 
 .modal-body input, .modal-body select{
     height: 22px;
-    margin-top: 10px;
+    margin-top: 8px;
+    border: solid 1px darkgrey;
+    border-radius: 4px;
+}
+
+.modal-body select{
+    appearance: none;
+    background-image: url("./images/dropdown-arrow.png");
+    background-repeat: no-repeat;
+    background-position: right 3px center;
+    background-size: 12px;
+}
+
+.modal-body input:focus-visible, .modal-body select:focus-visible{
+    outline-color: skyblue;
+}
+
+.valid, .invalid{
+    background-repeat: no-repeat;
+    background-size: 14px;
+    background-position: right 4px center;
+    padding-right: 20px;
+}
+
+.valid{
+    outline: solid 1px lime !important;
+    background-image: url("./images/check-circle-green.png");
+}
+select.valid{
+    background: url("./images/dropdown-arrow.png") right 20px center, url("./images/check-circle-green.png") right 4px center;
+    background-size: 14px;
+    background-repeat: no-repeat;
+}
+
+.invalid{
+    outline: solid 1px red !important;
+    background-image: url("./images/exclamation-circle-red.png");
+}
+
+select.invalid{
+    background: url("./images/dropdown-arrow.png") right 20px center, url("./images/exclamation-circle-red.png") right 4px center;
+    background-size: 14px;
+    background-repeat: no-repeat;
+}
+
+.required-indication{
+    color: red;
+}
+
+.warning{
+    margin: 4px 0 0;
+    font-size: 14px;
+    margin-bottom: -20px;
+    color: darkred;
+}
+
+.project-modal input[type='radio'].hidden{
+    display: none;
 }
 
 .project-modal .icon-container{
     display: flex;
     justify-content: space-between;
     font-size: 22px;
-    margin-top: 10px;
+    margin-top: 8px;
 }
 
 .project-modal .icon-container label{
@@ -127,22 +184,6 @@
     height: 80%;
     margin: 0 8px 8px 0;
     cursor: pointer;
-}
-
-.invalid{
-    outline: solid 2px red;
-}
-
-.valid{
-    outline: solid 2px lightgreen;
-}
-
-.required-indication{
-    color: red;
-}
-
-.project-modal input[type='radio'].hidden{
-    display: none;
 }
 
 @keyframes slide-down-fade-in {
