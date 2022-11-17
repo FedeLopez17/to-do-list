@@ -17,11 +17,15 @@ export default function buildUserInterface(){
 
 function _appendNavBar(container){
     const navBar = document.createElement("nav");
+    const title = document.createElement("h1");
     const hamburgerToggle = document.createElement("i");
     hamburgerToggle.classList.add("fa-solid", "fa-bars");
     hamburgerToggle.id = "hamburger-toggle";
     hamburgerToggle.addEventListener("click", _toggleSideMenu);
     navBar.appendChild(hamburgerToggle);
+    title.id = "page-title";
+    title.innerText = "Tick It Up!";
+    navBar.appendChild(title);
     const newTaskButton = document.createElement("i");
     newTaskButton.classList.add("fa-solid", "fa-plus");
     newTaskButton.id = "new-task-button";

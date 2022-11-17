@@ -19,14 +19,20 @@ nav{
     height: 44px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
 }
 
 nav #hamburger-toggle{
+    margin-left: 10px;
     cursor: pointer;
 }
 
+nav #page-title{
+    margin-left: 20px;
+    margin-right: auto;
+}
+
 nav #new-task-button{
+    margin-right: 10px;
     cursor: pointer;
 }
 
