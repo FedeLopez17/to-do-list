@@ -84,7 +84,7 @@
 }
 select.valid{
     background: url("./images/dropdown-arrow.png") right 20px center, url("./images/check-circle-green.png") right 4px center;
-    background-size: 14px;
+    background-size: 12px, 14px;
     background-repeat: no-repeat;
 }
 
@@ -95,7 +95,7 @@ select.valid{
 
 select.invalid{
     background: url("./images/dropdown-arrow.png") right 20px center, url("./images/exclamation-circle-red.png") right 4px center;
-    background-size: 14px;
+    background-size: 12px, 14px;
     background-repeat: no-repeat;
 }
 
