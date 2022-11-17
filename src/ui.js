@@ -3,6 +3,7 @@ import { appendNewProjectModal, appendUpdateProjectModal, appendDeleteProjectMod
 import { appendNewTaskModal, appendNewTaskModalFromProject, appendViewTaskModal, appendUpdateTaskModal, appendMoveTaskModal, appendDeleteTaskModal } from "./modals";
 import { getProjectNames, getProjectTasks, getTodaysTasks, getThisWeeksTasks, getProjectIcon, getCompletedTasks } from "./projects";
 import displayAlert from "./alerts";
+import { PROJECTS_TO_IGNORE } from "./data";
 
 export default function buildUserInterface(){
     const container = document.querySelector("#content");
@@ -142,7 +143,7 @@ function _appendProjects(container){
     projectList.appendChild(projects);
 
     for(const projectName of getProjectNames()){
-        const PROJECTS_TO_IGNORE = ["Inbox"];
+        //PROJECTS_TO_IGNORE is imported from "./data.js"
         if(PROJECTS_TO_IGNORE.includes(projectName)) continue;
 
         const projectContainer = document.createElement("section");

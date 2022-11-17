@@ -4,6 +4,7 @@ import Project, { deleteProject, getProject, getProjectIcons, getProjectNames, g
 import { reloadProjects, reloadTasks } from "./ui";
 import { makeTaskModalFields } from "./modals-data";
 import displayAlert from "./alerts";
+import { PROJECTS_TO_IGNORE } from "./data";
 
 export function appendUpdateProjectModal(projectName){
     const project = getProject(projectName);
@@ -474,6 +475,7 @@ function _validateProjectAndCarryThrough({isAddMode, outdatedProject}){
 
 function _addProject(projectName, projectIcon){
     const project = new Project(projectName, projectIcon);
+    _updateAmountOfProjectsCssVariable();
     reloadProjects();
     return project;
 }
@@ -511,6 +513,7 @@ function _migrateAllTasks(originProject, recipientProject){
 
 function _deleteProject(projectName){
     deleteProject(projectName);
+    _updateAmountOfProjectsCssVariable();
     reloadProjects();
     const deletedProjectOnScreen = document.querySelector(`.project-tasks[data-project-name='${projectName}']`);
     if(deletedProjectOnScreen) reloadTasks("Inbox");
@@ -663,6 +666,14 @@ function _selfValidation(input){
         input.classList.remove("valid");
         if(!input.classList.contains("invalid")){input.classList.add("invalid")};
     }
+}
+
+
+function _updateAmountOfProjectsCssVariable(){
+    const cssVariable = getComputedStyle(document.documentElement).getPropertyValue("--amount-of-projects");
+    //PROJECTS_TO_IGNORE is imported from "./data.js"
+    const updatedAmountOfProjects = getProjectNames().length - PROJECTS_TO_IGNORE.length;
+    document.documentElement.style.setProperty("--amount-of-projects", updatedAmountOfProjects);
 }
 
 

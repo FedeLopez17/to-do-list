@@ -2,6 +2,10 @@
     --nav-height: 44px;
     --aside-height: calc(100vh - var(--nav-height));
     --aside-width: 305px;
+    --amount-of-projects: 0;
+    --aside-projects-height: 40px;
+    --new-project-button-height: 50px;
+    --aside-projects-toggle-height: 40px;
 }
 
 html, body{
@@ -14,6 +18,11 @@ body{
     background-color: teal;
 }
 
+.wrapper{
+    display: flex;
+}
+
+/* Navbar */
 nav{
     background-color: grey;
     height: 44px;
@@ -36,34 +45,48 @@ nav #new-task-button{
     cursor: pointer;
 }
 
-.wrapper{
-    display: flex;
-}
 
+/* Aside section */
 aside{
     background-color: aqua;
     height: var(--aside-height);
     width: 0;
     transition: width 0.2s ease-in;
+    box-sizing: border-box;
+    padding-top: 50px;
 }
 
 aside.active{
     width: var(--aside-width);
 }
 
-aside .projects.hidden{
-    display: none;
+
+/* Aside Projects */
+
+aside .projects{
+    height: calc((var(--amount-of-projects) * var(--aside-projects-height)) + var(--new-project-button-height));
+    transition: height 0.3s;
+    background-color: red;
+    overflow: hidden;
 }
 
-aside .new-project-button{
-    display: flex;
-    align-items: center;
+aside .projects.hidden{
+    height: 0px;
 }
 
 aside .project{
+    height: var(--aside-projects-height);
+    margin-left: 25px;
+    margin-right: 5px;
     display: flex;
+    justify-content: flex-start;
+    align-items: center;
     cursor: pointer;
-    background-color: darksalmon;
+}
+
+aside .project > i{
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 aside .project:hover{
@@ -75,6 +98,52 @@ aside .project.current{
     background-color: darkred;
 }
 
+aside .project-list{
+    margin: 20px 5px 0 35px;
+    border-top: solid 1px red;
+}
+
+aside #project-toggle{
+    height: var(--aside-projects-toggle-height);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+aside #project-toggle i{
+    margin-left: 10px;
+}
+
+aside .project-list .project{
+    margin-left: 0;
+}
+
+aside .project-list .project .project-title-wrapper{
+    display: flex;
+    gap: 5px;
+    width: 70%;
+}
+
+aside .project-list .project .project-title-wrapper i{
+    margin-left: 0;
+}
+
+aside .project-list .project i{
+    margin-right: 0;
+    margin-left: 10px;
+}
+
+aside .new-project-button{
+    height: var(--new-project-button-height);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+
+/* Main section*/
 main{
     flex: 1;
     background-color: pink;
