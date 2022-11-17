@@ -155,13 +155,16 @@ function _appendProjects(container){
 
         const projectTitleWrapper = document.createElement("section");
         projectTitleWrapper.classList.add("project-title-wrapper");
+        projectTitleWrapper.style.pointerEvents = "none";
 
         const projectIcon = document.createElement("i");
         projectIcon.classList.add("fa-solid", getProjectIcon(projectName).class);
+        projectIcon.style.pointerEvents = "none";
         projectTitleWrapper.appendChild(projectIcon);
 
         const projectTitle = document.createElement("span");
         projectTitle.innerText = projectName;
+        projectTitle.style.pointerEvents = "none";
         projectTitleWrapper.appendChild(projectTitle);
 
         projectContainer.appendChild(projectTitleWrapper);
