@@ -149,29 +149,92 @@ aside .new-project-button{
 /* Main section*/
 main{
     flex: 1;
+    display: flex;
+    justify-content: center;
     background-color: pink;
 }
 
 main .project-tasks{
+    width: 100%;
     height: 100%;
     overflow-y: scroll;
+    padding: 0 10%;
     display: flex;
     flex-direction: column;
+    background-color: red;
 }
 
 .project-tasks .task{
     display: flex;
     flex-direction: column;
+    margin-bottom: 20px;
     cursor: pointer;
 }
 
+.project-tasks .task .top{
+    height: 50px;
+    display: flex;
+    align-items: center;
+    background-color: pink;
+    border-radius: 10px 10px 0 0;
+}
+
+.project-tasks .task .top.low{
+    outline: solid 1px yellow;
+}
+
+.project-tasks .task .top.medium{
+    outline: solid 1px green;
+}
+
+.project-tasks .task .top.high{
+    outline: solid 1px red;
+}
+
+.project-tasks .task .top .status-checkbox{
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.project-tasks .task .top .task-title{
+    margin-right: auto;
+}
+
+.project-tasks .task .top.done .task-title{
+    text-decoration: line-through;
+}
+
+.project-tasks:not([data-project-name="Completed"]) .task .top.done{
+    opacity: 0.5;
+    outline: solid 1px skyblue;
+}
+
+.project-tasks .task .top i{
+    margin-right: 10px;
+}
+
 .project-tasks .task-details{
-    background-color: red;
+    height: 190px;
+    transition: height 0.2s;
+    overflow: hidden;
+    background-color: white;
+    border-radius: 0 0 10px 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-content: space-evenly;
+    padding: 0 10%;
+}
+
+.project-tasks .task-details p{
+    margin: 0;
+}
+
+.project-tasks .task-details p > span{
+    font-weight: 900;
 }
 
 .project-tasks .task-details.collapsed{
-    display: none;
-    /* ESTO DEBERIA CRECER EN HEIGHT, NO DESAPARECER */
+    height: 0;
 }
 
 .project-tasks .task #priority-toggle.low{
@@ -186,7 +249,10 @@ main .project-tasks{
     color: red;
 }
 
-.done{
-    opacity: 0.5;
-    text-decoration: line-through;
+.project-tasks #add-task-button{
+    height: 50px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
 }

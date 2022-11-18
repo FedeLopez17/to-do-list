@@ -250,7 +250,7 @@ function _displayTasks(projectName, event){
         taskSection.classList.add("task");
 
         const upperSection = document.createElement("section");
-        upperSection.classList.add("top");
+        upperSection.classList.add("top", task.priority);
         upperSection.setAttribute("data-id", `${task.title}-from-${task.project}`);
         upperSection.addEventListener("click", (event)=>{_toggleDetails({event})});
         taskSection.appendChild(upperSection);
@@ -378,6 +378,7 @@ function _toggleTaskStatus(task){
     const detailsWereOpen = document.querySelector(`.task-details[data-id='${dataId}']:not(.collapsed)`);
     reloadTasks(task.project);
     if(detailsWereOpen) _toggleDetails({dataId});
+    displayAlert("Task updated!");
 }
 
 
