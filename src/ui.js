@@ -296,6 +296,7 @@ function _displayTasks(projectName, event){
                 eventListeners: [{event: "click", function: ()=>{appendMoveTaskModal(task)}}],
             },
             priority: {
+                htmlElement: "i",
                 id: "priority-toggle",
                 classes: ["fa-solid", "fa-flag", task.priority],
                 title: "Toggle Priority",
