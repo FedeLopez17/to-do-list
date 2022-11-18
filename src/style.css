@@ -60,6 +60,9 @@ aside.active{
     width: var(--aside-width);
 }
 
+aside *{
+    white-space: nowrap;
+}
 
 /* Aside Projects */
 
