@@ -21,6 +21,9 @@ export default class ToDo{
             const isNewProject = (property === "project");
             if(isNewProject) this.moveTo(updatedValue);
 
+            const isEmptyDescription = (property === "description" && updatedValue.replaceAll(" ", "").length === 0);
+            if(isEmptyDescription) updatedValue = "n/a";
+
             this[property] = updatedValue;
         }
     }
