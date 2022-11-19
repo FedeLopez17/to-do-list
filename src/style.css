@@ -55,7 +55,7 @@ aside{
     transition: width 0.2s ease-in;
     box-sizing: border-box;
     padding: 50px 0;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
 }
 
@@ -163,7 +163,7 @@ main .project-tasks{
     width: 100%;
     height: 100vh;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding: 0 10%;
     display: flex;
     flex-direction: column;
