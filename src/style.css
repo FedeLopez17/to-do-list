@@ -6,6 +6,7 @@
     --aside-projects-height: 40px;
     --new-project-button-height: 50px;
     --aside-projects-toggle-height: 40px;
+    --aside-projectlist-projects-margin-bottom: 20px;
 }
 
 html, body{
@@ -15,7 +16,7 @@ html, body{
 
 body{
     background-color: teal;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 .wrapper{
@@ -53,7 +54,9 @@ aside{
     width: 0;
     transition: width 0.2s ease-in;
     box-sizing: border-box;
-    padding-top: 50px;
+    padding: 50px 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 aside.active{
@@ -67,9 +70,9 @@ aside *{
 /* Aside Projects */
 
 aside .projects{
-    height: calc((var(--amount-of-projects) * var(--aside-projects-height)) + var(--new-project-button-height));
+    height: calc(((var(--aside-projects-height) + var(--aside-projectlist-projects-margin-bottom)) * var(--amount-of-projects)) + var(--new-project-button-height));
     transition: height 0.3s;
-    background-color: red;
+    background-color: royalblue;
     overflow: hidden;
 }
 
@@ -119,6 +122,8 @@ aside #project-toggle i{
 
 aside .project-list .project{
     margin-left: 0;
+    margin-bottom: var(--aside-projectlist-projects-margin-bottom);
+    background-color: aliceblue;
 }
 
 aside .project-list .project .project-title-wrapper{
@@ -156,7 +161,8 @@ main{
 
 main .project-tasks{
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    overflow-x: hidden;
     overflow-y: scroll;
     padding: 0 10%;
     display: flex;
