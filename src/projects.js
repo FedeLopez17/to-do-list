@@ -1,5 +1,6 @@
 import isToday from "date-fns/isToday";
 import isThisWeek from "date-fns/isThisWeek";
+import { updateLocalStorage } from "./data";
 
 let _PROJECTS = {};
 
@@ -44,6 +45,7 @@ export default class Project{
         this.orderedTaskNames = [];
         _PROJECTS[this.name] = this;
         _sortProjects();
+        updateLocalStorageProjects();
     }
 
     sortTasks(){
@@ -82,6 +84,7 @@ export default class Project{
     setIcon(iconName){
         this.icon.name = iconName;
         this.icon.class = PROJECT_ICONS[iconName].class;
+        updateLocalStorageProjects();
     }
 }
 
@@ -107,6 +110,7 @@ export function getProjectTasks(projectName){
 
 export function addProjectTask(task, project){
     _PROJECTS[project].addTask(task);
+    updateLocalStorageProjects();
 }
 
 export function renameProjectTask(task, newTaskTitle){
@@ -115,10 +119,12 @@ export function renameProjectTask(task, newTaskTitle){
 
 export function deleteProjectTask(task){
     _PROJECTS[task.project].deleteTask(task.title);
+    updateLocalStorageProjects();
 }
 
 export function deleteProject(projectName){
     delete _PROJECTS[projectName];
+    updateLocalStorageProjects();
 }
 
 
@@ -163,4 +169,8 @@ function _getTasksForTimePeriod(timePeriod){
     }
 
     return tasksForTimePeriod;
+}
+
+export function updateLocalStorageProjects(){
+    updateLocalStorage(_PROJECTS);
 }

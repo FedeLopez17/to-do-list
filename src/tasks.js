@@ -1,14 +1,14 @@
-import { addProjectTask, deleteProjectTask, renameProjectTask } from "./projects";
+import { addProjectTask, deleteProjectTask, renameProjectTask, updateLocalStorageProjects } from "./projects";
 import format from "date-fns/format";
 
 export default class ToDo{
-    constructor({title, description, priority, dueDate, project}){
+    constructor({title, description, priority, status = false, dueDate, formattedDate = format(new Date(dueDate), "EEEE do - MMMM - yyyy"), project}){
         this.title = title;
         this.description = description;
         this.priority = priority;
-        this.status = false;
+        this.status = status;
         this.dueDate = dueDate;
-        this.formattedDate = format(new Date(dueDate), "EEEE do - MMMM - yyyy");
+        this.formattedDate = formattedDate;
         this.project = project;
         addProjectTask(this, project);
     }
@@ -25,6 +25,7 @@ export default class ToDo{
             if(isEmptyDescription) updatedValue = "n/a";
 
             this[property] = updatedValue;
+            updateLocalStorageProjects();
         }
     }
 

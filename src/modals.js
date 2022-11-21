@@ -6,6 +6,7 @@ import { makeTaskModalFields } from "./modals-data";
 import displayAlert from "./alerts";
 import { PROJECTS_TO_IGNORE } from "./data";
 
+
 export function appendUpdateProjectModal(projectName){
     const project = getProject(projectName);
     _appendProjectModal({mode:"update", project});
