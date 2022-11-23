@@ -1,6 +1,6 @@
 import "./modals.css";
 import ToDo from "./tasks.js";
-import Project, { deleteProject, getProject, getProjectIcons, getProjectNames, getProjectTasks } from "./projects";
+import Project, { deleteProject, getProject, getProjectIcons, getProjectNames, getProjectTasks, setProjectIcon } from "./projects";
 import { reloadProjects, reloadTasks } from "./ui";
 import { makeTaskModalFields } from "./modals-data";
 import displayAlert from "./alerts";
@@ -491,7 +491,7 @@ function _updateProject(updatedName, updatedIcon, outdatedProject){
     if(projectDidNotChange) return;
 
     if(onlyTheIconIsDifferent){
-        outdatedProject.setIcon(updatedIcon);
+        setProjectIcon(outdatedProject.name, updatedIcon);
     }
     else{
         const updatedProject = _addProject(updatedName, updatedIcon);

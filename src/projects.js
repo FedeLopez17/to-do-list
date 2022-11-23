@@ -92,6 +92,10 @@ export function getProject(projectName){
     return _PROJECTS[projectName];
 }
 
+export function setProjectIcon(projectName, projectIcon){
+    _PROJECTS[projectName].setIcon(projectIcon);
+}
+
 export function getProjectNames(){
     const projectNames = [];
     for(const projectName in _PROJECTS){
