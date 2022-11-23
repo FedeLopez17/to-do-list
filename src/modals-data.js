@@ -51,6 +51,16 @@ export function makeTaskModalFields(task){
                 }
             }
         },
+        status: {
+            viewMode: {
+                container: {
+                    classes: ["status-container"]
+                },
+                text: {
+                    innerHTML: task && `<span>Status: </span> ${(task.status) ? "Done" : "Pending"}`
+                }
+            }
+        },
         dueDate: {
             wrapper: {
                 classes: ["due-date-wrapper"]

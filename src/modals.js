@@ -203,7 +203,9 @@ function _appendTaskModal({mode, task, projectName}){
         const viewModeObject = fieldObject.viewMode;
         
         if(isViewMode){
-            if(inputObject.attributes.id === "title") continue;
+            // In the view mode, there's no need to display the title of the task as the title is already being used in the header
+            if(fieldName === "title") continue;
+
             const fieldContainer = document.createElement("section");
             viewModeObject.container.classes.forEach(cssClass => {fieldContainer.classList.add(cssClass)});
             const fieldText = document.createElement("p");
@@ -212,6 +214,9 @@ function _appendTaskModal({mode, task, projectName}){
             modalBody.appendChild(fieldContainer);
         }
         else{
+            // Task status is only shown in view mode
+            if(fieldName === "status") continue;
+
             const wrapper = document.createElement("section");
             wrapper.classList.add(...wrapperObject.classes);
     
@@ -542,7 +547,6 @@ function _addNewTask(){
     const inputs = document.querySelectorAll(".new.task-modal input, .new.task-modal textarea, .new.task-modal select");
     const task = {};
     for(const input of inputs){
-        console.log(input);
         task[input.id] = input.value || OPTIONAL_FIELDS[input.id].defaultValue;
     }
 

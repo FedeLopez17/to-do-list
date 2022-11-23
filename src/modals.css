@@ -59,6 +59,10 @@
     border-radius: 4px;
 }
 
+.task-modal .modal-body textarea{
+    resize: none;
+}
+
 .modal-body select{
     appearance: none;
     background-image: url("./images/dropdown-arrow.png");
