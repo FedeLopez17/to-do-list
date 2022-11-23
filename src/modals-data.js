@@ -36,9 +36,8 @@ export function makeTaskModalFields(task){
                 innerText: "Description"
             },
             input: {
-                htmlElement: "input",
+                htmlElement: "textarea",
                 attributes: {
-                    type: "textarea",
                     id: "description",
                     "data-modal-name": "description"
                 }

@@ -539,9 +539,10 @@ function _validateTaskAndCarryThrough({isAddMode, task}){
 
 function _addNewTask(){
     const OPTIONAL_FIELDS = {description: {defaultValue: "n/a"}};
-    const inputs = document.querySelectorAll(".new.task-modal input, .new.task-modal select");
+    const inputs = document.querySelectorAll(".new.task-modal input, .new.task-modal textarea, .new.task-modal select");
     const task = {};
     for(const input of inputs){
+        console.log(input);
         task[input.id] = input.value || OPTIONAL_FIELDS[input.id].defaultValue;
     }
 
@@ -573,7 +574,7 @@ function _updateTask(task){
 
     if(projectChanged) previousProject = task.project;
 
-    const inputs = document.querySelectorAll(".update.task-modal input, .update.task-modal select");
+    const inputs = document.querySelectorAll(".update.task-modal input, .update.task-modal textarea, .update.task-modal select");
     for(const input of inputs){
         task.update(input.id, input.value);
     }
@@ -637,7 +638,7 @@ function _isFollowedByAWarning(input){
 
 
 function _validateInputs(){
-    const inputs = document.querySelectorAll(".task-modal input:not(#description), .task-modal select");
+    const inputs = document.querySelectorAll(".task-modal input, .task-modal select");
     let allInputsAreValid = true;
 
     for (const input of inputs){
