@@ -1,5 +1,5 @@
 :root{
-    --alert-color: lightgreen;
+    --alert-color: rgba(144, 238, 144, 0.75);
     --alert-width: 150px;
     --alert-margin-top: 10px;
     --alert-margin-right: 10px;
@@ -8,10 +8,14 @@
 #alert{
     position: absolute;
     background-color: var(--alert-color);
+    backdrop-filter: blur(2px);
     top: var(--alert-margin-top);
     right: var(--alert-margin-right);
     aspect-ratio: 21/9;
     width: var(--alert-width);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     animation: slide-in-right 0.2s linear;
     border-radius: 10px;
     transition: opacity 0.5s;
