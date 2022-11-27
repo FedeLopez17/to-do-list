@@ -50,6 +50,8 @@
     flex: 1;
     width: 80%;
     align-self: center;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .modal-body input, .modal-body select{
@@ -200,4 +202,10 @@ select.invalid{
 @keyframes slide-up-fade-out {
     0% {transform: translateY(0); opacity: 1;}
     100% {transform: translateY(-100px); opacity: 0.5}
+}
+
+@media (max-width: 700px), (orientation: portrait){
+    .task-modal{
+        top: 5%;
+    }
 }

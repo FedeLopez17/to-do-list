@@ -39,7 +39,8 @@ export function makeTaskModalFields(task){
                 htmlElement: "textarea",
                 attributes: {
                     id: "description",
-                    "data-modal-name": "description"
+                    "data-modal-name": "description",
+                    maxLength: 60
                 }
             },
             viewMode: {

@@ -144,6 +144,12 @@ aside .project-list .project .project-title-wrapper{
     width: 70%;
 }
 
+aside .project-list .project .project-title-wrapper span{
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
 aside .project-list .project .project-title-wrapper i{
     margin-left: 0;
 }
@@ -165,7 +171,7 @@ aside .new-project-button{
 
 /* Main section*/
 main{
-    max-width: 100%;
+    width: calc(100% - var(--aside-width));
     flex: 1;
     display: flex;
     justify-content: center;
@@ -216,6 +222,10 @@ main .project-tasks{
 
 .project-tasks .task .top .task-title{
     margin-right: auto;
+    max-width: 25ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .project-tasks .task .top.done .task-title{
@@ -234,11 +244,12 @@ main .project-tasks{
 .project-tasks .task-details{
     height: 190px;
     transition: height 0.2s;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     background-color: white;
     border-radius: 0 0 10px 10px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     align-content: space-evenly;
     padding: 0 10%;
 }
@@ -287,5 +298,9 @@ main .project-tasks{
 
     .task #move-task-button, .task #priority-toggle{
         display: none;
+    }
+
+    .project-tasks .task .top .task-title{
+        max-width: 20ch;
     }
 }
