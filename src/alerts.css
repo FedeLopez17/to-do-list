@@ -19,6 +19,7 @@
     animation: slide-in-right 0.2s linear;
     border-radius: 10px;
     transition: opacity 0.5s;
+    z-index: 2;
 }
 
 #alert.fade-out{

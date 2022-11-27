@@ -1,6 +1,6 @@
 :root{
     --nav-height: 44px;
-    --aside-height: calc(100vh - var(--nav-height));
+    --full-viewport-height-minus-nav-height: calc(100vh - var(--nav-height));
     --aside-width: 305px;
     --amount-of-projects: 0;
     --aside-projects-height: 40px;
@@ -16,17 +16,19 @@ html, body{
 
 body{
     background-color: teal;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .wrapper{
+    height: var(--full-viewport-height-minus-nav-height);
     display: flex;
+    position: relative;
 }
 
 /* Navbar */
 nav{
     background-color: grey;
-    height: 44px;
+    height: var(--nav-height);
     display: flex;
     align-items: center;
 }
@@ -48,15 +50,26 @@ nav #new-task-button{
 
 
 /* Aside section */
+.aside-background{
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    top: calc(var(--nav-height) * -1);
+    background-color: rgba(10, 10, 10, 30%);
+    z-index: 1;
+}
+
 aside{
     background-color: aqua;
-    height: var(--aside-height);
+    height: 100%;
     width: 0;
     transition: width 0.2s ease-in;
     box-sizing: border-box;
     padding: 50px 0;
     overflow-y: auto;
     overflow-x: hidden;
+    z-index: 1;
 }
 
 aside.active{
@@ -73,7 +86,6 @@ aside .projects{
     height: calc(((var(--aside-projects-height) + var(--aside-projectlist-projects-margin-bottom)) * var(--amount-of-projects)) + var(--new-project-button-height));
     transition: height 0.3s;
     background-color: royalblue;
-    overflow: hidden;
 }
 
 aside .projects.hidden{
@@ -153,6 +165,7 @@ aside .new-project-button{
 
 /* Main section*/
 main{
+    max-width: 100%;
     flex: 1;
     display: flex;
     justify-content: center;
@@ -161,8 +174,7 @@ main{
 
 main .project-tasks{
     width: 100%;
-    height: 100vh;
-    overflow-x: hidden;
+    box-sizing: border-box;
     overflow-y: auto;
     padding: 0 10%;
     display: flex;
@@ -257,8 +269,23 @@ main .project-tasks{
 
 .project-tasks #add-task-button{
     height: 50px;
+    margin-bottom: 50px;
     display: flex;
     align-items: center;
     gap: 5px;
     cursor: pointer;
+}
+
+@media (max-width: 700px), (orientation: portrait){
+    aside{
+        position: absolute;
+    }
+
+    .aside-background.active{
+        display: block;
+    }
+
+    .task #move-task-button, .task #priority-toggle{
+        display: none;
+    }
 }

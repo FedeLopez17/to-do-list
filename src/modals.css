@@ -1,9 +1,9 @@
 :root{
-    --modal-width: 500px;
+    --modal-width: min(80%, 500px);
 }
 
 .modal-background{
-    background-color: rgba(10, 10, 10, 60%);
+    background-color: rgba(10, 10, 10, 50%);
     position: absolute;
     top: 0;
     height: 100%;
@@ -121,8 +121,10 @@ select.invalid{
 .project-modal .icon-container{
     display: flex;
     justify-content: space-between;
+    gap: 10px;
     font-size: 22px;
     margin-top: 8px;
+    overflow-x: auto;
 }
 
 .project-modal .icon-container label{

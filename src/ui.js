@@ -39,12 +39,18 @@ function _appendNavBar(container){
 function _toggleSideMenu(){
     const sideMenu = document.querySelector("aside");
     sideMenu.classList.toggle("active");
+    const sideMenuBackground = document.querySelector(".aside-background");
+    sideMenuBackground.classList.toggle("active");
 }
 
 
 function _appendAside(container){
+    const asideBackground = document.createElement("section");
+    asideBackground.classList.add("aside-background");
+    asideBackground.addEventListener("click", _toggleSideMenu);
+    container.appendChild(asideBackground);
+
     const aside = document.createElement("aside");
-    aside.classList.add("active");
 
     const ASIDE_COMPONENTS = {
         inbox: {
