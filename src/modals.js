@@ -481,7 +481,7 @@ function _validateProjectAndCarryThrough({isAddMode, outdatedProject}){
 
 function _addProject(projectName, projectIcon){
     const project = new Project(projectName, projectIcon);
-    _updateAmountOfProjectsCssVariable();
+    updateAmountOfProjectsCssVariable();
     reloadProjects();
     return project;
 }
@@ -519,7 +519,7 @@ function _migrateAllTasks(originProject, recipientProject){
 
 function _deleteProject(projectName){
     deleteProject(projectName);
-    _updateAmountOfProjectsCssVariable();
+    updateAmountOfProjectsCssVariable();
     reloadProjects();
     const deletedProjectOnScreen = document.querySelector(`.project-tasks[data-project-name='${projectName}']`);
     if(deletedProjectOnScreen) reloadTasks("Inbox");
@@ -675,7 +675,7 @@ function _selfValidation(input){
 }
 
 
-function _updateAmountOfProjectsCssVariable(){
+export function updateAmountOfProjectsCssVariable(){
     const cssVariable = getComputedStyle(document.documentElement).getPropertyValue("--amount-of-projects");
     //PROJECTS_TO_IGNORE is imported from "./data.js"
     const updatedAmountOfProjects = getProjectNames().length - PROJECTS_TO_IGNORE.length;

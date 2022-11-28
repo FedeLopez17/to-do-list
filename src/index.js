@@ -2,6 +2,7 @@ import buildUserInterface from "./ui.js";
 import Project from "./projects.js";
 import { checkForSavedProjects } from "./data.js";
 import ToDo from "./tasks.js";
+import { updateAmountOfProjectsCssVariable } from "./modals.js";
 
 const savedProjects = checkForSavedProjects();
 
@@ -20,6 +21,7 @@ if(savedProjects){
                 formattedDate: task.formattedDate,
                 project: task.project
             });
+            updateAmountOfProjectsCssVariable();
         }
     }
 }
