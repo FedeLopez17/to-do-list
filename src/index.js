@@ -21,9 +21,9 @@ if(savedProjects){
                 formattedDate: task.formattedDate,
                 project: task.project
             });
-            updateAmountOfProjectsCssVariable();
         }
     }
+    updateAmountOfProjectsCssVariable();
 }
 else{
     new Project("Inbox", "inbox");
