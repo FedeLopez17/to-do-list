@@ -88,7 +88,7 @@
 }
 
 .valid{
-    outline: solid 1px lime !important;
+    border: solid 1px lime !important;
     background-image: url("./images/check-circle-green.png");
 }
 select.valid{
@@ -98,7 +98,7 @@ select.valid{
 }
 
 .invalid{
-    outline: solid 1px red !important;
+    border: solid 1px red !important;
     background-image: url("./images/exclamation-circle-red.png");
 }
 
@@ -200,6 +200,7 @@ select.invalid{
     margin: 0 8px 8px 0;
     cursor: pointer;
     font-weight: 900;
+    border-radius: 5px;
 }
 
 :not(.delete) > .modal-footer button{

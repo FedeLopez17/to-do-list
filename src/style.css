@@ -6,7 +6,7 @@
     --aside-projects-height: 40px;
     --new-project-button-height: 50px;
     --aside-projects-toggle-height: 40px;
-    --aside-projectlist-projects-margin-bottom: 20px;
+    --aside-projectlist-projects-margin-bottom: 10px;
     
     --low-priority-color: yellow;
     --medium-priority-color: darkorange;
@@ -112,6 +112,7 @@ aside .project{
     justify-content: flex-start;
     align-items: center;
     cursor: pointer;
+    border-radius: 5px;
 }
 
 aside .project > i{
@@ -147,6 +148,12 @@ aside #project-toggle i{
 aside .project-list .project{
     margin-left: 0;
     margin-bottom: var(--aside-projectlist-projects-margin-bottom);
+    background-color: var(--color-200);
+    border-radius: 5px;
+    justify-content: center;
+}
+
+aside .project-list .project:hover, aside .new-project-button:hover{
     background-color: var(--color-400);
 }
 
@@ -171,6 +178,10 @@ aside .project-list .project i{
     margin-left: 10px;
 }
 
+aside .project-list .project i:hover{
+    transform: scale(1.15);
+}
+
 aside .new-project-button{
     height: var(--new-project-button-height);
     display: flex;
@@ -178,6 +189,7 @@ aside .new-project-button{
     gap: 5px;
     cursor: pointer;
     margin-right: 5px;
+    border-radius: 5px;
 }
 
 
@@ -257,6 +269,10 @@ main .project-tasks{
     margin-right: 10px;
 }
 
+.project-tasks .task .top i:hover{
+    transform: scale(1.15);
+}
+
 .project-tasks .task-details{
     height: 190px;
     transition: height 0.2s;
@@ -298,9 +314,15 @@ main .project-tasks{
     height: 50px;
     margin-bottom: 50px;
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 5px;
     cursor: pointer;
+    border-radius: 5px;
+}
+
+.project-tasks #add-task-button:hover{
+    background-color: var(--color-200);
 }
 
 @media (max-width: 700px), (orientation: portrait){
