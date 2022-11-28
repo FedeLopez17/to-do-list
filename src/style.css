@@ -204,7 +204,8 @@ aside .project-list .project i{
 }
 
 aside .project-list .project i:hover{
-    transform: scale(1.15);
+    transform: scale(1.1);
+    filter: drop-shadow(-1px -1px 0px var(--color-100));
 }
 
 aside .new-project-button{
@@ -295,7 +296,8 @@ main .project-tasks{
 }
 
 .project-tasks .task .top i:hover{
-    transform: scale(1.15);
+    transform: scale(1.1);
+    filter: drop-shadow(-1px -1px 0px var(--color-100));
 }
 
 .project-tasks .task-details{
@@ -336,7 +338,7 @@ main .project-tasks{
 }
 
 .project-tasks #add-task-button{
-    height: 50px;
+    min-height: 50px;
     margin-bottom: 50px;
     display: flex;
     justify-content: center;
