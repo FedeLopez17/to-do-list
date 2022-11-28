@@ -181,14 +181,26 @@ function _appendProjects(container){
                 id: "edit-project-button",
                 classes: ["fa-solid", "fa-pen-to-square"],
                 title: "Edit",
-                eventListeners: [{event: "click", function: ()=>{appendUpdateProjectModal(projectName)}}]
+                eventListeners: [{event: "click", function: ()=>{
+                    if(_viewportInPortraitMode() || _viewportIsNarrow()){
+                        _toggleSideMenu();
+                    }
+
+                    appendUpdateProjectModal(projectName);
+                }}]
             },
             delete: {
                 htmlElement: "i",
                 id: "delete-project-button",
                 classes: ["fa-solid", "fa-trash-can"],
                 title: "Delete",
-                eventListeners: [{event: "click", function: ()=>{appendDeleteProjectModal(projectName)}}]
+                eventListeners: [{event: "click", function: ()=>{
+                    if(_viewportInPortraitMode() || _viewportIsNarrow()){
+                        _toggleSideMenu();
+                    }
+
+                    appendDeleteProjectModal(projectName);
+                }}]
             }
         }
 
@@ -197,7 +209,13 @@ function _appendProjects(container){
 
     const newProjectButton = document.createElement("section");
     newProjectButton.classList.add("new-project-button");
-    newProjectButton.addEventListener("click", appendNewProjectModal);
+    newProjectButton.addEventListener("click", ()=>{
+        if(_viewportInPortraitMode() || _viewportIsNarrow()){
+            _toggleSideMenu();
+        }
+
+        appendNewProjectModal();   
+    });
     const icon = document.createElement("i");
     icon.classList.add("fa-solid", "fa-plus");
     newProjectButton.appendChild(icon);
@@ -442,4 +460,12 @@ function _toggleDetails({event, dataId}){
     }
     const details = document.querySelector(`.task-details[data-id='${dataId}']`);
     details.classList.toggle("collapsed");
+}
+
+function _viewportInPortraitMode(){
+    return (window.innerHeight > window.innerWidth);
+}
+
+function _viewportIsNarrow(){
+    return (window.innerWidth < 700);
 }
