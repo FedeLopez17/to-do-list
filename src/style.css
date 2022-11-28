@@ -7,6 +7,18 @@
     --new-project-button-height: 50px;
     --aside-projects-toggle-height: 40px;
     --aside-projectlist-projects-margin-bottom: 20px;
+    
+    --low-priority-color: yellow;
+    --medium-priority-color: darkorange;
+    --high-priority-color: red;
+
+    /* Color palette: */
+    --color-100: #CAF0F8;
+    --color-200: #90E0EF;
+    --color-300: #00B4D8;
+    --color-400: #0077B6;
+    --color-500: #03045E;
+
 }
 
 html, body{
@@ -15,7 +27,6 @@ html, body{
 }
 
 body{
-    background-color: teal;
     overflow-x: hidden;
 }
 
@@ -27,7 +38,8 @@ body{
 
 /* Navbar */
 nav{
-    background-color: grey;
+    background-color: var(--color-500);
+    color: var(--color-100);
     height: var(--nav-height);
     display: flex;
     align-items: center;
@@ -57,11 +69,11 @@ nav #new-task-button{
     height: 100vh;
     top: calc(var(--nav-height) * -1);
     background-color: rgba(10, 10, 10, 30%);
-    z-index: 1;
+    z-index: 2;
 }
 
 aside{
-    background-color: aqua;
+    background-color: var(--color-300);
     height: 100%;
     width: 0;
     transition: width 0.2s ease-in;
@@ -69,7 +81,7 @@ aside{
     padding: 50px 0;
     overflow-y: auto;
     overflow-x: hidden;
-    z-index: 1;
+    z-index: 2;
 }
 
 aside.active{
@@ -85,7 +97,6 @@ aside *{
 aside .projects{
     height: calc(((var(--aside-projects-height) + var(--aside-projectlist-projects-margin-bottom)) * var(--amount-of-projects)) + var(--new-project-button-height));
     transition: height 0.3s;
-    background-color: royalblue;
     overflow: hidden;
 }
 
@@ -109,17 +120,17 @@ aside .project > i{
 }
 
 aside .project:hover{
-    background-color: darkred;
+    background-color: var(--color-400);
 }
 
 aside .project.current{
     font-weight: 900;
-    background-color: darkred;
+    background-color: var(--color-400);
 }
 
 aside .project-list{
     margin: 20px 5px 0 35px;
-    border-top: solid 1px red;
+    border-top: solid 1px var(--color-500);
 }
 
 aside #project-toggle{
@@ -136,7 +147,7 @@ aside #project-toggle i{
 aside .project-list .project{
     margin-left: 0;
     margin-bottom: var(--aside-projectlist-projects-margin-bottom);
-    background-color: aliceblue;
+    background-color: var(--color-400);
 }
 
 aside .project-list .project .project-title-wrapper{
@@ -176,7 +187,7 @@ main{
     flex: 1;
     display: flex;
     justify-content: center;
-    background-color: pink;
+    background-color: var(--color-100);
 }
 
 main .project-tasks{
@@ -186,7 +197,6 @@ main .project-tasks{
     padding: 0 10%;
     display: flex;
     flex-direction: column;
-    background-color: red;
 }
 
 .project-tasks .task{
@@ -200,20 +210,25 @@ main .project-tasks{
     height: 50px;
     display: flex;
     align-items: center;
-    background-color: pink;
+    background-color: var(--color-200);
     border-radius: 10px 10px 0 0;
+    z-index: 1;
+}
+
+.project-tasks .task .top:hover, .project-tasks .task .top.active{
+    background-color: var(--color-300);
 }
 
 .project-tasks .task .top.low{
-    outline: solid 1px yellow;
+    outline: solid 1px var(--low-priority-color);
 }
 
 .project-tasks .task .top.medium{
-    outline: solid 1px green;
+    outline: solid 1px var(--medium-priority-color);
 }
 
 .project-tasks .task .top.high{
-    outline: solid 1px red;
+    outline: solid 1px var(--high-priority-color);
 }
 
 .project-tasks .task .top .status-checkbox{
@@ -235,7 +250,7 @@ main .project-tasks{
 
 .project-tasks:not([data-project-name="Completed"]) .task .top.done{
     opacity: 0.5;
-    outline: solid 1px skyblue;
+    outline: solid 1px var(--color-400);
 }
 
 .project-tasks .task .top i{
@@ -247,7 +262,7 @@ main .project-tasks{
     transition: height 0.2s;
     overflow-x: auto;
     overflow-y: hidden;
-    background-color: white;
+    background-color: var(--color-200);
     border-radius: 0 0 10px 10px;
     display: grid;
     grid-template-columns: 1fr;
@@ -268,15 +283,15 @@ main .project-tasks{
 }
 
 .project-tasks .task #priority-toggle.low{
-    color: yellow;
+    color: var(--low-priority-color);
 }
 
 .project-tasks .task #priority-toggle.medium{
-    color: green;
+    color: var(--medium-priority-color);
 }
 
 .project-tasks .task #priority-toggle.high{
-    color: red;
+    color: var(--high-priority-color);
 }
 
 .project-tasks #add-task-button{

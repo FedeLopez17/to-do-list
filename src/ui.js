@@ -458,6 +458,8 @@ function _toggleDetails({event, dataId}){
         if(clickedOnAButton) return;
         dataId = event.target.getAttribute("data-id");
     }
+    const taskTopSection = document.querySelector(`.task .top[data-id='${dataId}']`);
+    taskTopSection.classList.toggle("active");
     const details = document.querySelector(`.task-details[data-id='${dataId}']`);
     details.classList.toggle("collapsed");
 }

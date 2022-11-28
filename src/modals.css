@@ -8,6 +8,7 @@
     top: 0;
     height: 100%;
     width: 100%;
+    z-index: 2;
 }
 
 .task-modal, .project-modal{
@@ -19,6 +20,7 @@
     left: calc(50% - (var(--modal-width) / 2)); /* exactly in the center */
     width: var(--modal-width);
     animation: slide-down-fade-in 0.2s ease-in;
+    z-index: 2;
 }
 
 .task-modal{
@@ -34,7 +36,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: red;
+    background-color: var(--color-500);
+    color: var(--color-100);
 }
 
 .modal-header .modal-title{
@@ -131,13 +134,14 @@ select.invalid{
 
 .project-modal .icon-container label{
     padding: 8px;
-    border: solid 1px lightgrey;
+    border: solid 1px var(--color-300);
+    background-color: var(--color-100);
     border-radius: 8px;
     cursor: pointer;
 }
 
 .project-modal input[type='radio']:checked + label{
-    background-color: red;
+    background-color: var(--color-300);
 }
 
 .modal-body > [class*="wrapper"]{
@@ -164,10 +168,8 @@ select.invalid{
 
 .delete i{
     font-size: 100px;
-}
-
-.delete .modal-body span{
-    font-weight: 900;
+    color: red;
+    text-shadow: -2px 1px 0px black;
 }
 
 .delete .modal-footer{
@@ -177,6 +179,11 @@ select.invalid{
 
 .delete .delete-button{
     background-color: red;
+}
+
+.delete .delete-button:hover{
+    background-color: #c20000; /*Slightly darker red*/
+    color: white;
 }
 
 .modal-footer{
@@ -192,7 +199,18 @@ select.invalid{
     height: 80%;
     margin: 0 8px 8px 0;
     cursor: pointer;
+    font-weight: 900;
 }
+
+:not(.delete) > .modal-footer button{
+    background-color: var(--color-400);
+    color: var(--color-100);
+}
+
+:not(.delete) > .modal-footer button:hover{
+    background-color: var(--color-500);
+}
+
 
 @keyframes slide-down-fade-in {
     0% {transform: translateY(-100px); opacity: 0.5}
