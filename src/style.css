@@ -243,18 +243,20 @@ main .project-tasks{
     flex-direction: column;
 }
 
-main .project-tasks header{
-    font-family: 'Montserrat', sans-serif;
+main .project-tasks > *{
     width: min(90%, 900px);
     margin: 0 auto;
+}
+
+main .project-tasks header{
+    font-family: 'Montserrat', sans-serif;
 }
 
 .project-tasks .task{
     display: flex;
     flex-direction: column;
     cursor: pointer;
-    width: min(90%, 900px);
-    margin: 0 auto 30px;
+    margin-bottom: 30px;
     filter: drop-shadow(-2px 2px 0px var(--color-500));
 }
 
