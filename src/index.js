@@ -3,6 +3,9 @@ import Project from "./projects.js";
 import { checkForSavedProjects } from "./data.js";
 import ToDo from "./tasks.js";
 import { updateAmountOfProjectsCssVariable } from "./modals.js";
+import displayStartUpAnimation from "./startup-animation.js";
+
+displayStartUpAnimation();
 
 const savedProjects = checkForSavedProjects();
 
