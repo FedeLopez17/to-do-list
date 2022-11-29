@@ -8,9 +8,10 @@
     --aside-projects-toggle-height: 40px;
     --aside-projectlist-projects-margin-bottom: 10px;
     
-    --low-priority-color: yellow;
-    --medium-priority-color: darkorange;
+    --low-priority-color: green;
+    --medium-priority-color: yellow;
     --high-priority-color: red;
+
 
     /* Color palette: */
     --color-100: #CAF0F8;
@@ -24,6 +25,10 @@
 html, body{
     margin: 0;
     box-sizing: border-box;
+}
+
+*{
+    font-family: 'Roboto', sans-serif;
 }
 
 body{
@@ -78,6 +83,7 @@ nav #hamburger-toggle{
 nav #page-title{
     margin-left: 20px;
     margin-right: auto;
+    font-family: 'Montserrat', sans-serif;
 }
 
 nav #new-task-button{
@@ -237,11 +243,19 @@ main .project-tasks{
     flex-direction: column;
 }
 
+main .project-tasks header{
+    font-family: 'Montserrat', sans-serif;
+    width: min(90%, 900px);
+    margin: 0 auto;
+}
+
 .project-tasks .task{
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px;
     cursor: pointer;
+    width: min(90%, 900px);
+    margin: 0 auto 30px;
+    filter: drop-shadow(-2px 2px 0px var(--color-500));
 }
 
 .project-tasks .task .top{
@@ -258,15 +272,15 @@ main .project-tasks{
 }
 
 .project-tasks .task .top.low{
-    outline: solid 1px var(--low-priority-color);
+    border-bottom: dotted 2px var(--low-priority-color);
 }
 
 .project-tasks .task .top.medium{
-    outline: solid 1px var(--medium-priority-color);
+    border-bottom: dotted 2px var(--medium-priority-color);
 }
 
 .project-tasks .task .top.high{
-    outline: solid 1px var(--high-priority-color);
+    border-bottom: dotted 2px var(--high-priority-color);
 }
 
 .project-tasks .task .top .status-checkbox{
@@ -286,9 +300,9 @@ main .project-tasks{
     text-decoration: line-through;
 }
 
-.project-tasks:not([data-project-name="Completed"]) .task .top.done{
-    opacity: 0.5;
-    outline: solid 1px var(--color-400);
+.project-tasks .task .top.done{
+    border: none;
+    background-color: var(--color-400);
 }
 
 .project-tasks .task .top i{
