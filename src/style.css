@@ -273,15 +273,15 @@ main .project-tasks header{
     background-color: var(--color-300);
 }
 
-.project-tasks .task .top.low{
+.project-tasks .task .top.active.low{
     border-bottom: dotted 2px var(--low-priority-color);
 }
 
-.project-tasks .task .top.medium{
+.project-tasks .task .top.active.medium{
     border-bottom: dotted 2px var(--medium-priority-color);
 }
 
-.project-tasks .task .top.high{
+.project-tasks .task .top.active.high{
     border-bottom: dotted 2px var(--high-priority-color);
 }
 
