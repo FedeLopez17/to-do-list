@@ -25,7 +25,7 @@ function _appendNavBar(container){
     hamburgerToggle.addEventListener("click", _toggleSideMenu);
     navBar.appendChild(hamburgerToggle);
     title.id = "page-title";
-    title.innerText = "Tick It Up!";
+    title.innerText = "Tick It Off!";
     navBar.appendChild(title);
     const newTaskButton = document.createElement("i");
     newTaskButton.classList.add("fa-solid", "fa-plus");

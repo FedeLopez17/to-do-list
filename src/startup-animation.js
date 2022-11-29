@@ -9,7 +9,7 @@ export default function displayStartUpAnimation(){
 
     const title = document.createElement("h1");
     title.id = "title";
-    title.innerText = "Tick It Up!";
+    title.innerText = "Tick It Off!";
     animationContainerTop.appendChild(title);
 
     const checkmark = document.createElement("section");
