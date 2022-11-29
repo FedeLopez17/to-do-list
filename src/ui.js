@@ -30,6 +30,7 @@ function _appendNavBar(container){
     const newTaskButton = document.createElement("i");
     newTaskButton.classList.add("fa-solid", "fa-plus");
     newTaskButton.id = "new-task-button";
+    newTaskButton.title = "Add task";
     newTaskButton.addEventListener("click", appendNewTaskModal);
     navBar.appendChild(newTaskButton);
     container.appendChild(navBar);
@@ -209,6 +210,7 @@ function _appendProjects(container){
 
     const newProjectButton = document.createElement("section");
     newProjectButton.classList.add("new-project-button");
+    newProjectButton.title = "Add project";
     newProjectButton.addEventListener("click", ()=>{
         if(_viewportInPortraitMode() || _viewportIsNarrow()){
             _toggleSideMenu();
@@ -383,6 +385,7 @@ function _displayTasks(projectName, event){
 
     const addTaskButton = document.createElement("section");
     addTaskButton.id = "add-task-button";
+    addTaskButton.title = "Add task";
     addTaskButton.addEventListener("click", ()=>{appendNewTaskModalFromProject(projectName)});
     const icon = document.createElement("i");
     icon.classList.add("fa-solid", "fa-plus");
