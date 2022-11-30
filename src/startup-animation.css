@@ -2,54 +2,50 @@
     --text-fade-in-animation-delay: 0s;
     --text-fade-in-animation-duration: 1s;
     --text-low-opacity-animation-delay: calc(var(--tick-animation-delay) + (var(--tick-animation-duration) / 2));
-    --text-low-opacity-animaiton-duration: 0.5s;
+    --text-low-opacity-animation-duration: 0.5s;
     --tick-animation-delay: var(--text-fade-in-animation-duration);
-    --tick-animation-duration: 0.5s;
-    --rise-container-animation-duration: 0.5s;
-    --drop-container-animation-duration: 0.5s;
-    --container-animation-delay: calc(var(--text-low-opacity-animation-delay) + var(--text-low-opacity-animaiton-duration) + 0.5s);
-
-    --color-300-low-opacity: rgb(0 180 216 / 90%);
-    --color-400-low-opacity: rgb(0 119 182 / 90%);
+    --tick-animation-duration: 0.3s;
+    --rise-container-animation-duration: 0.3s;
+    --container-animation-delay: calc(var(--text-low-opacity-animation-delay) + var(--text-low-opacity-animation-duration) + 0.5s);
+    --decrease-wrapper-opacity-animation-duration: 0.3s;
+    --wrapper-animation-delay: calc(var(--container-animation-delay) + var(--rise-container-animation-duration));
 }
 
-#animation-container-top{
+#animation-wrapper{
     position: absolute;
-    z-index: 1;
+    backdrop-filter: blur(5px);
+    background-color: var(--color-100-low-opacity);
     width: 100%;
-    height: 70vh;
+    height: 100vh;
+    z-index: 3;
+    animation: decrease-opacity var(--decrease-wrapper-opacity-animation-duration) linear var(--wrapper-animation-delay) forwards;
+}
+
+#animation-container{
+    position: absolute;
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: rise-container var(--rise-container-animation-duration) var(--container-animation-delay) forwards;
-    background-color: var(--color-300-low-opacity);
-    backdrop-filter: blur(5px);
-
+    animation: rise-container var(--rise-container-animation-duration) linear var(--container-animation-delay) forwards;
 }
 
-#animation-container-bottom{
-    position: absolute;
-    bottom: 0;
-    z-index: 1;
-    width: 100%;
-    height: 30vh;
-    animation: drop-container var(--drop-container-animation-duration) var(--container-animation-delay) forwards;
-    background-color: var(--color-400-low-opacity);
-    backdrop-filter: blur(5px);
-}
 
 #title{
     font-family: 'Nerko One', cursive;
     font-size: min(16vw, 300px);
+    margin-top: -1vw;
     color: var(--color-400);
     text-shadow: -0.4vw 0.4vw var(--color-500);
     animation: 
         fade-in var(--text-fade-in-animation-duration) var(--text-fade-in-animation-delay) forwards,
-        low-opacity var(--text-low-opacity-animaiton-duration) var(--text-low-opacity-animation-delay) forwards;
+        low-opacity var(--text-low-opacity-animation-duration) var(--text-low-opacity-animation-delay) forwards;
 }
 
 #checkmark{
     position: absolute;
+    margin-top: -1vw;
     opacity: 0;
     transform: rotate(45deg);
     box-sizing: border-box;
@@ -79,7 +75,7 @@
         width: 0;
         height: 0;
     }
-    30%{
+    30% {
         width: 10vw;
         height: 0;
     }
@@ -91,11 +87,11 @@
 }
 
 @keyframes rise-container{
-    0%{transform: translateY(0);}
-    100%{transform: translateY(-70vh);}
+    0% {transform: translateY(0);}
+    100% {transform: translateY(-100vh);}
 }
 
-@keyframes drop-container{
-    0%{transform: translateY(0);}
-    100%{transform: translateY(30vh);}
+@keyframes decrease-opacity {
+    0% {opacity: 1;}
+    100% {opacity: 0;}
 }

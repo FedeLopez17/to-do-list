@@ -1,4 +1,6 @@
 :root{
+    --scrollbar-width: 12px;
+    --theme-toggle-width: 60px;
     --nav-height: 44px;
     --full-viewport-height-minus-nav-height: calc(100vh - var(--nav-height));
     --aside-width: 305px;
@@ -13,13 +15,21 @@
     --high-priority-color: red;
 
 
-    /* Color palette: */
-    --color-100: #CAF0F8;
-    --color-200: #90E0EF;
-    --color-300: #00B4D8;
-    --color-400: #0077B6;
-    --color-500: #03045E;
+    /* Light Color palette: */
+    --color-100-light: rgb(202, 240, 248);
+    --color-100-low-opacity-light: rgb(202 240 248 / 50%);
+    --color-200-light: rgb(144, 224, 239);
+    --color-300-light: rgb(0, 180, 216);
+    --color-400-light: rgb(0, 119, 182);
+    --color-500-light: rgb(3, 4, 94);
 
+    /* Dark Color palette: */
+    --color-100-dark: rgb(36, 0, 70);
+    --color-100-low-opacity-dark: rgb(36 0 70 / 50%);
+    --color-200-dark: rgb(60, 9, 108);
+    --color-300-dark: rgb(90, 24, 154);
+    --color-400-dark: rgb(123, 44, 191);
+    --color-500-dark: rgb(157, 78, 221);
 }
 
 html, body{
@@ -53,7 +63,7 @@ body{
 
 ::-webkit-scrollbar
 {
-	width: 12px;
+    width: var(--scrollbar-width);
 	background-color: var(--color-200);
 }
 
@@ -66,6 +76,41 @@ body{
 }
 
 
+/* Theme toggle */
+#theme-toggle{
+    width: var(--theme-toggle-width);
+    aspect-ratio: 1/1;
+    position: fixed;
+    top: calc(var(--nav-height) - (var(--theme-toggle-width) / 2));
+    right: calc(var(--scrollbar-width) * 2);
+    z-index: 1;
+    border-radius: calc(var(--theme-toggle-width) / 2);
+    background-color: var(--color-300);
+    background-image: url("./images/day-and-night.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    transform: rotate(0deg);
+    transition: transform 0.5s;
+}
+
+#theme-toggle.light{
+    transform: rotate(-180deg);
+    filter: drop-shadow(0px 0px 5px red);
+}
+
+#theme-toggle.light:hover{
+    filter: drop-shadow(0px -2px 5px red);
+}
+
+#theme-toggle.dark{
+    transform: rotate(0deg);
+}
+
+#theme-toggle.dark:hover{
+    filter: drop-shadow(0px -2px 5px white);
+}
+
 /* Navbar */
 nav{
     background-color: var(--color-500);
@@ -73,6 +118,8 @@ nav{
     height: var(--nav-height);
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 2;
 }
 
 nav #hamburger-toggle{

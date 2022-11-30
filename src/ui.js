@@ -3,11 +3,12 @@ import { appendNewProjectModal, appendUpdateProjectModal, appendDeleteProjectMod
 import { appendNewTaskModal, appendNewTaskModalFromProject, appendViewTaskModal, appendUpdateTaskModal, appendMoveTaskModal, appendDeleteTaskModal } from "./modals";
 import { getProjectNames, getProjectTasks, getTodaysTasks, getThisWeeksTasks, getProjectIcon, getCompletedTasks } from "./projects";
 import displayAlert from "./alerts";
-import { PROJECTS_TO_IGNORE } from "./data";
+import { checkForThemeInLocalStorage, PROJECTS_TO_IGNORE, setThemeInLocalStorage } from "./data";
 
 export default function buildUserInterface(){
     const container = document.querySelector("#content");
     _appendNavBar(container);
+    _appendThemeToggle(container);
     const mainWrapper = document.createElement("section");
     mainWrapper.classList.add("wrapper");
     _appendAside(mainWrapper);
@@ -428,6 +429,36 @@ function _appendButtons(BUTTONS_INFO, container){
         buttonObject.eventListeners.forEach(eventListener => {projectButton.addEventListener(eventListener.event, eventListener.function)});
         container.appendChild(projectButton);
     }
+}
+
+
+function _appendThemeToggle(container){
+    const themeToggle = document.createElement("section");
+    themeToggle.id = "theme-toggle";
+    const themeInLocalStorage = checkForThemeInLocalStorage();
+    themeToggle.classList.add(themeInLocalStorage || "light");
+    themeToggle.addEventListener("click", ()=>{
+        _toggleCssThemeClasses(themeToggle);
+        const selectedTheme = (themeToggle.classList.contains("light")) ? "light" : "dark";
+        _setTheme(selectedTheme);
+    });
+    container.appendChild(themeToggle);
+
+    _setTheme((themeToggle.classList.contains("light")) ? "light" : "dark");
+}
+
+function _setTheme(selectedTheme){
+    setThemeInLocalStorage(selectedTheme);
+    const COLOR_IDS = ["100", "100-low-opacity", "200", "300", "400", "500"];
+    COLOR_IDS.forEach(colorId => {
+        const selectedThemeColor = getComputedStyle(document.documentElement).getPropertyValue(`--color-${colorId}-${selectedTheme}`);
+        document.documentElement.style.setProperty(`--color-${colorId}`, selectedThemeColor);
+    })
+}
+
+function _toggleCssThemeClasses(themeToggle){
+    themeToggle.classList.toggle("light");
+    themeToggle.classList.toggle("dark");
 }
 
 

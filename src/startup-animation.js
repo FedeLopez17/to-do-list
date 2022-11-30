@@ -3,25 +3,22 @@ import "./startup-animation.css";
 export default function displayStartUpAnimation(){
     const container = document.querySelector("#content");
 
-    const animationContainerTop = document.createElement("section");
-    animationContainerTop.id = "animation-container-top";
-    container.appendChild(animationContainerTop);
+    const animationWrapper = document.createElement("section");
+    animationWrapper.id = "animation-wrapper";
+    container.appendChild(animationWrapper);
+
+    const animationContainer = document.createElement("section");
+    animationContainer.id = "animation-container";
+    animationWrapper.appendChild(animationContainer);
 
     const title = document.createElement("h1");
     title.id = "title";
     title.innerText = "Tick It Off!";
-    animationContainerTop.appendChild(title);
+    animationContainer.appendChild(title);
 
     const checkmark = document.createElement("section");
     checkmark.id = "checkmark";
-    animationContainerTop.appendChild(checkmark);
+    animationContainer.appendChild(checkmark);
 
-    const animationContainerBottom = document.createElement("section");
-    animationContainerBottom.id = "animation-container-bottom";
-    container.appendChild(animationContainerBottom);
-
-    setTimeout(()=>{
-        animationContainerTop.remove();
-        animationContainerBottom.remove();
-    }, 3000);
+    setTimeout(()=>{animationWrapper.remove()}, 3000);
 }

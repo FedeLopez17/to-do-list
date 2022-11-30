@@ -16,6 +16,20 @@ export function checkForSavedProjects(){
     return (savedProjects);
 }
 
+export function setThemeInLocalStorage(theme){
+    const noStorage = !_localStorageAvailable();
+    if(noStorage) return;
+
+    window.localStorage.setItem("theme", theme);
+}
+
+export function checkForThemeInLocalStorage(){
+    const noStorage = !_localStorageAvailable();
+    if(noStorage) return;
+
+    return window.localStorage.getItem("theme");
+}
+
 // Took this function from MDN. Made sure to understand how it works.
 function _localStorageAvailable() {
     let storage;
