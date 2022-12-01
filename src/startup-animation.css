@@ -32,7 +32,7 @@
 }
 
 
-#title{
+#animation-container #title{
     font-family: 'Nerko One', cursive;
     font-size: min(16vw, 300px);
     margin-top: -1vw;
@@ -43,7 +43,7 @@
         low-opacity var(--text-low-opacity-animation-duration) var(--text-low-opacity-animation-delay) forwards;
 }
 
-#checkmark{
+#animation-container #checkmark{
     position: absolute;
     margin-top: -1vw;
     opacity: 0;
