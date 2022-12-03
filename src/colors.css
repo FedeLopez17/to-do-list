@@ -26,12 +26,12 @@
 
 
     /* Dark Color palette: */
-    --color-100-dark: #032732;
-    --color-100-low-opacity-dark: rgb(0 32 41 / 50%);
-    --color-200-dark: #32798d;
-    --color-300-dark: #01161c;
-    --color-400-dark: #0cb7bd;
-    --color-500-dark: #42fff6; /* #b4c081 */
+    --color-100-dark: rgb(3, 39, 50);
+    --color-100-low-opacity-dark: rgb(3 39 50 / 50%);
+    --color-200-dark: rgb(50, 121, 141);
+    --color-300-dark: rgb(1, 22, 28);
+    --color-400-dark: rgb(12, 183, 189);
+    --color-500-dark: rgb(66, 255, 246);
 
     --color-input-dark: var(--color-400-dark);
     --color-input-text-dark: var(--color-100-dark);
@@ -207,10 +207,6 @@ main{
     color: var(--color-200);
 }
 
-.project-tasks .task .top i{
-    color: ;
-}
-
 .project-tasks .task .top i:hover{
     filter: drop-shadow(-1px -1px 0px --color-100);
 }
@@ -225,6 +221,7 @@ main{
 
 .project-tasks #add-task-button:hover{
     background-color: var(--color-400);
+    color: var(--color-100);
 }
 
 
