@@ -129,6 +129,9 @@ nav #new-task-button{
 aside{
     height: 100%;
     width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     transition: width 0.2s ease-in;
     box-sizing: border-box;
     padding: 50px 0;
@@ -148,8 +151,7 @@ aside *{
 /* Aside Projects */
 aside .project{
     height: var(--aside-projects-height);
-    margin-left: 25px;
-    margin-right: 5px;
+    width: 90%;
     margin-bottom: var(--aside-projects-margin-bottom);
     display: flex;
     justify-content: flex-start;
@@ -171,6 +173,10 @@ aside .project-list .projects{
     height: calc(((var(--aside-projects-height) + var(--aside-projects-margin-bottom)) * var(--amount-of-projects)) + var(--new-project-button-height));
     transition: height 0.3s;
     overflow: hidden;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 aside .project-list .projects.hidden{
@@ -178,13 +184,17 @@ aside .project-list .projects.hidden{
 }
 
 aside .project-list{
-    margin: 20px 5px 0 35px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
     border-top-style: solid;
     border-top-width: 1px;
 }
 
 aside #project-toggle{
     height: var(--aside-projects-toggle-height);
+    margin-left: 10px;
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -205,6 +215,7 @@ aside .project-list .project .project-title-wrapper{
     display: flex;
     gap: 5px;
     width: 70%;
+    margin-left: 10px;
 }
 
 aside .project-list .project .project-title-wrapper span{
@@ -228,11 +239,12 @@ aside .project-list .project i:hover{
 
 aside .new-project-button{
     height: var(--new-project-button-height);
+    width: 90%;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 5px;
     cursor: pointer;
-    margin-right: 5px;
     border-radius: 5px;
 }
 
