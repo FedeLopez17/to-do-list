@@ -418,7 +418,10 @@ function _toggleTaskPriority(task){
     const currentPriority = task.priority;
     const newPriority = (currentPriority === "low") ? "medium" : (currentPriority === "medium") ? "high" : "low";
     task.update("priority", newPriority);
+    const dataId = `${task.title}-from-${task.project}`;
+    const detailsWereOpen = document.querySelector(`.task-details[data-id='${dataId}']:not(.collapsed)`);
     reloadTasks(task.project);
+    if(detailsWereOpen) _toggleDetails({dataId});
     displayAlert("Task updated!");
 }
 
