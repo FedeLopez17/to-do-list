@@ -1,0 +1,230 @@
+:root{
+
+    /* Light Color palette: */
+    --color-100-light: rgb(255, 255, 255);
+    --color-100-low-opacity-light: rgb(255 255 255 / 50%);
+    --color-200-light: rgb(220, 220, 220);
+    --color-300-light: rgb(105, 105, 105);
+    --color-400-light: rgb(202, 1, 1);
+    --color-500-light: rgb(68, 68, 68);
+
+    --color-input-light: white;
+    --color-input-text-light: var(--color-500-light); 
+    --color-focused-input-light: #87ceeb;
+    --color-valid-input-light: #03cf03;
+    --color-invalid-input-light: #ff0000;
+    --color-required-input-indication-light: #ff0000;
+    --color-input-warning-light: #8b0000;
+    --color-delete-icon-light: #ff0000;
+    --color-delete-button-light: #ff0000;
+    --color-cancel-deletion-button-light: var(--color-200-light);
+    --color-cancel-deletion-button-text-light: var(--color-500-light);
+    --color-delete-button-text-light: var(--color-500-light);
+    --color-delete-button-hover-light: #c20000;
+    --color-delete-button-text-hover-light: #ffffff;
+
+
+
+    /* Dark Color palette: */
+    --color-100-dark: #032732;
+    --color-100-low-opacity-dark: rgb(0 32 41 / 50%);
+    --color-200-dark: #32798d;
+    --color-300-dark: #01161c;
+    --color-400-dark: #0cb7bd;
+    --color-500-dark: #42fff6; /* #b4c081 */
+
+    --color-input-dark: var(--color-400-dark);
+    --color-input-text-dark: var(--color-100-dark);
+    --color-focused-input-dark: var(--color-500);
+    --color-valid-input-dark: #00ff00;
+    --color-invalid-input-dark: #ff0000;
+    --color-required-input-indication-dark: #ff0000;
+    --color-input-warning-dark: #ff0000;
+    --color-delete-icon-dark: #ff0000;
+    --color-delete-button-dark: var(--color-500-dark);
+    --color-delete-button-text-dark: #000000;
+    --color-delete-button-hover-dark: var(--color-400-dark);
+    --color-delete-button-text-hover-dark: #ffffff;
+}
+
+
+/* Color asignations */
+
+/* Startup animation */
+#animation-wrapper{
+    background-color: var(--color-100-low-opacity);
+}
+
+#animation-container #title{
+    color: var(--color-400);
+    text-shadow: -0.4vw 0.4vw var(--color-500);
+}
+
+#animation-container #checkmark{
+    border-bottom-color: var(--color-500);
+    border-right-color: var(--color-500);
+    filter: drop-shadow(-0.3vw 0.3vw 0 var(--color-400));
+}
+
+
+/* Modals */
+.task-modal, .project-modal{
+    background-color: var(--color-100);
+    color: var(--color-500);
+    border-color: var(--color-300);
+}
+
+.modal-header{
+    background-color: var(--color-500);
+    color: var(--color-100);
+}
+
+.modal-body input, .modal-body select, .modal-body textarea{
+    color: var(--color-input-text);
+    background-color: var(--color-input) !important;
+}
+
+.modal-body input:focus-visible, .modal-body select:focus-visible, .modal-body textarea:focus-visible{
+    outline: none;
+    border-color: var(--color-focused-input);
+}
+
+.modal-body .valid{
+    border-color: var(--color-valid-input) !important;
+}
+
+.modal-body .invalid{
+    border-color: var(--color-invalid-input) !important;
+}
+
+.modal-body .required-indication{
+    color: var(--color-required-input-indication);
+}
+
+.modal-body .warning{
+    color: var(--color-input-warning);
+}
+
+.project-modal .icon-container label{
+    border-color: var(--color-300);
+    background-color: var(--color-100);
+}
+
+.project-modal input[type='radio']:checked + label{
+    background-color: var(--color-200);
+}
+
+.delete i{
+    color: var(--color-delete-icon);
+}
+
+.delete .cancel-button{
+    background-color: var(--color-cancel-deletion-button);
+    color: var(--color-cancel-deletion-button-text);
+}
+
+.delete .delete-button{
+    background-color: var(--color-delete-button);
+    color: var(--color-delete-button-text)
+}
+
+.delete .delete-button:hover{
+    background-color: var(--color-delete-button-hover);
+    color: var(--color-delete-button-text-hover);
+}
+
+:not(.delete) > .modal-footer button{
+    background-color: var(--color-400);
+    color: var(--color-100);
+}
+
+:not(.delete) > .modal-footer button:hover{
+    background-color: var(--color-500);
+}
+
+
+/* Main page */
+::-webkit-scrollbar, ::-webkit-scrollbar-track{
+    background-color: var(--color-200);
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: var(--color-400);
+}
+
+nav{
+    background-color: var(--color-500);
+    color: var(--color-100);
+}
+
+aside{
+    background-color: var(--color-300);
+    color: var(--color-500);
+}
+
+aside .project{
+    background-color: var(--color-100);
+}
+
+aside .project:hover{
+    background-color: var(--color-200);
+}
+
+aside .project.current{
+    background-color: var(--color-400);
+    color: var(--color-100);
+}
+
+aside .project-list{
+    border-top-color: var(--color-200);
+}
+
+aside .new-project-button, aside #project-toggle{
+    color: var(--color-200);
+}
+
+ aside .new-project-button:hover{
+    background-color: var(--color-400);
+    color: var(--color-200);
+}
+
+main{
+    background-color: var(--color-100);
+    color: var(--color-500);
+}
+
+.project-tasks .task .top{
+    background-color: var(--color-200);
+}
+
+.project-tasks .task .top.active, .project-tasks .task .top:hover{
+    background-color: var(--color-400);
+    color: var(--color-200);
+}
+
+.project-tasks .task .top.done{
+    background-color: var(--color-300);
+    color: var(--color-200);
+}
+
+.project-tasks .task .top i{
+    color: ;
+}
+
+.project-tasks .task .top i:hover{
+    filter: drop-shadow(-1px -1px 0px --color-100);
+}
+
+.project-tasks .task-details{
+    background-color: var(--color-200);
+}
+
+.project-tasks #add-task-button{
+    background-color: initial;
+}
+
+.project-tasks #add-task-button:hover{
+    background-color: var(--color-400);
+}
+
+

@@ -12,7 +12,6 @@
 }
 
 .task-modal, .project-modal{
-    background-color: white;
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -20,6 +19,8 @@
     left: calc(50% - (var(--modal-width) / 2)); /* exactly in the center */
     width: var(--modal-width);
     animation: slide-down-fade-in 0.2s ease-in;
+    border-style: solid;
+    border-width: 2px;
     z-index: 2;
 }
 
@@ -36,8 +37,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--color-500);
-    color: var(--color-100);
 }
 
 .modal-header .modal-title{
@@ -60,12 +59,15 @@
 .modal-body input, .modal-body select{
     height: 22px;
     margin-top: 8px;
-    border: solid 1px darkgrey;
+    border-style: solid;
+    border-width: 1px;
     border-radius: 4px;
 }
 
 .task-modal .modal-body textarea{
     resize: none;
+    border-style: solid;
+    border-width: 1px;
 }
 
 .modal-body select{
@@ -76,47 +78,40 @@
     background-size: 12px;
 }
 
-.modal-body input:focus-visible, .modal-body select:focus-visible{
-    outline-color: skyblue;
-}
-
-.valid, .invalid{
+.modal-body .valid, .modal-body .invalid{
     background-repeat: no-repeat;
     background-size: 14px;
     background-position: right 4px center;
     padding-right: 20px;
 }
 
-.valid{
-    border: solid 1px lime !important;
+.modal-body .valid{
+    border-style: solid;
+    border-width: 1px;
     background-image: url("./images/check-circle-green.png");
 }
-select.valid{
+.modal-body select.valid{
     background: url("./images/dropdown-arrow.png") right 20px center, url("./images/check-circle-green.png") right 4px center;
     background-size: 12px, 14px;
     background-repeat: no-repeat;
 }
 
-.invalid{
-    border: solid 1px red !important;
+.modal-body .invalid{
+    border-style: solid;
+    border-width: 1px;
     background-image: url("./images/exclamation-circle-red.png");
 }
 
-select.invalid{
+.modal-body select.invalid{
     background: url("./images/dropdown-arrow.png") right 20px center, url("./images/exclamation-circle-red.png") right 4px center;
     background-size: 12px, 14px;
     background-repeat: no-repeat;
 }
 
-.required-indication{
-    color: red;
-}
-
-.warning{
+.modal-body .warning{
     margin: 4px 0 0;
     font-size: 14px;
     margin-bottom: -20px;
-    color: darkred;
 }
 
 .project-modal input[type='radio'].hidden{
@@ -134,14 +129,10 @@ select.invalid{
 
 .project-modal .icon-container label{
     padding: 8px;
-    border: solid 1px var(--color-300);
-    background-color: var(--color-100);
+    border-style: solid;
+    border-width: 1px;
     border-radius: 8px;
     cursor: pointer;
-}
-
-.project-modal input[type='radio']:checked + label{
-    background-color: var(--color-300);
 }
 
 .modal-body > [class*="wrapper"]{
@@ -168,22 +159,12 @@ select.invalid{
 
 .delete i{
     font-size: 100px;
-    color: red;
     text-shadow: -2px 1px 0px black;
 }
 
 .delete .modal-footer{
     margin: 0;
     height: 50px;
-}
-
-.delete .delete-button{
-    background-color: red;
-}
-
-.delete .delete-button:hover{
-    background-color: #c20000; /*Slightly darker red*/
-    color: white;
 }
 
 .modal-footer{
@@ -202,16 +183,6 @@ select.invalid{
     font-weight: 900;
     border-radius: 5px;
 }
-
-:not(.delete) > .modal-footer button{
-    background-color: var(--color-400);
-    color: var(--color-100);
-}
-
-:not(.delete) > .modal-footer button:hover{
-    background-color: var(--color-500);
-}
-
 
 @keyframes slide-down-fade-in {
     0% {transform: translateY(-100px); opacity: 0.5}

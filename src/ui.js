@@ -1,4 +1,5 @@
 import "./style.css";
+import "./colors.css";
 import { appendNewProjectModal, appendUpdateProjectModal, appendDeleteProjectModal } from "./modals";
 import { appendNewTaskModal, appendNewTaskModalFromProject, appendViewTaskModal, appendUpdateTaskModal, appendMoveTaskModal, appendDeleteTaskModal } from "./modals";
 import { getProjectNames, getProjectTasks, getTodaysTasks, getThisWeeksTasks, getProjectIcon, getCompletedTasks } from "./projects";
@@ -449,7 +450,12 @@ function _appendThemeToggle(container){
 
 function _setTheme(selectedTheme){
     setThemeInLocalStorage(selectedTheme);
-    const COLOR_IDS = ["100", "100-low-opacity", "200", "300", "400", "500"];
+    const COLOR_IDS = [
+        "100", "100-low-opacity", "200", "300", "400", "500",
+        "input", "focused-input", "valid-input", "invalid-input", "required-input-indication", "input-warning",
+        "cancel-deletion-button", "cancel-deletion-button-text", "delete-icon", "delete-button", "delete-button-text",
+        "delete-button-hover", "delete-button-text-hover", "input-text"
+    ];
     COLOR_IDS.forEach(colorId => {
         const selectedThemeColor = getComputedStyle(document.documentElement).getPropertyValue(`--color-${colorId}-${selectedTheme}`);
         document.documentElement.style.setProperty(`--color-${colorId}`, selectedThemeColor);

@@ -1,4 +1,5 @@
 import "./startup-animation.css";
+import "./colors.css";
 
 export default function displayStartUpAnimation(){
     const container = document.querySelector("#content");

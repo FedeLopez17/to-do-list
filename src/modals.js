@@ -1,4 +1,5 @@
 import "./modals.css";
+import "./colors.css";
 import ToDo from "./tasks.js";
 import Project, { deleteProject, getProject, getProjectIcons, getProjectNames, getProjectTasks, setProjectIcon } from "./projects";
 import { reloadProjects, reloadTasks } from "./ui";
