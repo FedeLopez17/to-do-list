@@ -117,7 +117,10 @@ function _appendAside(container){
     container.appendChild(aside);
 }
 // Inbox loads as the default project.
-window.addEventListener("load", ()=>{_displayTasks("Inbox")});
+window.addEventListener("load", ()=>{
+    _displayTasks("Inbox");
+    _toggleCurrentProject(".project[data-name='Inbox']");
+});
 
 function _toggleCurrentProject(projectSelector, event){
     const clickedOnAButton = event && !event.target.classList.contains("project");
