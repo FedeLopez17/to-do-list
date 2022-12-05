@@ -42,4 +42,11 @@ https://user-images.githubusercontent.com/95712292/205460941-1f87ee0e-f1d1-4cc1-
 ## Thoughts on the project:
 I liked this project a lot. It allowed me to better understand a lot of concepts I had previously seen but hadn't fully grasped.<br>
 Admittedly, I'm not sure whether or not I managed to write 100% SOLID code this time, but it was a really fun project nonetheless.<br>
-I'm sure I'll soon look back at this project and realize everything I could have done better; that's the beauty of learning and github :)
+I'm sure I'll soon look back at this project and realize everything I could have done better; that's the beauty of learning and the beauty of github :)
+
+## Future improvements and suggestions according to friends' feedback and my own reflections:
+- Only the title input should be required when creating a new task, the date input should not be.
+- Improve the Modals' CSS as they look bad in certain screens and don't even work properly in others (unscrollable overflow).
+- The sidebar should be shown from the start if the screen is wide enough. Otherwise, the page can feel a bit empty.
+- The theme toggle isn't intuitive and it doesn't integrate well with the rest of the page. Maybe I should change it.
+- Organize the files better.
